@@ -1,0 +1,126 @@
+{
+  "id": "ch1",
+  "title": "The Missing Rings",
+  "lessons": [42, 43],
+  "requiresKnown": ["a", "of", "the", "you"],
+  "scenes": [
+    {
+      "id": "ch1-1",
+      "bg": "toyroom",
+      "cast": ["princess", "kitten", "ted", "dot"],
+      "picture": "In a messy toy room, a worried teddy bear in a bow tie holds up an empty little box, while a rag doll and a princess with a star wand find a big feather on the floor.",
+      "intro": ["story.ch1-1.intro.1", "story.ch1-1.intro.2", "story.ch1-1.intro.3"],
+      "sentences": [
+        {"id": "ch1-1.1", "text": "Ted is in a fuss.", "effect": "sparkle", "trick": null},
+        {"id": "ch1-1.2", "text": "Ted held up the box.", "effect": "item-pop", "trick": "box"},
+        {"id": "ch1-1.3", "text": "A big mess is on the mat!", "effect": "item-pop", "trick": "mess"},
+        {"id": "ch1-1.4", "text": "You and Dot will help.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch1-1.outro.1", "story.ch1-1.outro.2"]
+    },
+    {
+      "id": "ch1-2",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "tess", "nell"],
+      "picture": "In a castle hall, a girl with two puffy hair buns shrinks a big bell with her magic so it fits in a teacup, while a baby crawls by blowing bubbles.",
+      "intro": ["story.ch1-2.intro.1", "story.ch1-2.intro.2"],
+      "sentences": [
+        {"id": "ch1-2.1", "text": "Tess has a big bell.", "effect": "item-pop", "trick": "bell"},
+        {"id": "ch1-2.2", "text": "Tess taps the bell.", "effect": "shrink", "trick": "bell"},
+        {"id": "ch1-2.3", "text": "The bell is in a cup!", "effect": "sparkle", "trick": "cup"},
+        {"id": "ch1-2.4", "text": "Nell will not sit still!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch1-2.outro.1"],
+      "question": {"line": "story.ch1-2.question", "choices": ["tricks/mop", "tricks/bell", "tricks/jam"], "answer": "tricks/bell"},
+      "reward": {"colorin": "cp-ch1-1"}
+    },
+    {
+      "id": "ch1-3",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "On a castle step, a little kitten in a wizard hat sniffs a fluffy feather, and a puff of wind carries it up and away down the hall.",
+      "intro": ["story.ch1-3.intro.1"],
+      "sentences": [
+        {"id": "ch1-3.1", "text": "Fluff is on the step.", "effect": "sparkle", "trick": null},
+        {"id": "ch1-3.2", "text": "The cat sniffs the fluff.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch1-3.3", "text": "A puff of wind!", "effect": "item-pop", "trick": "puff"},
+        {"id": "ch1-3.4", "text": "The fluff went up and up.", "effect": "float", "trick": null}
+      ],
+      "outro": ["story.ch1-3.outro.1"]
+    },
+    {
+      "id": "ch1-4",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "tess", "vex-grab"],
+      "picture": "In a castle kitchen, a silly queen with a big crooked crown and a jingly bell on her shoe slips in a puddle of spilled milk, while pots and spoons hang on the wall.",
+      "intro": ["story.ch1-4.intro.1"],
+      "sentences": [
+        {"id": "ch1-4.1", "text": "Tess has the bell.", "effect": "item-pop", "trick": "bell"},
+        {"id": "ch1-4.2", "text": "The bell is on Vex!", "effect": "sparkle", "trick": "bell"},
+        {"id": "ch1-4.3", "text": "The bell tells on Vex!", "effect": "sparkle", "trick": "bell"},
+        {"id": "ch1-4.4", "text": "Vex slips on the spill.", "effect": "vex-slip", "trick": null}
+      ],
+      "outro": ["story.ch1-4.outro.1"]
+    },
+    {
+      "id": "ch1-5",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "gus-idle"],
+      "picture": "In a castle kitchen, a goofy crow sits in a basket of fluffy pom-poms with fuzz on his beak, sneezing so hard that a little ring flies out and plops into a cup.",
+      "intro": ["story.ch1-5.intro.1", "story.ch1-5.intro.2"],
+      "sentences": [
+        {"id": "ch1-5.1", "text": "Gus hid in the fuzz.", "effect": "item-pop", "trick": "fuzz"},
+        {"id": "ch1-5.2", "text": "Fuzz is on his bill.", "effect": "crow-flap", "trick": "fuzz"},
+        {"id": "ch1-5.3", "text": "Gus can not stop!", "effect": "crow-flap", "trick": null},
+        {"id": "ch1-5.4", "text": "Plop! It fell in a cup!", "effect": "ring-found", "trick": "cup"}
+      ],
+      "outro": ["story.ch1-5.outro.1", "story.ch1-5.outro.2"],
+      "question": {"line": "story.ch1-5.question", "choices": ["tricks/hat", "tricks/cup", "tricks/bed"], "answer": "tricks/cup"}
+    },
+    {
+      "id": "ch1-6",
+      "bg": "hub",
+      "cast": ["princess", "kitten", "bix", "vex-grab"],
+      "picture": "Below a castle wall, a silly queen sits in the grass with a bird's nest on her head like a messy hat, while a big seagull flies off with a tiny ring in its beak.",
+      "intro": ["story.ch1-6.intro.1"],
+      "sentences": [
+        {"id": "ch1-6.1", "text": "Vex hid it in a nest.", "effect": "item-pop", "trick": "nest"},
+        {"id": "ch1-6.2", "text": "A big gull swept in.", "effect": "item-pop", "trick": "gull"},
+        {"id": "ch1-6.3", "text": "The gull got it!", "effect": "float", "trick": "gull"},
+        {"id": "ch1-6.4", "text": "The nest fell on Vex!", "effect": "vex-bonk", "trick": "nest"}
+      ],
+      "outro": ["story.ch1-6.outro.1"],
+      "question": {"line": "story.ch1-6.question", "choices": ["cast/gus-flap", "tricks/gull", "tricks/bug"], "answer": "tricks/gull"}
+    },
+    {
+      "id": "ch1-7",
+      "bg": "hub",
+      "cast": ["princess", "kitten", "tess", "nell"],
+      "picture": "Beside an old stone well, a baby blows a giant bubble with a tiny ring inside it, and a girl with two puffy hair buns reaches up to catch it.",
+      "intro": ["story.ch1-7.intro.1", "story.ch1-7.intro.2"],
+      "sentences": [
+        {"id": "ch1-7.1", "text": "The gull is at the well.", "effect": "item-pop", "trick": "well"},
+        {"id": "ch1-7.2", "text": "Plop! It fell in the well!", "effect": "sparkle", "trick": "well"},
+        {"id": "ch1-7.3", "text": "Nell will puff and puff.", "effect": "float", "trick": null},
+        {"id": "ch1-7.4", "text": "Up it went, up and up!", "effect": "ring-found", "trick": null}
+      ],
+      "outro": ["story.ch1-7.outro.1", "story.ch1-7.outro.2"]
+    },
+    {
+      "id": "ch1-8",
+      "bg": "toyroom",
+      "cast": ["princess", "kitten", "ted-dot-hearts", "tess", "bix", "nell"],
+      "picture": "In a toy room full of hearts, a teddy bear and a rag doll hug and hold their ring box, while a princess, her kitten and three happy friends clap and cheer.",
+      "intro": ["story.ch1-8.intro.1"],
+      "sentences": [
+        {"id": "ch1-8.1", "text": "Ted gets the box.", "effect": "ring-found", "trick": "box"},
+        {"id": "ch1-8.2", "text": "Ted and Dot hug.", "effect": "sparkle", "trick": null},
+        {"id": "ch1-8.3", "text": "Ted will kiss Dot.", "effect": "sparkle", "trick": null},
+        {"id": "ch1-8.4", "text": "Tess, Bix and Nell clap.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch1-8.outro.1", "story.ch1-8.outro.2"],
+      "reward": {"colorin": "cp-ch1-2"}
+    }
+  ],
+  "side": []
+}

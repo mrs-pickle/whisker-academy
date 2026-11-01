@@ -1,0 +1,15 @@
+{
+  "name": "Meadowlark's World: Whisker Academy",
+  "short_name": "Whisker Academy",
+  "description": "A home reading-practice game: sounds, blending and spelling, played with a grown-up.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#fdf8ee",
+  "background_color": "#fdf8ee",
+  "icons": [
+    { "src": "assets/art/ui/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/art/ui/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/art/ui/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

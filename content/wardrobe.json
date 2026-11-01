@@ -1,0 +1,15 @@
+[
+{"id":"o-gown-teal","slot":"outfit","art":"wardrobe/o-gown-teal","starter":true,"label":"Teal gown"},
+{"id":"o-gown-pink","slot":"outfit","art":"wardrobe/o-gown-pink","starter":true,"label":"Pink ball gown"},
+{"id":"o-tunic-green","slot":"outfit","art":"wardrobe/o-tunic-green","starter":true,"label":"Green tunic"},
+{"id":"o-ballet","slot":"outfit","art":"wardrobe/o-ballet","starter":false,"label":"Ballet tutu"},
+{"id":"o-swim","slot":"outfit","art":"wardrobe/o-swim","starter":false,"label":"Swimsuit"},
+{"id":"o-explorer","slot":"outfit","art":"wardrobe/o-explorer","starter":false,"label":"Explorer outfit"},
+{"id":"o-gardener","slot":"outfit","art":"wardrobe/o-gardener","starter":false,"label":"Gardening overalls"},
+{"id":"o-wizard","slot":"outfit","art":"wardrobe/o-wizard","starter":false,"label":"Wizard robe"},
+{"id":"o-wedding-guest","slot":"outfit","art":"wardrobe/o-wedding-guest","starter":false,"label":"Wedding-guest dress"},
+{"id":"k-hat-blue","slot":"kitten-acc","art":"wardrobe/k-hat-blue","starter":true,"label":"Blue magic hat"},
+{"id":"k-bow-pink","slot":"kitten-acc","art":"wardrobe/k-bow-pink","starter":false,"label":"Pink bow"},
+{"id":"crown-gold","slot":"crown","art":"princess/crown-gold","starter":true,"label":"Gold crown"},
+{"id":"crown-flower","slot":"crown","art":"princess/crown-flower","starter":false,"label":"Flower crown"}
+]

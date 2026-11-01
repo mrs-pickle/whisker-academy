@@ -1,0 +1,17 @@
+[
+  {"id":"pig-set","lesson":18,"steps":["pig","peg","pet","pit","sit","set"]},
+  {"id":"bit-led","lesson":26,"steps":["bit","bet","bed","bid","lid","led"]},
+  {"id":"wig-bit","lesson":28,"steps":["wig","wag","bag","beg","bet","bit"]},
+  {"id":"mop-wit","lesson":28,"steps":["mop","map","mat","met","wet","wit"]},
+  {"id":"bug-log","lesson":26,"steps":["bug","bag","big","beg","leg","log"]},
+  {"id":"sip-pit","lesson":18,"steps":["sip","sap","sat","set","sit","pit"]},
+  {"id":"dig-bid","lesson":18,"steps":["dig","dug","bug","bud","bed","bid"]},
+  {"id":"hat-pet","lesson":23,"steps":["hat","hot","hut","nut","net","pet"]},
+  {"id":"web-kit","lesson":28,"steps":["web","wed","led","lid","kid","kit"]},
+  {"id":"lip-cup","lesson":35,"steps":["lip","lap","lamp","camp","cap","cup"]},
+  {"id":"clip-plop","lesson":37,"steps":["clip","clap","flap","flip","flop","plop"]},
+  {"id":"boss-hiss","lesson":42,"steps":["boss","moss","mess","miss","kiss","hiss"]},
+  {"id":"buzz-bell","lesson":42,"steps":["buzz","fuzz","fizz","fill","fell","bell"]},
+  {"id":"bell-ball","lesson":43,"steps":["bell","bill","fill","fell","fall","ball"]},
+  {"id":"well-yell","lesson":43,"steps":["well","will","wall","tall","tell","yell"]}
+]

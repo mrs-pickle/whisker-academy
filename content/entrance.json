@@ -1,0 +1,22 @@
+{
+  "lines": [
+    { "id": "real-a", "kind": "real", "lessonSet": "35: short a", "words": ["map", "cab", "jam", "van", "had"] },
+    { "id": "real-i", "kind": "real", "lessonSet": "36: short i", "words": ["sip", "dig", "kid", "win", "mix"] },
+    { "id": "real-o", "kind": "real", "lessonSet": "37: short o", "words": ["hop", "log", "pot", "jog", "box"] },
+    { "id": "real-u", "kind": "real", "lessonSet": "39: short u", "words": ["cub", "nut", "hum", "jug", "tug"] },
+    { "id": "real-e", "kind": "real", "lessonSet": "40: short e", "words": ["beg", "net", "leg", "yes", "vet"] },
+    { "id": "real-ie", "kind": "real", "lessonSet": "41: short i and e", "words": ["pet", "pit", "led", "bid", "set"] },
+    { "id": "real-blends", "kind": "real", "lessonSet": "35-41: blends", "words": ["clap", "gift", "stop", "plum", "desk"] },
+    { "id": "nonsense-1", "kind": "nonsense", "lessonSet": "35-41: short vowels", "words": ["mip", "tud", "pob", "zad", "keb"] },
+    { "id": "nonsense-ie", "kind": "nonsense", "lessonSet": "41: short i and e", "words": ["tib", "bep", "hib", "meb", "wib"] },
+    { "id": "nonsense-2", "kind": "nonsense", "lessonSet": "35-41: short vowels", "words": ["fip", "gub", "jom", "vab", "tep"] },
+    { "id": "nonsense-blends-1", "kind": "nonsense", "lessonSet": "35-37: blends", "words": ["bamp", "snad", "blim", "spim", "clob"] },
+    { "id": "nonsense-blends-2", "kind": "nonsense", "lessonSet": "39-40: blends", "words": ["glud", "nusk", "flep", "jelp", "kest"] }
+  ],
+  "dictation": ["pig", "bed", "sun", "wet", "cap", "milk", "nest", "jump", "twist", "slept"],
+  "passage": {
+    "id": "pond",
+    "text": "A pup and a cat sat in the sun. “Look!” said the cat. “A fox is in the pond!” The pup went to the pond. The fox did a big jump, and the pup got wet. “You are a wet pup!” said the cat. The pup and the cat had a nap in the sun.",
+    "wordCount": 55
+  }
+}

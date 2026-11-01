@@ -1,0 +1,43 @@
+{
+  "ie": [
+    ["pig","peg"],
+    ["bit","bet"],
+    ["sit","set"],
+    ["lid","led"],
+    ["bid","bed"],
+    ["pit","pet"],
+    ["wit","wet"],
+    ["fill","fell"],
+    ["big","beg"],
+    ["bill","bell"],
+    ["will","well"],
+    ["miss","mess"],
+    ["slid","sled"],
+    ["lift","left"],
+    ["spill","spell"],
+    ["disk","desk"]
+  ],
+  "ssh": [
+    ["sip","ship"],
+    ["sell","shell"],
+    ["sock","shock"],
+    ["mass","mash"],
+    ["sack","shack"],
+    ["self","shelf"],
+    ["sift","shift"]
+  ],
+  "sshMinLesson": 45,
+  "sshSegs": {
+    "ship": [["sh","sh"],["i","i"],["p","p"]],
+    "shell": [["sh","sh"],["e","e"],["ll","l"]],
+    "sock": [["s","s"],["o","o"],["ck","k"]],
+    "shock": [["sh","sh"],["o","o"],["ck","k"]],
+    "mass": [["m","m"],["a","a"],["ss","s"]],
+    "mash": [["m","m"],["a","a"],["sh","sh"]],
+    "sack": [["s","s"],["a","a"],["ck","k"]],
+    "shack": [["sh","sh"],["a","a"],["ck","k"]],
+    "self": [["s","s"],["e","e"],["l","l"],["f","f"]],
+    "shelf": [["sh","sh"],["e","e"],["l","l"],["f","f"]],
+    "shift": [["sh","sh"],["i","i"],["f","f"],["t","t"]]
+  }
+}
