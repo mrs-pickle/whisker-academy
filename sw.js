@@ -30,10 +30,10 @@ async function precache() {
     const stopped = results.find((result) => result.status === 'rejected');
     if (stopped) throw stopped.reason;
   }
-  if (!(await caches.has(CACHE))) throw new Error(`sw.js: ${CACHE} was deleted during the install`);
   const latest = await fetch(urlOf('precache.json'), { cache: 'no-cache' });
   const now = latest.ok ? (await latest.json()).version : null;
   if (now !== VERSION) throw new Error(`sw.js: precache.json is now version ${now}, not ${VERSION}; the page registers that one next`);
+  if (!(await caches.has(CACHE))) throw new Error(`sw.js: ${CACHE} was deleted during the install`);
 }
 
 self.addEventListener('install', (event) => {

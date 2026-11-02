@@ -96,6 +96,10 @@ async function charmWord(view, iw, { copilot, known, slow, bracelet, once }) {
   card.classList.toggle('veiled', known);
   await view.prompt(['v.charm.build', clip]);
   const lastSound = await buildWord({ view, c, word: (iw), board, bottom, answered: () => {}, once }, slow);
+  if (lastSound === null) {
+    view.root.classList.remove('charm-pronoun');
+    return { pass: true };
+  }
   bottom.replaceChildren();
   card.classList.remove('veiled');
   view.cheer();
@@ -106,6 +110,10 @@ async function charmWord(view, iw, { copilot, known, slow, bracelet, once }) {
 
   await view.prompt(['v.charm.read', clip]);
   const answer = await judgeAloud(view, { copilot, kind: 'read', model: [clip], target: card, praise: 'charm' });
+  if ('pass' in answer) {
+    view.root.classList.remove('charm-pronoun');
+    return answer;
+  }
 
   const after = joinBracelet(view, iw, bracelet).then(() => { view.root.classList.remove('charm-pronoun'); });
   return { ...answer, after };
@@ -127,9 +135,15 @@ export async function run(el, ctx, round, hooks) {
   const bracelet = h('img', { class: 'charm-bracelet', src: artUrl('ui/bracelet'), alt: '', draggable: 'false' });
   view.root.append(bracelet);
   const once = createOnce();
-  const played = [];
+  let played = [];
+  const passed = new Set();
+  const roundHooks = { ...hooks, pass(id, mode) {
+    passed.add(id.slice(3));
+    played = played.filter((iw) => !passed.has(iw.w));
+    hooks.pass?.(id, mode);
+  } };
   try {
-    const result = await runRound(view, round, hooks, {
+    const result = await runRound(view, round, roundHooks, {
       play: (item) => {
         const iw = item.id.startsWith('iw:') && item.mode === 'read' ? instant.get(item.id.slice(3)) : undefined;
         if (!iw) {
@@ -147,7 +161,8 @@ export async function run(el, ctx, round, hooks) {
       },
       easy: (used) => easyCharm(ctx, used),
     });
-    if (result === 'done' && hooks.protege && view.live()) await protegeMoment(view, played, once);
+    if (result === 'done' && hooks.protege && view.live()) await protegeMoment(view, played, once, passed);
+    if (view.live()) hooks.answersIn?.();
   } finally {
     view.destroy();
   }

@@ -1,9 +1,11 @@
 import { h } from '../core/dom.js';
+import { MIX_IT_UP } from '../profile/settings.js';
 import { artUrl, layeredArt } from '../ui/components.js';
 import { castArt } from '../ui/story-stage.js';
 import { dressUpButton } from './dressup.js';
 
-export const BREAK_STYLES = Object.freeze(['ballet', 'jumps', 'swim']);
+export const BREAK_STYLES = Object.freeze(['ballet', 'jumps', 'swim', 'stretch', 'parade']);
+const OWN_START = Object.freeze(['stretch', 'parade']);
 const MOVES = 4;
 
 const START_MS = 4000;
@@ -19,7 +21,23 @@ const breakStyle = (style) => (typeof style === 'string' && BREAK_STYLES.include
 
 export function breakLines(style) {
   const s = breakStyle(style);
-  return ['break.start', ...Array.from({ length: MOVES }, (_, i) => `break.${s}.${i + 1}`), 'break.done'];
+  const start = OWN_START.includes(s) ? `break.${s}.start` : 'break.start';
+  return [start, ...Array.from({ length: MOVES }, (_, i) => `break.${s}.${i + 1}`), 'break.done'];
+}
+
+export function nextInMix(played, rng) {
+  const cycle = (Array.isArray(played) ? played : []).filter((s, i, all) => BREAK_STYLES.includes(s) && all.indexOf(s) === i);
+  const left = BREAK_STYLES.filter((s) => !cycle.includes(s));
+  if (left.length > 0) { const style = rng.pick(left); return { style, played: [...cycle, style] }; }
+  const style = rng.pick(BREAK_STYLES.filter((s) => s !== cycle.at(-1)));
+  return { style, played: [style] };
+}
+
+export function nextBreak(ctx) {
+  if (ctx.settings.breakStyle !== MIX_IT_UP) return ctx.settings.breakStyle;
+  const { style, played } = nextInMix(ctx.profile.breaks, ctx.rng);
+  ctx.profile = { ...ctx.profile, breaks: played };
+  return style;
 }
 
 
@@ -114,7 +132,7 @@ export async function runCuddle(el, ctx, { dressUp = false } = {}) {
 }
 
 export function mount(el, ctx, params = {}) {
-  const played = params.kind === 'cuddle' ? runCuddle(el, ctx) : runBreak(el, ctx, { style: params.style ?? ctx.settings.breakStyle });
+  const played = params.kind === 'cuddle' ? runCuddle(el, ctx) : runBreak(el, ctx, { style: params.style ?? nextBreak(ctx) });
   played.then(() => (el.isConnected ? ctx.router.go('hub') : undefined))
     .catch((err) => console.error('The break preview stopped', err));
   return () => {};

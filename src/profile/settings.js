@@ -1,3 +1,6 @@
+export const MIX_IT_UP = 'mix-it-up';
+
+
 export const DEFAULT_SETTINGS = Object.freeze({
   taughtUpTo: 41,
   sessionMinutes: 15,
@@ -5,7 +8,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
   sShContrast: false,
   ieEmphasis: true,
   cardRoutine: 'sound',
-  breakStyle: 'ballet',
+  breakStyle: MIX_IT_UP,
+  mixOffered: true,
   textSpacing: 'normal',
   tint: 'paper',
   pin: null,
@@ -42,8 +46,8 @@ function tipsSeen(value) {
 
 const SETTING_TYPES = Object.freeze({
   taughtUpTo: 'number', sessionMinutes: 'number', copilot: 'boolean', sShContrast: 'boolean', ieEmphasis: 'boolean',
-  cardRoutine: 'string', breakStyle: 'string', textSpacing: 'string', tint: 'string', pin: 'string', printWords: 'boolean',
-  tipsSeen: 'object',
+  cardRoutine: 'string', breakStyle: 'string', mixOffered: 'boolean', textSpacing: 'string', tint: 'string', pin: 'string',
+  printWords: 'boolean', tipsSeen: 'object',
 });
 
 export function isSettingsShape(raw) {
@@ -64,7 +68,8 @@ export function normalizeSettings(raw) {
     sShContrast: bool(r.sShContrast, d.sShContrast),
     ieEmphasis: bool(r.ieEmphasis, d.ieEmphasis),
     cardRoutine: oneOf(r.cardRoutine, CARD_ROUTINES, d.cardRoutine),
-    breakStyle: name(r.breakStyle, d.breakStyle),
+    breakStyle: r.mixOffered !== true && r.breakStyle === 'ballet' ? d.breakStyle : name(r.breakStyle, d.breakStyle),
+    mixOffered: true,
     textSpacing: oneOf(r.textSpacing, TEXT_SPACINGS, d.textSpacing),
     tint: name(r.tint, d.tint),
     pin: typeof r.pin === 'string' && r.pin.length > 0 && r.pin.length <= MAX_PIN_HASH_LENGTH ? r.pin : d.pin,

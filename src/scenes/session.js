@@ -1,16 +1,18 @@
+import { advanceStory } from '../activities/story.js';
 import { h } from '../core/dom.js';
 import { createArrivalGuard } from '../core/lock.js';
-import { buildSession } from '../engine/session-builder.js';
+import { buildSession, openToHer } from '../engine/session-builder.js';
 import { createMonitor } from '../engine/frustration.js';
 import { applyResult, newItemState } from '../engine/itemstate.js';
 import { dayOptions } from '../engine/page-recipe.js';
+import { closedPass, howOf, markedBack, passesToReturn, reopenedPass, reviewRounds, withBackResult, withPass } from '../engine/passes.js';
 import { nextSpellTier } from '../engine/spell-tier.js';
 import { earnMadePage, earnPage, firstWaiting, pagesNow } from '../profile/pages.js';
-import { isExtraPractice } from '../profile/profile.js';
-import { artUrl, bigButton, layeredArt, pathStones } from '../ui/components.js';
+import { isExtraPractice, latestAccuracy } from '../profile/profile.js';
+import { artUrl, bigButton, layeredArt, lessonBar, pathStones, setLessonBar } from '../ui/components.js';
 import { wordsBuilt, wordsForStrip } from '../ui/print-pages.js';
 import { castArt } from '../ui/story-stage.js';
-import { runBreak, runCuddle } from './break.js';
+import { nextBreak, runBreak, runCuddle } from './break.js';
 import { dressUpButton } from './dressup.js';
 import { pickGiftChoices } from './reward.js';
 
@@ -117,6 +119,16 @@ export function sessionRounds(plan) {
 const copy = (list) => (Array.isArray(list) ? [...list] : []);
 const strings = (list) => copy(list).filter(x => typeof x === 'string');
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const isWhole = (n) => Number.isInteger(n) && (n) >= 0;
+
+export function lessonPercent(groups, at, part = 0, fraction = 0) {
+  if (at >= groups.length) return 100;
+  const sizes = groups[at].map((r) => Math.max(1, r.items.length));
+  const before = sizes.slice(0, part).reduce((a, b) => a + b, 0);
+  const whole = sizes.reduce((a, b) => a + b, 0);
+  const within = (before + sizes[part] * Math.min(1, Math.max(0, fraction))) / whole;
+  return Math.min(99, Math.floor((100 * (at + within)) / groups.length));
+}
 
 function recordSession(profile, record, replace) {
   const sessions = copy(profile.sessions);
@@ -135,12 +147,13 @@ export { isExtraPractice };
 
 
 
+
 export function startToday(plan, day, profile, settings) {
   return {
     day, taughtUpTo: settings.taughtUpTo, sShContrast: settings.sShContrast, plan,
     done: 0, answered: 0, right: 0, ms: 0, applied: [],
     before: { tricks: strings(profile.unlocked?.tricks), charms: strings(profile.unlocked?.charms), sparkles: strings(profile.unlocked?.sparkles) },
-    colorin: null, scene: null, recorded: false, copilot: null,
+    colorin: null, scene: null, recorded: false, copilot: null, peak: 0, answersIn: null,
   };
 }
 
@@ -165,6 +178,20 @@ function planFrom(raw) {
   return { day: raw.day, rounds };
 }
 
+const storyMove = (pick) => (pick ? { chapterId: pick.chapterId, kind: pick.kind, index: pick.index, forced: pick.forced === true,
+  scene: { id: pick.scene.id, reward: { colorin: pick.scene.reward?.colorin ?? null } } } : null);
+
+const isStoryMove = (move) => isPlainObject(move) && typeof move.chapterId === 'string' && ['main', 'side', 'reread', 'again'].includes(move.kind)
+  && isWhole(move.index) && typeof move.forced === 'boolean' && isPlainObject(move.scene) && typeof move.scene.id === 'string'
+  && isPlainObject(move.scene.reward) && (move.scene.reward.colorin == null || typeof move.scene.reward.colorin === 'string');
+
+function answersInFrom(stored) {
+  if (!isPlainObject(stored)) return null;
+  const { round, answered, right, story } = stored;
+  if (!isWhole(round) || !isWhole(answered) || !isWhole(right) || right > answered) return null;
+  return story === null || isStoryMove(story) ? { round, answered, right, story } : null;
+}
+
 export function resumeToday(stored, day, settings) {
   if (!isPlainObject(stored) || stored.day !== day) return null;
   if (stored.taughtUpTo !== settings.taughtUpTo || stored.sShContrast !== settings.sShContrast) return null;
@@ -183,6 +210,8 @@ export function resumeToday(stored, day, settings) {
     scene: typeof stored.scene === 'string' && stored.scene !== '' ? stored.scene : null,
     recorded: stored.recorded === true,
     copilot: typeof stored.copilot === 'boolean' ? stored.copilot : null,
+    peak: Number.isInteger(stored.peak) && stored.peak >= 0 && stored.peak <= 100 ? stored.peak : 0,
+    answersIn: answersInFrom(stored.answersIn),
   };
 }
 
@@ -207,7 +236,7 @@ const sessionRecord = (today, copilot, complete) => ({
   day: today.day,
   minutes: Math.round(today.ms / 6000) / 10,
   rounds: today.done,
-  accuracy: today.answered === 0 ? 0 : today.right / today.answered,
+  ...(today.answered === 0 ? {} : { accuracy: today.right / today.answered }),
   copilot,
   complete,
 });
@@ -215,6 +244,12 @@ const sessionRecord = (today, copilot, complete) => ({
 export function afterRound(profile, today, { ms, answered, right, applied, copilot }) {
   const next = { ...today, done: today.done + 1, answered, right, ms, applied: [...applied], recorded: true };
   return { today: next, profile: recordSession(profile, sessionRecord(next, copilot, false), today.recorded) };
+}
+
+export function noteScene(today, pick) {
+  const page = pick?.kind === 'reread' ? null : pick?.scene?.reward?.colorin;
+  const scene = pick?.scene?.id;
+  return { ...today, ...(typeof page === 'string' && page !== '' ? { colorin: page } : {}), ...(typeof scene === 'string' && scene !== '' ? { scene } : {}) };
 }
 
 export function spelledToday(plan, states, day) {
@@ -279,6 +314,42 @@ export async function partsForTheDay(ctx) {
     console.error('The page parts could not be read, so the day earns a built-in page', err);
     return null;
   }
+}
+
+export function cutOffDay(stored, settings) {
+  if (!isPlainObject(stored) || !Number.isInteger(stored.day)) return null;
+  const today = resumeToday(stored, stored.day, settings);
+  if (!today) return null;
+  const rounds = sessionRounds(today.plan).length;
+  if (rounds === 0) return null;
+  if (today.done === rounds) return today;
+  return today.done === rounds - 1 && today.answersIn?.round === rounds - 1 ? today : null;
+}
+
+export async function finishCutOffDay(ctx) {
+  const cut = cutOffDay(ctx.today, ctx.settings);
+  if (!cut) return false;
+  const copilot = cut.copilot ?? ctx.settings.copilot !== false;
+  let { profile } = ctx;
+  let today = cut;
+  let score = { ms: cut.ms, answered: cut.answered, right: cut.right, applied: cut.applied, copilot };
+  if (cut.done < sessionRounds(cut.plan).length) {
+    const { answered, right, story } = (cut.answersIn);
+    score = { ...score, answered, right };
+    if (story) {
+      profile = advanceStory(profile, story);
+      today = noteScene(today, story);
+    }
+    ({ profile, today } = afterRound(profile, today, score));
+  }
+  const library = isExtraPractice(profile, today.day) ? null : await libraryForTheDay(ctx);
+  const parts = library ? await partsForTheDay(ctx) : null;
+  const end = finishSession(profile, today, score, { states: ctx.states, content: ctx.content, rng: ctx.rng, pages: library, parts });
+  ctx.profile = end.profile;
+  if (end.pages) ctx.pages = end.pages;
+  ctx.today = null;
+  await ctx.save();
+  return true;
 }
 
 export function createThrottle(run, ms, { now = () => Date.now(), setTimer = (fn, wait) => setTimeout(fn, wait), clearTimer = (id) => clearTimeout(id) } = {}) {
@@ -362,12 +433,12 @@ function askCopilot(host, ctx) {
   });
 }
 
-async function nextStone(host, ctx) {
+async function kittenMoment(host, ctx, say) {
   const screen = h('div', { class: 'session-next' },
     h('img', { class: 'scene-bg', src: artUrl('bg/hub'), alt: '' }),
     layeredArt(castArt('kitten', ctx.profile?.look, 'cheer'), 'session-kitten cheer'));
   host.append(screen);
-  await Promise.all([ctx.say('session.next'), wait(NEXT_MS)]);
+  await Promise.all([say(), wait(NEXT_MS)]);
   screen.remove();
 }
 
@@ -385,7 +456,6 @@ export function mount(el, ctx) {
   const day = ctx.day;
   const extra = isExtraPractice(ctx.profile, day);
   const resumed = resumeToday(ctx.today, day, ctx.settings);
-  const last = ctx.profile.sessions?.at(-1);
   let plan;
   try {
     plan = resumed?.plan ?? buildSession({
@@ -395,7 +465,7 @@ export function mount(el, ctx) {
       profile: ctx.profile,
       day,
       rng: ctx.rng,
-      lastAccuracy: typeof last?.accuracy === 'number' ? last.accuracy : null,
+      lastAccuracy: latestAccuracy(ctx.profile),
     });
   } catch (err) {
     console.error("Today's plan could not be made", err);
@@ -414,7 +484,13 @@ export function mount(el, ctx) {
     if (fresh) path.querySelectorAll('.stone')[done - 1]?.classList.add('fresh');
   };
   showPath(today.done);
-  el.append(h('div', { class: 'session' }, host, path));
+  const bar = lessonBar();
+  const showBar = (percent) => {
+    today = { ...today, peak: Math.max(today.peak, percent) };
+    setLessonBar(bar, today.peak);
+  };
+  showBar(lessonPercent(groups, today.done));
+  el.append(h('div', { class: 'session' }, host, path, bar));
 
   const save = () => ctx.save().catch(( err) => console.error('The session could not be saved', err));
   const leaveTo = (to) => {
@@ -453,12 +529,18 @@ export function mount(el, ctx) {
     stopCatchUp = ctx.onLeave?.(catchUp) ?? null;
     const record = (id, mode, answer, options) => {
       hooks.record(id, mode, answer, options);
+      ctx.profile = closedPass(ctx.profile, id, mode, day, howOf(answer, options));
       throttle.poke();
     };
     const undo = () => {
       const undone = hooks.undo();
+      if (undone) ctx.profile = reopenedPass(ctx.profile, undone.id, undone.mode, day);
       throttle.poke();
       return undone;
+    };
+    const pass = (id, mode) => {
+      ctx.profile = withPass(ctx.profile, id, mode, day);
+      throttle.poke();
     };
     const third = groups.flat().map(r => r.activity).filter(a => a === 'chain' || a === 'charm');
     const protegeIn = third.length > 0 ? ctx.rng.pick(third) : null;
@@ -466,28 +548,34 @@ export function mount(el, ctx) {
     let cuddle = false;
 
     const onScene = (pick) => {
-      const page = pick?.kind === 'reread' ? null : pick?.scene?.reward?.colorin;
-      const scene = pick?.scene?.id;
-      today = { ...today, ...(typeof page === 'string' && page !== '' ? { colorin: page } : {}), ...(typeof scene === 'string' && scene !== '' ? { scene } : {}) };
+      today = noteScene(today, pick);
       throttle.poke();
     };
-    const play = async (round) => {
+    const run = async (round, roundHooks) => {
       try {
         const activity = await import(`../activities/${round.activity}.js`);
-        await activity.run(host, ctx, round, { record, undo, monitor: hooks.monitor, copilot, protege: round.activity === protegeIn, extra, onScene });
+        await activity.run(host, ctx, round, roundHooks);
       } catch (err) {
         console.error(`The ${round.activity} round stopped`, err);
       }
     };
+    const answersIn = (pick) => {
+      const { answered, right } = recorder.snapshot();
+      today = { ...today, answersIn: { round: groups.length - 1, answered, right, story: storyMove(pick) } };
+      saveNow();
+    };
+    const play = (round, i, part) => run(round, { record, undo, pass, monitor: hooks.monitor, copilot, protege: round.activity === protegeIn, extra, onScene,
+      progress: (fraction) => showBar(lessonPercent(groups, i, part, fraction)),
+      answersIn: i === groups.length - 1 && part === groups[i].length - 1 ? answersIn : undefined });
 
     for (let i = first; i < groups.length; i++) {
       if (i > first) {
         let exit;
         if (cuddle) exit = await runCuddle(host, ctx, { dressUp: true });
         else {
-          await nextStone(host, ctx);
+          await kittenMoment(host, ctx, () => ctx.say('session.next'));
           if (!live) return;
-          exit = await runBreak(host, ctx, { style: ctx.settings.breakStyle, dressUp: true });
+          exit = await runBreak(host, ctx, { style: nextBreak(ctx), dressUp: true });
         }
         if (!live) return;
         if (exit === 'dressup') {
@@ -496,12 +584,13 @@ export function mount(el, ctx) {
         }
       }
       cuddle = false;
-      for (const round of groups[i]) {
-        await play(round);
+      for (const [part, round] of groups[i].entries()) {
+        await play(round, i, part);
         if (!live) return;
         if (hooks.breakSignalled()) { cuddle = true; break; }
       }
       ({ profile: ctx.profile, today } = afterRound(ctx.profile, today, score()));
+      showBar(lessonPercent(groups, today.done));
       ctx.today = today;
       showPath(today.done, true);
       if (today.done === groups.length) break;
@@ -526,6 +615,39 @@ export function mount(el, ctx) {
     const ended = ending.then(() => {}, () => {}).then(() => { if (ctx.dayEnding === ended) ctx.dayEnding = null; });
     ctx.dayEnding = ended;
     const end = await ending;
+    if (!live) return;
+
+    const passesBack = async () => {
+      const items = passesToReturn(ctx.profile, day, openToHer(ctx.content, ctx.settings, ctx.profile));
+      if (items.length === 0) return;
+      ctx.profile = markedBack(ctx.profile, items, day);
+      await save();
+      if (!live) return;
+      await kittenMoment(host, ctx, () => ctx.say('pass.back'));
+      if (!live) return;
+      const backHooks = {
+        record(id, mode, answer, options) {
+          hooks.record(id, mode, answer, options);
+          ctx.profile = withBackResult(ctx.profile, id, mode, howOf(answer, options));
+          save();
+        },
+        undo() {
+          const undone = hooks.undo();
+          save();
+          return undone;
+        },
+        pass(id, mode) {
+          ctx.profile = withPass(ctx.profile, id, mode, day);
+          save();
+        },
+        monitor: hooks.monitor, copilot, protege: false, extra, review: true,
+      };
+      for (const round of reviewRounds(items)) {
+        await run(round, backHooks);
+        if (!live || hooks.breakSignalled()) return;
+      }
+    };
+    if (!cuddle) await passesBack();
     if (!live) return;
     await ctx.router.go('reward', { gifts: end.gifts, extra, page: end.page, maker: end.maker, ...madeToday(ctx.profile, today), stones: total });
   };

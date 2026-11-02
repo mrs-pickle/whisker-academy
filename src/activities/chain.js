@@ -3,7 +3,7 @@ import { isDecodable } from '../curriculum/decodable.js';
 import { tierOf } from '../curriculum/tiers.js';
 import { eligibleChains, eligibleWords, rWordAllowed } from '../engine/session-builder.js';
 import { artUrl, kittenBubble, soundBoxes, tile } from '../ui/components.js';
-import { bounce, createActivityView, createOnce, isKnown, knownInstant, listenDisc, now, runRound, showNext, sparkle, typeToPick } from './cards.js';
+import { bounce, createActivityView, createOnce, isKnown, knownInstant, listenDisc, now, offerPass, runRound, showNext, sparkle, typeToPick } from './cards.js';
 import { chainTray, createChainController, diffStep, protegeError } from './chain-controller.js';
 import { segClips } from './spell.js';
 
@@ -77,17 +77,18 @@ function pictureFrame() {
 
 async function makeChange(parts) {
   const before = parts.c.state().stepIndex;
-  await chooseBox(parts);
+  if (await chooseBox(parts)) return null;
   return parts.c.state().stepIndex === before ? chooseTile(parts) : [];
 }
 
-function chooseBox({ view, c, board, hint, answered }) {
+function chooseBox({ view, c, board, hint, answered, passable }) {
   return new Promise((resolve) => {
     const { change, current } = c.state();
     const target = (change);
     const gaps = target.op === 'ins';
     let targets = [];
     let made = false;
+    let stopPass = () => {};
     const pick = (kind, i) => view.lock.run(async () => {
       if (made) return;
       const before = c.state();
@@ -100,8 +101,9 @@ function chooseBox({ view, c, board, hint, answered }) {
       try {
         if (after.misses === before.misses) {
           made = true;
+          stopPass();
           if (after.stepIndex > before.stepIndex) targets[i].classList.add('leaving');
-          resolve();
+          resolve(false);
           return;
         }
         bounce(targets[i]);
@@ -119,11 +121,18 @@ function chooseBox({ view, c, board, hint, answered }) {
     const el = wordBoxes(current.map(([g]) => g), gaps ? { onGap: (i) => pick('gap', i) } : { onBox: (i) => pick('box', i) });
     targets = ([...el.querySelectorAll(gaps ? '.chain-gap' : '.sound-box')]);
     board.replaceChildren(el);
+    if (passable) {
+      stopPass = offerPass(view, () => {
+        made = true;
+        view.choosing(false);
+        resolve(true);
+      });
+    }
     view.choosing(true);
   });
 }
 
-async function chooseTile({ view, c, board, bottom, prompt, once }) {
+async function chooseTile({ view, c, board, bottom, prompt, once, passable }) {
   const { ctx } = view;
   const { change, current, nextSeg } = c.state();
   const target = (change);
@@ -142,6 +151,7 @@ async function chooseTile({ view, c, board, bottom, prompt, once }) {
   return new Promise((resolve) => {
     const tiles = new Map();
     let stopKeys = () => {};
+    let stopPass = () => {};
     const pick = (g) => view.lock.run(async () => {
       const before = c.state();
       c.pickTile(g);
@@ -152,6 +162,7 @@ async function chooseTile({ view, c, board, bottom, prompt, once }) {
       c.setLocked(true);
       try {
         if (after.stepIndex > before.stepIndex) {
+          stopPass();
           stopKeys();
           bottom.replaceChildren();
           resolve(before.feedback?.kind === 'reveal' ? segClips(seg) : []);
@@ -175,6 +186,14 @@ async function chooseTile({ view, c, board, bottom, prompt, once }) {
     for (const g of tray) tiles.set(g, tile({ label: g, onPick: pick, size: TILE_SIZE }));
     bottom.replaceChildren(h('div', { class: 'chain-tray' }, [...tiles.values()]));
     stopKeys = typeToPick([...tiles.keys()], pick, view.root, view.lock.locked);
+    if (passable) {
+      stopPass = offerPass(view, () => {
+        stopKeys();
+        bottom.replaceChildren();
+        view.choosing(false);
+        resolve(null);
+      });
+    }
     view.choosing(true);
   });
 }
@@ -204,7 +223,8 @@ async function playChain(view, steps, once) {
     const prompt = ['v.chain.next', word, how];
     await view.prompt(prompt, { play: ['v.chain.next', word, ...(op === 'sub' ? once(how) : [how])] });
     if (c.state().stepIndex === 0) start = now();
-    const lastSound = await makeChange({ view, c, board, bottom, prompt, hint: ['v.error.listen', `ws.${next}`, word], answered, once });
+    const lastSound = await makeChange({ view, c, board, bottom, prompt, hint: ['v.error.listen', `ws.${next}`, word], answered, once, passable: true });
+    if (lastSound === null) return { pass: true };
 
     const made = steps[c.state().stepIndex];
     const boxes = wordBoxes(labelsOf(made));
@@ -251,11 +271,11 @@ async function kittenTries(view, word, mixup, once) {
   await showNext(view, [...lastSound, clip, 'v.kitten.protege.thanks', ...(c.state().misses === 0 ? ['v.praise.kitten.1'] : [])]).pressed;
 }
 
-export function pickProtege(ctx, preferred) {
+export function pickProtege(ctx, preferred, passed = new Set()) {
   const { content, settings, profile } = ctx;
   const spellable = (word) => {
     const tier = word.tier ?? tierOf(word.segs);
-    return tier <= profile.spellTier && rWordAllowed(profile, tier);
+    return tier <= profile.spellTier && rWordAllowed(profile, tier) && !passed.has( (word).w);
   };
   const candidates = [
     ...ctx.rng.shuffle(preferred.filter(spellable)),
@@ -275,8 +295,8 @@ export function pickProtege(ctx, preferred) {
   return null;
 }
 
-export async function protegeMoment(view, preferred, once) {
-  const picked = pickProtege(view.ctx, preferred);
+export async function protegeMoment(view, preferred, once, passed) {
+  const picked = pickProtege(view.ctx, preferred, passed);
   if (!picked) return false;
   await kittenTries(view, picked.word, picked.mixup, once);
   return true;
@@ -296,9 +316,15 @@ export async function run(el, ctx, round, hooks) {
   const words = new Map((ctx.content.words ?? []).map(( w) => [w.w, w]));
   const chains = new Map((ctx.content.chains ?? []).map(( ch) => [ch.id, ch]));
   const once = createOnce();
-  const played = [];
+  let played = [];
+  const passed = new Set();
+  const roundHooks = { ...hooks, pass(id, mode) {
+    for (const w of chains.get(id.slice(3))?.steps ?? []) passed.add(w);
+    played = played.filter((word) => !passed.has(word.w));
+    hooks.pass?.(id, mode);
+  } };
   try {
-    const result = await runRound(view, round, hooks, {
+    const result = await runRound(view, round, roundHooks, {
       play: (item) => {
         const chain = item.id.startsWith('ch:') && item.mode === 'spell' ? chains.get(item.id.slice(3)) : undefined;
         const steps = chain?.steps.map(w => words.get(w));
@@ -311,7 +337,8 @@ export async function run(el, ctx, round, hooks) {
       },
       easy: (used) => easyChain(ctx, words, used),
     });
-    if (result === 'done' && hooks.protege && view.live()) await protegeMoment(view, played, once);
+    if (result === 'done' && hooks.protege && view.live()) await protegeMoment(view, played, once, passed);
+    if (view.live()) hooks.answersIn?.();
   } finally {
     view.destroy();
   }

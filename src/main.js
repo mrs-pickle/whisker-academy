@@ -45,6 +45,16 @@ const stateEntries = (ctx) => [
   ...(Array.isArray(ctx.pages) ? ([['pages', ctx.pages]]) : []),
 ];
 
+async function finishCutOff(game) {
+  if (!isPlainObject(game.today)) return;
+  try {
+    const { finishCutOffDay } = await import('./scenes/session.js');
+    await finishCutOffDay(game);
+  } catch (err) {
+    console.error('A day cut off in its last clip could not be finished', err);
+  }
+}
+
 async function boot() {
   const launch = parseLaunch(location.search, location.hostname);
   const root = document.getElementById('stage');
@@ -158,8 +168,10 @@ async function boot() {
   document.fonts?.load('700 28px Andika').catch(() => {});
   if (launch.scene) Object.assign(window, { meadowsWorld: game });
 
-  if (playing && windows.playing()) await game.router.go(launch.scene ?? 'hub', launch.params);
-  else {
+  if (playing && windows.playing()) {
+    await finishCutOff(game);
+    if (!away) await game.router.go(launch.scene ?? 'hub', launch.params);
+  } else {
     away = true;
     await game.router.go(ELSEWHERE);
   }

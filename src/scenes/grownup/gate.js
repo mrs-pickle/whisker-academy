@@ -8,6 +8,7 @@ export const SCREENS = Object.freeze([
   ['instant', 'Instant words'],
   ['progress', 'Progress'],
   ['quest-results', 'Quest results'],
+  ['passes', 'Passes'],
   ['pages', 'Coloring pages'],
   ['soundcheck', 'Sound check'],
   ['backup', 'Backup'],

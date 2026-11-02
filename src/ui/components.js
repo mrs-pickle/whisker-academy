@@ -30,6 +30,20 @@ export function pathStones({ total, done }) {
   return h('div', { class: 'path-stones', role: 'img', 'aria-label': `${lit} of ${count} done`, style: { '--stones': String(Math.max(count, 1)) } }, stones);
 }
 
+export function lessonBar() {
+  const label = h('span', { class: 'lesson-bar-label' });
+  const bar = h('div', { class: 'lesson-bar', role: 'progressbar', 'aria-label': "How much of today's lesson is done", 'aria-valuemin': '0', 'aria-valuemax': '100' },
+    h('div', { class: 'lesson-bar-fill' }), label);
+  setLessonBar(bar, 0);
+  return bar;
+}
+
+export function setLessonBar(bar, percent) {
+  bar.setAttribute('aria-valuenow', String(percent));
+  bar.style.setProperty('--done', `${percent}%`);
+  (bar.querySelector('.lesson-bar-label')).textContent = `${percent}%`;
+}
+
 export function tile({ label, onPick, size = 120 }) {
   const face = Math.max(110, size);
   const font = Math.min(130, Math.max(96, Math.round(face * 0.8)));
@@ -92,6 +106,11 @@ export function nextButton({ onNext }) {
   return button;
 }
 
+export function passButton({ onPass }) {
+  return h('button', { type: 'button', class: 'pass-button', onClick: ( event) => onPass?.(event) },
+    h('span', { class: 'pass-mark', 'aria-hidden': 'true' }, '→'), h('span', {}, 'Pass'));
+}
+
 export function pawButton({ onTap }) {
   const button = (h('button', { type: 'button', class: 'paw-button', 'aria-label': 'Tap for each sound',
     onClick: () => { if (button.disabled) return; pop(button); onTap?.(); } }, picture('ui/paw')));
@@ -100,7 +119,7 @@ export function pawButton({ onTap }) {
 
 let bannerCount = 0;
 
-export function copilotBanner({ onYes, onAgain, onHelp, onUndo, helpText = COPILOT_HELP, kind = 'read' }) {
+export function copilotBanner({ onYes, onAgain, onHelp, onUndo, onPass, helpText = COPILOT_HELP, kind = 'read' }) {
   const help = h('p', { class: 'copilot-help', id: `copilot-help-${++bannerCount}`, hidden: true }, helpText);
   const rule = h('button', { type: 'button', class: 'copilot-rule', 'aria-label': 'How to judge', 'aria-expanded': 'false', 'aria-controls': help.id,
     onClick: () => { help.hidden = !help.hidden; rule.setAttribute('aria-expanded', String(!help.hidden)); } }, '?');
@@ -123,7 +142,8 @@ export function copilotBanner({ onYes, onAgain, onHelp, onUndo, helpText = COPIL
     h('div', { class: 'copilot-choices' },
       choice('1', 'yes', '✓', 'Yes', onYes),
       choice('2', 'again', '↻', 'Try again', onAgain),
-      choice('3', 'help', '🔊', 'Help', onHelp)),
+      choice('3', 'help', '🔊', 'Help', onHelp),
+      onPass ? choice('4', 'pass', '→', 'Pass', onPass) : null),
     help);
 
   keysOnPage(banner, (event) => {

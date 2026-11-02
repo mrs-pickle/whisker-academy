@@ -19,6 +19,8 @@ export const PROFILE_FATES = Object.freeze({
   sessions: 'reset',
   giftIndex: 'reset',
   pendingGifts: 'reset',
+  passes: 'reset',
+  breaks: 'reset',
 });
 
 export const LOOK_FATES = Object.freeze({

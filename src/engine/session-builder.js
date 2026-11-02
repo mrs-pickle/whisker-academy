@@ -2,8 +2,9 @@ import { isDecodable } from '../curriculum/decodable.js';
 import { hasShortIE } from '../curriculum/ie-nasal.js';
 import { finishedSessions, isExtraPractice } from '../profile/profile.js';
 import { isDue, isOverdue } from './itemstate.js';
+import { waitingPasses } from './passes.js';
 import { REHEARSAL_NEXT_START, REHEARSAL_OFFSETS } from './rehearsal.js';
-import { againScene, nextStoryScene } from './story-place.js';
+import { againScene, chapterOpen, nextStoryScene, readingContext, sceneReadable } from './story-place.js';
 
 
 
@@ -32,6 +33,7 @@ const RECENT_WEIGHT = 2;
 const RECENT_LESSONS = 7;
 const TRICK_WEIGHT = 3;
 const WORD_CARD_PART = 3;
+const PASS_PART = 3;
 const R_WORD_SESSIONS = 10;
 export const R_WORD_TIER = 4;
 const NONSENSE_CARDS = Object.freeze({ 10: 1, 15: 1, 20: 2 });
@@ -95,7 +97,15 @@ function isFirstSessionBack(states, day) {
 export function buildSession({ content, states, settings, profile, day, rng, lastAccuracy }) {
   const sizes = ROUND_SIZES[settings.sessionMinutes] ?? ROUND_SIZES[DEFAULT_MINUTES];
   const slots = Object.values(sizes).reduce((sum, n) => sum + n, 0);
-  const pools = gatherPools(content, settings, profile, { again: sizes.story > 1 && !isExtraPractice(profile, day) });
+  const extra = isExtraPractice(profile, day);
+  const pools = gatherPools(content, settings, profile, { again: sizes.story > 1 && !extra });
+  const waiting = extra ? [] : waitingPasses(profile, day);
+  const waitingKeys = new Set(waiting.map(w => `${w.id}#${w.mode}`));
+  const passedIn = (pool, size) => {
+    const ids = new Set();
+    return waiting.flatMap(w => pool.filter(c => c.id === w.id && c.mode === w.mode))
+      .filter(c => !ids.has(c.id) && ids.add(c.id)).slice(0, passRoom(size));
+  };
 
   const back = isFirstSessionBack(states, day);
   if (back) {
@@ -107,7 +117,18 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   }
 
   const attach = (list) => list.map(c => ({ ...c, state: states.get(c.key) }));
-  const p = Object.fromEntries(Object.entries(pools).map(([name, list]) => [name, attach(list)]));
+  const attached = Object.fromEntries(Object.entries(pools).map(([name, list]) => [name, attach(list)]));
+  const storyPassed = waiting.some(w => /^[sq]:/.test(w.id)) ? storyCandidates(content, settings, profile, states) : [];
+  const passing = {
+    warmup: passedIn(attached.warmup, sizes.warmup),
+    cards: passedIn([...attached.read, ...attached.nonsense, ...attached.iePairs, ...attached.sshPairs, ...attached.cards, ...storyPassed], sizes.cards),
+    spell: passedIn(attached.spell, sizes.spell),
+    chain: passedIn(attached.chains, sizes.chain),
+    charm: passedIn(attached.instant, sizes.charm),
+  };
+  const placedKeys = new Set(Object.values(passing).flat().map(c => c.key));
+  const p = Object.fromEntries(Object.entries(attached).map(([name, list]) =>
+    [name, name === 'story' ? list : list.filter(c => !waitingKeys.has(c.key) || placedKeys.has(c.key))]));
   const due = (c) => c.state !== undefined && isDue(c.state, day);
   const late = (c) => back && c.state !== undefined && isOverdue(c.state, day);
   const knows = (c) => c.state !== undefined && !due(c) && (c.state.mastered || c.state.box >= 2);
@@ -126,6 +147,10 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   };
   const start = profile.startLesson;
   const isNewWord = (c) => c.state === undefined && (c.lesson) > start;
+  const headWith = (round, list, isNew = isNewWord) => {
+    for (const c of list) round.add(c, isNew(c));
+    return round.filled();
+  };
 
   const mastered = p.spell.filter(c => c.state?.mastered);
   const easy = mastered.filter(c => !due(c));
@@ -135,7 +160,9 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const pairMax = Math.floor(sizes.cards / 2);
   const wordMax = Math.ceil(sizes.cards / WORD_CARD_PART);
   const spellSet = new Set(p.spell.map(c => c.id));
-  const spellFree = sizes.spell - (first ? 1 : 0);
+  const spellPassed = passing.spell.filter(c => c !== first);
+  const charmPassed = passing.charm;
+  const spellFree = Math.max(0, sizes.spell - (first ? 1 : 0) - spellPassed.length);
   const spellDue = new Set(p.spell.filter(due).map(c => c.id));
   const metLearning = p.instant.filter(c => c.status === 'learning' && c.state !== undefined).length;
   const newReading = new Map(p.read.filter(isNewWord).map(c => [c.id, c]));
@@ -149,16 +176,18 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   ], newQuota(lastAccuracy), {
     spell: Math.max(Math.min(1, spellFree), spellFree - dueRoom(p.spell.filter(c => c !== first), sizes.spell)),
     cards: Math.max(0, wordMax - dueRoom(p.read.filter(c => !spellDue.has(c.id)), sizes.cards)),
-    charm: sizes.charm,
+    charm: Math.max(0, sizes.charm - charmPassed.length),
   }, metLearning < sizes.charm ? 'charm' : null, rng);
   const freshFor = (round) => fresh.filter(f => f.round === round).map(f => f.c);
   const newRound = (size) => createRound(size, due, late);
 
   const warmup = newRound(sizes.warmup);
+  const warmupHead = headWith(warmup, passing.warmup);
   for (const c of byPriority(p.warmup)) warmup.add(c);
 
   const spell = newRound(sizes.spell);
   if (first) spell.add(first);
+  const spellHead = headWith(spell, spellPassed);
   for (const c of freshFor('spell')) spell.add(c, true);
   const spellable = p.spell.filter(c => c.state !== undefined || c.lesson <= start);
   for (const c of dueFirst(spellable)) spell.add(c);
@@ -170,9 +199,10 @@ export function buildSession({ content, states, settings, profile, day, rng, las
     if (c.tier === profile.spellTier && spell.add(c)) tierFilled++;
   }
   for (const c of spellFillers) spell.add(c);
-  const spelled = new Set(spell.finish(first ? 1 : 0).map(i => i.id));
+  const spelled = new Set(spell.finish(spellHead).map(i => i.id));
 
   const cards = newRound(sizes.cards);
+  const cardsHead = headWith(cards, passing.cards, c => !c.id.startsWith('n:') && isNewWord(c));
   let words = 0;
   const addWord = (c, isNew = false) => { if (words < wordMax && cards.add(c, isNew)) words++; };
   for (const c of freshFor('cards')) addWord(c, true);
@@ -198,9 +228,11 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   for (const c of byPriority(p.cards)) cards.add(c);
 
   const chain = newRound(sizes.chain);
+  const chainHead = headWith(chain, passing.chain);
   for (const c of byPriority(p.chains)) chain.add(c);
 
   const charm = newRound(sizes.charm);
+  const charmHead = headWith(charm, charmPassed, c => c.status === 'learning' && c.state === undefined);
   for (const c of freshFor('charm')) charm.add(c, true);
   const met = p.instant.filter(c => c.state !== undefined || c.status === 'known');
   for (const c of dueFirst(met)) charm.add(c);
@@ -211,13 +243,14 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   for (const c of p.story) story.add(c);
 
   const parts = [
-    { activity: 'warmup', round: warmup, head: 0 }, { activity: 'cards', round: cards, head: 0 },
-    { activity: 'spell', round: spell, head: first ? 1 : 0 }, { activity: 'chain', round: chain, head: 0 },
-    { activity: 'charm', round: charm, head: 0 }, { activity: 'story', round: story, head: sizes.story },
+    { activity: 'warmup', round: warmup, head: warmupHead }, { activity: 'cards', round: cards, head: cardsHead },
+    { activity: 'spell', round: spell, head: spellHead }, { activity: 'chain', round: chain, head: chainHead },
+    { activity: 'charm', round: charm, head: charmHead }, { activity: 'story', round: story, head: sizes.story },
   ];
   const built = parts.map(part => ({ ...part, items: part.round.finish(part.head) }));
-  const carded = new Set(cards.finish().map(i => i.id));
+  const carded = new Set(cards.finish(cardsHead).map(i => i.id));
   capSessionReviews(built, (activity) => (activity === 'spell' ? carded : new Set()));
+  if (waiting.length > 0) for (const b of built) if (b.activity !== 'story') holdPassesToRoom(b, waitingKeys);
   const rounds = built.filter(b => b.items.length > 0)
     .map(b => ({ activity: b.activity, items: arrange(b.items, b.head, rng) }));
   return { day, rounds };
@@ -240,6 +273,38 @@ function capSessionReviews(built, avoid) {
     if (!(demoteWorst(b => b.head, true) || demoteWorst(b => b.head, false) || demoteWorst(() => 0, false))) break;
   }
 }
+
+function holdPassesToRoom(built, open) {
+  const { items } = built;
+  let over = items.filter(i => open.has(`${i.id}#${i.mode}`)).length - passRoom(items.length);
+  for (let at = items.length - 1; at >= 0 && over > 0; at--) {
+    if (!open.has(`${items[at].id}#${items[at].mode}`)) continue;
+    items.splice(at, 1);
+    if (at < built.head) built.head--;
+    over = items.filter(i => open.has(`${i.id}#${i.mode}`)).length - passRoom(items.length);
+  }
+}
+
+function storyCandidates(content, settings, profile, states = new Map()) {
+  const reading = readingContext(content, profile, settings);
+  const cand = (id, mode) => ({ id, mode, key: `${id}#${mode}`, weight: 1, state: states.get(`${id}#${mode}`) });
+  return (content.story ?? []).filter(ch => chapterOpen(ch, settings)).flatMap(ch => [...ch.scenes, ...ch.side])
+    .filter(scene => sceneReadable(scene, reading))
+    .flatMap(scene => [
+      ...(scene.sentences ?? []).map(s => cand(`s:${s.id}`, 'read')),
+      ...(scene.question ? [cand(`q:${scene.id}`, 'pick')] : []),
+    ]);
+}
+
+export function openToHer(content, settings, profile) {
+  let open;
+  return ({ id, mode }) => {
+    open ??= new Set([...Object.values(gatherPools(content, settings, profile, { again: false })).flat(), ...storyCandidates(content, settings, profile)].map(c => c.key));
+    return open.has(`${id}#${mode}`);
+  };
+}
+
+const passRoom = (length) => Math.ceil(length / PASS_PART);
 
 function newQuota(lastAccuracy) {
   const a = lastAccuracy ?? 0;

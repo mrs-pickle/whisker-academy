@@ -3,7 +3,7 @@ import { nextSideQuest, nextStoryScene, previousMainScene, rereadDay } from '../
 import { artUrl } from '../ui/components.js';
 import { createStoryStage, sceneArt } from '../ui/story-stage.js';
 import { offerTips, TIMING_TIPS } from '../ui/tips.js';
-import { bounce, createActivityView, createOnce, herTurn, holdForUndo, judgeAloud, notYet, now, sparkle, untilHerTurn } from './cards.js';
+import { bounce, createActivityView, createOnce, herTurn, holdForUndo, judgeAloud, notYet, now, offerPass, sparkle, untilHerTurn } from './cards.js';
 
 
 
@@ -88,7 +88,7 @@ const sentenceClip = (s) => `s.${s.id}`;
 const storyLine = (s) => h('p', { class: 'story-line' }, s.text);
 
 
-async function readLines(view, stage, page, scene, hooks, { copilot, once, together: along }) {
+async function readLines(view, stage, page, scene, hooks, { copilot, once, together: along, progress }) {
   let together = along;
   const shown = [];
   const undoable = copilot && typeof hooks.undo === 'function';
@@ -123,11 +123,18 @@ async function readLines(view, stage, page, scene, hooks, { copilot, once, toget
         i -= 2;
         continue;
       }
-      answer = judged;
-      hooks.record(`s:${s.id}`, 'read', answer, copilot ? undefined : { scored: false });
-      back = undoable;
+      if ('pass' in judged) {
+        hooks.pass?.(`s:${s.id}`, 'read');
+        back = false;
+        await view.prompt([sentenceClip(s)]);
+      } else {
+        answer = judged;
+        hooks.record(`s:${s.id}`, 'read', answer, copilot ? undefined : { scored: false });
+        back = undoable;
+      }
     }
     line.classList.remove('current');
+    progress(i + 1);
     await stage.play(s.effect, { trick: s.trick });
     if (answer?.correct && !answer.helped) {
       view.sayNext(view.praise('story'));
@@ -148,15 +155,17 @@ async function readLines(view, stage, page, scene, hooks, { copilot, once, toget
   return { done: view.live(), together };
 }
 
-async function tellScene(view, stage, page, { scene, kind }, hooks, options) {
+async function tellScene(view, stage, page, pick, hooks, options) {
+  const { scene, kind } = pick;
   await view.prompt([kind === 'side' ? 'v.story.side' : 'v.story.start', ...voice(scene.intro)]);
   const { done, together } = await readLines(view, stage, page, scene, hooks, options);
   if (!done) return { done, together };
   if (scene.question && view.live()) {
-    await askQuestion(view, stage, scene);
+    await askQuestion(view, stage, scene, hooks);
     view.show(page);
   }
   if (!view.live()) return { done: false, together };
+  if (options.last) options.allIn(pick);
   await view.prompt([...voice(scene.outro), ...(options.last ? ['v.story.end'] : [])]);
   return { done: view.live(), together };
 }
@@ -164,11 +173,14 @@ async function tellScene(view, stage, page, { scene, kind }, hooks, options) {
 async function soloScene(view, stage, page, scene, hooks, options) {
   await view.prompt(['v.story.reread.start', options.together ? 'v.story.reread.echo' : 'v.story.reread.solo']);
   const read = await readLines(view, stage, page, scene, hooks, options);
-  if (read.done && options.last) await view.prompt(['v.story.end']);
+  if (read.done && options.last) {
+    options.allIn();
+    await view.prompt(['v.story.end']);
+  }
   return { done: read.done && view.live(), together: read.together };
 }
 
-async function askQuestion(view, stage, scene) {
+async function askQuestion(view, stage, scene, hooks) {
   const q = (scene.question);
   const replay = questionEffect(scene);
   const choices = untilHerTurn(q.choices.map(id => ({ id, el: h('button', { type: 'button', class: 'pic-choice', 'aria-label': id.split('/').pop() },
@@ -179,9 +191,11 @@ async function askQuestion(view, stage, scene) {
   await view.prompt([`v.${q.line}`]);
   await new Promise((resolve) => {
     let misses = 0;
+    let stopPass = () => {};
     const pick = (chosen) => view.lock.run(async () => {
       view.choosing(false);
       if (chosen === right) {
+        stopPass();
         right.classList.add('chosen');
         sparkle(right);
         view.cheer();
@@ -198,6 +212,11 @@ async function askQuestion(view, stage, scene) {
     });
     for (const c of choices) c.el.addEventListener('click', () => { if (!notYet(c.el)) pick(c.el); });
     herTurn(choices);
+    stopPass = offerPass(view, () => {
+      hooks.pass?.(`q:${scene.id}`, 'pick');
+      view.choosing(false);
+      resolve(undefined);
+    });
     view.choosing(true);
   });
 }
@@ -252,7 +271,8 @@ export function timeReading(view, scene, onDone) {
   });
 }
 
-async function rereadScene(view, stage, page, scene, { copilot, last }) {
+async function rereadScene(view, stage, page, pick, hooks, { copilot, last, progress, allIn }) {
+  const { scene } = pick;
   view.root.classList.add('activity-reread');
   const lines = scene.sentences.map(storyLine);
   page.append(...lines);
@@ -270,8 +290,15 @@ async function rereadScene(view, stage, page, scene, { copilot, last }) {
     if (!view.live()) return;
     lines[i].classList.add('current');
     await view.prompt([sentenceClip(s)]);
-    await judgeAloud(view, { copilot, kind: 'said', model: [sentenceClip(s)], target: lines[i] });
+    const echoed = await judgeAloud(view, { copilot, kind: 'said', model: [sentenceClip(s)], target: lines[i] });
+    const passed = 'pass' in echoed;
+    if (passed) {
+      hooks.pass?.(`s:${s.id}`, 'read');
+      await view.prompt([sentenceClip(s)]);
+    }
     lines[i].classList.remove('current');
+    progress(i + 1);
+    if (passed) await stage.play(s.effect, { trick: s.trick });
   }
   if (!view.live()) return;
   await view.prompt(['v.story.reread.solo']);
@@ -279,10 +306,13 @@ async function rereadScene(view, stage, page, scene, { copilot, last }) {
     view.choosing(true);
     await timeReading(view, scene, smoother);
   } else {
-    await judgeAloud(view, { copilot: false, kind: 'read', model: scene.sentences.map(sentenceClip), target: page });
-    await smoother();
+    const solo = await judgeAloud(view, { copilot: false, kind: 'read', model: scene.sentences.map(sentenceClip), target: page });
+    if (!('pass' in solo)) await smoother();
   }
-  if (view.live() && last) await view.prompt(['v.story.end']);
+  if (view.live() && last) {
+    allIn(pick);
+    await view.prompt(['v.story.end']);
+  }
 }
 
 function sceneOnStage(el, ctx, scene) {
@@ -324,14 +354,18 @@ export async function run(el, ctx, round, hooks) {
   const copilot = hooks.copilot ?? ctx.settings.copilot;
   const once = createOnce();
   let together = false;
+  const lines = passages.reduce((n, { scene }) => n + scene.sentences.length, 0);
+  let earlier = 0;
   for (const [n, pick] of passages.entries()) {
     const { scene } = pick;
     const { view, stage, page } = sceneOnStage(el, ctx, scene);
-    const options = { copilot, once, together, last: n === passages.length - 1 };
+    const options = { copilot, once, together, last: n === passages.length - 1,
+      progress: (inScene) => { if (lines > 0) hooks.progress?.((earlier + inScene) / lines); },
+      allIn: (pick) => { if (view.live()) hooks.answersIn?.(pick); } };
     let done = false;
     try {
       if (pick.kind === 'reread') {
-        await rereadScene(view, stage, page, scene, options);
+        await rereadScene(view, stage, page, pick, hooks, options);
         done = view.live();
         if (done && !extra) hooks.onScene?.(pick);
       } else if (pick.kind === 'again') {
@@ -349,5 +383,6 @@ export async function run(el, ctx, round, hooks) {
       view.destroy();
     }
     if (!done) return;
+    earlier += scene.sentences.length;
   }
 }

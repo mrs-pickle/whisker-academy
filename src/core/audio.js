@@ -146,18 +146,18 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing }) 
     const buffer = await Promise.race([bufferFor(id), interrupted.ended]);
     interrupted.forget();
     const c = context;
-    if (!buffer || !c || gen !== generation) return;
+    if (!buffer || !c || gen !== generation) return false;
     if (c.state === 'suspended') await untilRunning(c, gen);
-    if (gen !== generation || c.state === 'closed') return;
+    if (gen !== generation || c.state === 'closed') return false;
     endCurrent();
-    await new Promise((resolve) => {
+    return new Promise((resolve) => {
       let source;
       try {
         source = c.createBufferSource();
         source.buffer = buffer;
         source.connect(c.destination);
       } catch {
-        resolve(undefined);
+        resolve(false);
         return;
       }
       let done = false;
@@ -168,7 +168,7 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing }) 
         clearTimeout(watchdog);
         source.onended = null;
         if (current === playing) current = null;
-        resolve(undefined);
+        resolve(gen === generation);
       };
       const playing = { source, finish };
       source.onended = finish;
@@ -217,13 +217,19 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing }) 
     async playSeq(ids, gapMs = CLIP_GAP_MS, lead = 0) {
       const gen = interrupt();
       for (const id of new Set(ids)) bufferFor(id, false).catch(() => {});
+      let whole = true;
       for (let i = 0; i < ids.length; i++) {
-        if (gen !== generation) return;
+        if (gen !== generation) return false;
         const pause = i <= lead ? CLIP_GAP_MS : gapMs;
-        if (i > 0 && pause > 0) await delay(pause);
-        if (gen !== generation) return;
-        await playOne(ids[i], gen);
+        if (i > 0 && pause > 0) {
+          const interrupted = untilInterrupted(gen);
+          await Promise.race([delay(pause), interrupted.ended]);
+          interrupted.forget();
+        }
+        if (gen !== generation) return false;
+        if (!await playOne(ids[i], gen)) whole = false;
       }
+      return whole;
     },
 
     stop() {

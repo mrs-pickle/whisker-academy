@@ -1,7 +1,7 @@
 import { h } from '../../core/dom.js';
 import { TINTS } from '../../core/stage.js';
 import { LESSONS } from '../../curriculum/lessons.js';
-import { normalizeSettings } from '../../profile/settings.js';
+import { MIX_IT_UP, normalizeSettings } from '../../profile/settings.js';
 import { BREAK_STYLES } from '../break.js';
 import { checkPin, cornerFrame, hashPin, isValidPin } from './gate.js';
 import { cleanName, contentNote, NAME_MAX } from './setup.js';
@@ -22,7 +22,7 @@ export const SETTING_HELP = Object.freeze({
   cardRoutine: { label: 'Sound card routine',
     help: "How she answers a sound card, to match her tutor's drill. \"Letter name, key word, sound\" is used only for cards with a key word (set them in Sound cards); other cards stay sound only." },
   breakStyle: { label: 'Movement break style',
-    help: 'The kind of 30–60 second movement break between rounds.' },
+    help: 'The kind of 30–60 second movement break between rounds. Mix it up plays all five in turn, so none comes back until the others have had a go. Pick one to play only that.' },
   textSpacing: { label: 'Text spacing',
     help: 'Wide spaces the letters and the words a little further apart.' },
   tint: { label: 'Background tint',
@@ -36,7 +36,7 @@ export const SETTING_HELP = Object.freeze({
 });
 
 const capitalized = (id) => id.charAt(0).toUpperCase() + id.slice(1);
-const BREAK_LABELS = Object.freeze({ ballet: 'Ballet', jumps: 'Jumping', swim: 'Swimming' });
+const BREAK_LABELS = Object.freeze({ ballet: 'Ballet', jumps: 'Jumping', swim: 'Swimming', stretch: 'Cat stretch', parade: 'Royal parade' });
 
 const CHOICES = Object.freeze({
   sessionMinutes: [[10, '10 minutes'], [15, '15 minutes'], [20, '20 minutes']],
@@ -44,7 +44,7 @@ const CHOICES = Object.freeze({
   sShContrast: [[false, 'Off'], [true, 'On']],
   ieEmphasis: [[true, 'On'], [false, 'Off']],
   cardRoutine: [['sound', 'Sound only'], ['name-key-sound', 'Letter name, key word, sound']],
-  breakStyle: BREAK_STYLES.map((style) => [style, BREAK_LABELS[ (style)] ?? capitalized(style)]),
+  breakStyle: [[MIX_IT_UP, 'Mix it up'], ...BREAK_STYLES.map((style) => [style, BREAK_LABELS[ (style)] ?? capitalized(style)])],
   textSpacing: [['normal', 'Normal'], ['wide', 'Wide']],
   tint: TINTS.map((tint) => [tint, capitalized(tint)]),
 });

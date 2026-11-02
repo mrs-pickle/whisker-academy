@@ -1,5 +1,6 @@
 import { h } from '../core/dom.js';
 import { buildSession } from '../engine/session-builder.js';
+import { latestAccuracy } from '../profile/profile.js';
 import { createMonitor } from '../engine/frustration.js';
 import { bigButton } from '../ui/components.js';
 
@@ -61,7 +62,6 @@ export function mount(el, ctx, params) {
 
   const start = async () => {
     const activity = await import(`../activities/${a}.js`);
-    const last = ctx.profile.sessions?.at(-1);
     const plan = buildSession({
       content: ctx.content,
       states: new Map(ctx.states),
@@ -69,7 +69,7 @@ export function mount(el, ctx, params) {
       profile: ctx.profile,
       day: ctx.day,
       rng: ctx.rng,
-      lastAccuracy: typeof last?.accuracy === 'number' ? last.accuracy : null,
+      lastAccuracy: latestAccuracy(ctx.profile),
     });
     const round = debugRound(plan, a, params, ctx);
     const monitor = createMonitor();
@@ -87,6 +87,9 @@ export function mount(el, ctx, params) {
         if (undone.watched) monitor.undo();
         console.info(`[activity] undo ${undone.id}#${undone.mode}`);
         return { id: undone.id, mode: undone.mode };
+      },
+      pass(id, mode) {
+        console.info(`[activity] pass ${id}#${mode}`);
       },
       monitor,
       copilot: params.copilot === '0' ? false : params.copilot === '1' ? true : ctx.settings.copilot,

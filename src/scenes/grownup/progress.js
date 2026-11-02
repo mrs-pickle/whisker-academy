@@ -113,12 +113,12 @@ export function mount(el, ctx, params = {}) {
     h('p', { class: 'gu-hint' }, '"Sound cards" here counts the cards she has mastered in play. The Sound cards screen\'s Mastered is different: it is your mark of how her tutor sees each card, and it only changes which cards the drill shows more often.'),
 
     h('h2', { class: 'gu-subtitle' }, 'Accuracy, latest sessions'),
-    r.accuracy.length === 0 ? h('p', { class: 'gu-empty' }, 'No sessions yet.') : h('div', { class: 'gu-trend', role: 'img', 'aria-label': `Accuracy, oldest first: ${r.accuracy.map((a, i) => `${shortDate(r.accuracyDays[i])}: ${a}%`).join(', ')}` },
+    r.accuracy.length === 0 ? h('p', { class: 'gu-empty' }, r.totalSessions === 0 ? 'No sessions yet.' : 'No answers to score yet.') : h('div', { class: 'gu-trend', role: 'img', 'aria-label': `Accuracy, oldest first: ${r.accuracy.map((a, i) => `${shortDate(r.accuracyDays[i])}: ${a}%`).join(', ')}` },
       r.accuracy.map((a, i) => h('div', { class: 'gu-trend-bar' },
         h('span', { class: 'gu-trend-track' }, h('span', { class: 'gu-trend-fill', style: { height: `${a}%` } })),
         h('span', { class: 'gu-trend-value' }, `${a}%`),
         h('span', { class: 'gu-trend-date' }, shortDate(r.accuracyDays[i]))))),
-    h('p', { class: 'gu-hint' }, 'Sessions aim for about 85–90% right: easy enough to feel good, hard enough to learn. Unscored self-check moments are not counted.'),
+    h('p', { class: 'gu-hint' }, 'Sessions aim for about 85–90% right: easy enough to feel good, hard enough to learn. Unscored self-check moments and passes are not counted, and a day with nothing to score has no bar.'),
 
     h('h2', { class: 'gu-subtitle' }, 'Baseline (Entrance Quest)'),
     b ? h('table', { class: 'gu-table' }, h('tbody', {},

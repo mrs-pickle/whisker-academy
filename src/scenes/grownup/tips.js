@@ -7,6 +7,7 @@ export const PRINT_TIP = 'To print a coloring page, open it in the color-in room
 
 export const UNDO_TIP = 'Tapped by mistake? Press ↶ Undo. It takes back your last tap, and the word comes up again.';
 export const CONTINUE_TIP = 'At the end of a part, you get one more step: Continue or Undo. Press 1 or Enter to go on.';
+export const PASS_TIP = 'Stuck? Press → Pass (key 4). It is not scored, and it comes back at the end of the lesson and early in a later one.';
 export const TAKE_BACK_TIP = 'When she builds a word, the big ⌫ button takes back her last letter. So does the Backspace key. It never counts as a miss.';
 
 export const TIPS = Object.freeze([
@@ -23,9 +24,10 @@ export function mount(el, ctx, params = {}) {
   body.append(
     h('ul', { class: 'gu-tips' }, TIPS.map((tip) => h('li', {}, tip))),
     h('h2', { class: 'gu-subtitle' }, "On the Grown-up's turn"),
-    h('p', {}, 'Press 1 for ✓ Yes, 2 for ↻ Try again, and 3 for 🔊 Help, without reaching for the trackpad. The "?" on the banner shows the scoring rule.'),
+    h('p', {}, 'Press 1 for ✓ Yes, 2 for ↻ Try again, 3 for 🔊 Help, and 4 for → Pass, without reaching for the trackpad. The "?" on the banner shows the scoring rule.'),
     h('p', {}, UNDO_TIP),
     h('p', {}, CONTINUE_TIP),
+    h('p', {}, PASS_TIP),
     h('p', {}, TAKE_BACK_TIP),
     h('p', {}, 'On the screen before each adventure, "Grown-up playing today?" has Yes or No. On days with no grown-up, choose No: those moments become self-checks and are not scored. (Settings has the usual answer.)'),
     h('h2', { class: 'gu-subtitle' }, 'Stopping and printing'),

@@ -1,4 +1,5 @@
 import { LESSONS } from '../curriculum/lessons.js';
+import { isPassRecord, normalizePasses } from '../engine/passes.js';
 import { clampTaughtUpTo } from './settings.js';
 
 
@@ -59,6 +60,9 @@ export function finishedSessions(profile) {
 }
 
 export const isExtraPractice = (profile, day) => (Array.isArray(profile?.sessions) ? profile.sessions : []).some(s => isComplete(s) && s.day === day);
+export function latestAccuracy(profile) {
+  return profile.sessions?.findLast((s) => typeof s.accuracy === 'number')?.accuracy ?? null;
+}
 
 
 export const GIFT_COLLECTION = Object.freeze({ wardrobe: 'wardrobe', colorin: 'colorin', crayon: 'crayons' });
@@ -118,6 +122,8 @@ const PROFILE_FIELDS = Object.freeze({
   giftIndex: isNumber,
   customInstant: isStrings,
   pendingGifts: ( v) => Array.isArray(v) && v.every(isGiftRecord),
+  passes: ( v) => Array.isArray(v) && v.every(isPassRecord),
+  breaks: isStrings,
 });
 
 export const isProfileShape = (value) => fieldsOk(value, PROFILE_FIELDS);
@@ -165,5 +171,11 @@ export function normalizeProfile(stored, startLesson) {
   const waiting = Array.isArray(stored.pendingGifts) ? stored.pendingGifts.filter(isGiftRecord).map((g) => ({ type: g.type, id: g.id })) : [];
   if (waiting.length > 0) profile.pendingGifts = waiting;
   else delete profile.pendingGifts;
+  const passes = normalizePasses(stored.passes);
+  if (passes.length > 0) profile.passes = passes;
+  else delete profile.passes;
+  const breaks = Array.isArray(stored.breaks) ? stored.breaks.filter(isString) : [];
+  if (breaks.length > 0) profile.breaks = breaks;
+  else delete profile.breaks;
   return profile;
 }

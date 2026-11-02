@@ -3,7 +3,7 @@ import { CLIP_GAP_MS } from '../core/audio.js';
 import { createLock } from '../core/lock.js';
 import { CORRESPONDENCES } from '../curriculum/correspondences.js';
 import { PHONEMES, phonemeCodes } from '../curriculum/phonemes.js';
-import { artUrl, bigButton, copilotBanner, copilotHold, copilotUndoAside, keysOnPage, nextButton, setUndo, tile } from '../ui/components.js';
+import { artUrl, bigButton, copilotBanner, copilotHold, copilotUndoAside, keysOnPage, nextButton, passButton, setUndo, tile } from '../ui/components.js';
 import { HELP_TIPS, markTipSeen, offerTips, TURN_TIPS } from '../ui/tips.js';
 
 
@@ -131,9 +131,9 @@ export function createActivityView(el, ctx, { name, bg = 'bg/toyroom' }) {
     const lead = kept.length;
     const clips = [...kept, ...ids];
     kept = [];
-    if (!live() || clips.length === 0) return;
+    if (!live() || clips.length === 0) return false;
     const said = ctx.audio.playSeq(clips, gap, lead);
-    if (ids.length > 0) await said;
+    return ids.length === 0 ? false : (await said) !== false;
   };
 
   return {
@@ -143,13 +143,13 @@ export function createActivityView(el, ctx, { name, bg = 'bg/toyroom' }) {
     lock,
     show(...nodes) { work.replaceChildren(...nodes.filter(Boolean)); },
     async prompt(ids, { play: played = ids, gap } = {}) {
-      if (!live()) return;
+      if (!live()) return false;
       prompt = (ids.filter(Boolean));
       promptGap = gap;
       cue = null;
       ctx.setReplay?.(prompt, gap);
       const clips = (played.filter(Boolean));
-      if (clips.length > 0) await play(clips, gap);
+      return clips.length > 0 ? play(clips, gap) : false;
     },
     current: () => [...prompt],
     async say(ids, minMs = 0, gap) {
@@ -282,6 +282,18 @@ export function showNext(view, say = []) {
   return { pressed, said, hide: () => button.remove() };
 }
 
+export function offerPass(view, onPass) {
+  const button = passButton({ onPass: (event) => {
+    if (secondClick(event)) return;
+    view.lock.run(async () => {
+      button.remove();
+      onPass();
+    });
+  } });
+  view.root.append(button);
+  return () => button.remove();
+}
+
 export const notYet = (el) => el.classList.contains('not-yet');
 
 function wiggle(el) {
@@ -314,16 +326,19 @@ export function chooseOne(view, { choices, answer, hint, reward, praise, praiseL
     let misses = 0;
     let revealed = false;
     let answeredRight = false;
+    let passed = false;
     let stopKeys = () => {};
+    let stopPass = () => {};
     const right = choices.find(c => c.value === answer)?.el;
     const pick = (value) => view.lock.run(async () => {
       const chosen = choices.find(c => c.value === value)?.el;
-      if (answeredRight || abandon?.aborted || !chosen || !right || (revealed && chosen !== right)) return;
+      if (answeredRight || passed || abandon?.aborted || !chosen || !right || (revealed && chosen !== right)) return;
       ms ??= Math.round(now() - start);
       view.choosing(false);
       abandon?.answered();
       if (chosen === right) {
         answeredRight = true;
+        stopPass();
         stopKeys();
         right.classList.add('chosen');
         sparkle(right, view.root);
@@ -349,14 +364,36 @@ export function chooseOne(view, { choices, answer, hint, reward, praise, praiseL
     for (const c of choices) c.el.addEventListener('click', (event) => { if (!notYet(c.el) && !secondClick(event)) pick(c.value); });
     herTurn(choices);
     if (keyboard) stopKeys = typeToPick(choices.map(c => c.value), pick, view.root);
-    abandon?.onAbort(() => stopKeys());
+    stopPass = offerPass(view, () => {
+      if (answeredRight || abandon?.aborted) return;
+      passed = true;
+      abandon?.answered();
+      stopKeys();
+      view.choosing(false);
+      resolve({ pass: true });
+    });
+    abandon?.onAbort(() => { stopKeys(); stopPass(); });
     view.choosing(true);
   });
 }
 
+const PASS_LINE = 'pass.how';
+
+async function sayCheckLine(view, kind) {
+  const { ctx } = view;
+  const line = `v.selfcheck.${kind}`;
+  const how = Boolean(ctx) && ctx.settings?.tipsSeen?.[PASS_LINE] !== true;
+  const said = await view.prompt([...view.current(), line], { play: [line, ...(how ? ['v.pass.how'] : [])] });
+  if (how && said) ctx.settings = { ...ctx.settings, tipsSeen: markTipSeen(ctx.settings?.tipsSeen, PASS_LINE) };
+}
+
 function selfCheck(buttons) {
   return h('div', { class: 'selfcheck', role: 'group', 'aria-label': 'Check yourself' },
-    buttons.map(([label, icon, onClick]) => bigButton({ label, ...(typeof icon === 'string' ? { icon } : icon), onClick })));
+    buttons.map(([label, icon, onClick]) => {
+      const button = bigButton({ label, ...(typeof icon === 'string' ? { icon } : icon), onClick });
+      if (label === 'Pass') button.classList.add('pass');
+      return button;
+    }));
 }
 
 export function judgeAloud(view, { copilot, kind, model, target, praise, praiseLines, canUndo = false }) {
@@ -425,21 +462,27 @@ export function judgeAloud(view, { copilot, kind, model, target, praise, praiseL
       view.choosing(false);
       resolve({ undo: true });
     });
+    const pass = (event) => {
+      if (secondClick(event)) return;
+      view.lock.run(async () => {
+        panel.remove();
+        view.choosing(false);
+        resolve({ pass: true });
+      });
+    };
     if (copilot) {
-      panel = copilotBanner({ onYes: yes, onAgain: again, onHelp: help, onUndo: undo, kind });
+      panel = copilotBanner({ onYes: yes, onAgain: again, onHelp: help, onUndo: undo, onPass: pass, kind });
       showUndo();
     } else {
+      const passing = ['Pass', { glyph: '→' }, pass];
       panel = kind === 'read'
-        ? selfCheck([['I read it!', 'ui/sparkle', yes], ['Let me hear it', 'ui/speaker', help]])
-        : selfCheck([['I said it!', 'ui/sparkle', yes], ['Let me try again', { glyph: '↻' }, again]]);
+        ? selfCheck([['I read it!', 'ui/sparkle', yes], ['Let me hear it', 'ui/speaker', help], passing])
+        : selfCheck([['I said it!', 'ui/sparkle', yes], ['Let me try again', { glyph: '↻' }, again], passing]);
     }
     view.root.append(panel);
     if (copilot) offerTips(view.ctx, panel, TURN_TIPS[kind]);
     view.choosing(true);
-    if (!copilot) {
-      const line = `v.selfcheck.${kind}`;
-      view.prompt([...view.current(), line], { play: [line] });
-    }
+    if (!copilot) sayCheckLine(view, kind);
   });
 }
 
@@ -516,9 +559,10 @@ export async function runRound(view, round, hooks, { play, easy, undo = false, j
     } else {
       result = await play(item, { canUndo });
     }
-    if (result && !('undo' in result)) {
+    if (result && !('undo' in result) && !('pass' in result)) {
       if (!result.kept) hooks.record(item.id, item.mode, plain(result), ...(result.selfChecked ? [{ scored: false }] : []));
       for (const { mode, answer: other } of result.also ?? []) hooks.record(item.id, mode, plain(other), { monitor: false, ...(other.selfChecked ? { scored: false } : {}) });
+      for (const mode of result.passed ?? []) hooks.pass?.(item.id, mode);
       if (result.correct && !result.helped) right.push(item);
       await result.after;
     }
@@ -533,6 +577,7 @@ export async function runRound(view, round, hooks, { play, easy, undo = false, j
   };
   for (let i = 0; ; i++) {
     if (!view.live()) return breaking ? 'break' : 'done';
+    if (queue.length > 0) hooks.progress?.(Math.min(1, i / queue.length));
     if (i >= queue.length) {
       if (back && await holdForUndo(view)) {
         i = goBack() - 1;
@@ -547,6 +592,12 @@ export async function runRound(view, round, hooks, { play, easy, undo = false, j
     const result = await answer(item, back !== null && !aside, aside);
     if (result && 'undo' in result) {
       i = back ? goBack() - 1 : i - 1;
+      continue;
+    }
+    if (result && 'pass' in result) {
+      hooks.pass?.(item.id, item.mode);
+      back = null;
+      queue = queue.filter((q, at) => at <= i || q.id !== item.id || q.mode !== item.mode);
       continue;
     }
     back = before && result?.selfChecked === false ? { ...before, records: recorded(result) } : null;
@@ -579,11 +630,15 @@ async function seeCard(view, g, { copilot, first, canUndo = false }) {
   const model = cardRoutineClips(deckCard(ctx, g), ctx.settings);
   let checked = () => {};
   const clicked = new Promise((resolve) => { checked = resolve; });
+  let hearing = false;
+  let stopPass = () => {};
   const card = h('button', { type: 'button', class: 'sound-card', 'aria-label': 'Hear this card',
     onClick: ( event) => {
       if (secondClick(event)) return;
       const at = now();
       view.lock.run(async () => {
+        hearing = true;
+        stopPass();
         view.choosing(false);
         card.classList.add('checked');
         await view.say(model, 600);
@@ -596,7 +651,9 @@ async function seeCard(view, g, { copilot, first, canUndo = false }) {
   view.play([]);
   const start = now();
   view.choosing(true);
+  if (!hearing) stopPass = offerPass(view, () => { view.choosing(false); checked(null); });
   const at = (await clicked);
+  if (at === null) return { pass: true };
   const judged = await judgeAloud(view, { copilot, kind: 'said', model, target: card, praise: 'sound', praiseLines: soundPraiseLines('say'), canUndo });
   if ('undo' in judged) return judged;
   return { ...judged, ms: Math.round(Math.max(0, at - start)) };
@@ -635,6 +692,22 @@ async function readWord(view, item, word, { copilot, modeled, made, canUndo = fa
   return judgeAloud(view, { copilot, kind: 'read', model: [`w.${word}`], target: card, praise: 'read', canUndo });
 }
 
+async function readLine(view, id, text, { copilot, canUndo = false }) {
+  const card = h('div', { class: 'word-card line-card', lang: 'en' }, text);
+  view.show(card);
+  await view.prompt(['v.story.read']);
+  return judgeAloud(view, { copilot, kind: 'read', model: [`s.${id}`], target: card, canUndo });
+}
+
+async function askPicture(view, { question: q }, { abandon }) {
+  const choices = untilHerTurn(q.choices.map((id) => ({ value: id, el: h('button', { type: 'button', class: 'pic-choice', 'aria-label': id.split('/').pop() },
+    h('img', { src: artUrl(id), alt: '', draggable: 'false' })) })));
+  view.show(h('div', { class: 'choice-row pictures' }, choices.map(c => c.el)));
+  await view.prompt([`v.${q.line}`]);
+  const answer = await chooseOne(view, { choices, answer: q.answer, hint: [`v.${q.line}`], reward: [], abandon });
+  return 'pass' in answer ? answer : { ...answer, selfChecked: true };
+}
+
 const PAIR_ID = /^pr:([a-z]+):([^/]+)\/(.+)$/;
 
 function playCard(view, item, options) {
@@ -643,6 +716,10 @@ function playCard(view, item, options) {
   const pair = PAIR_ID.exec(item.id);
   if (pair && item.mode === 'listen') return listenPair(view, pair[1], pair[2], pair[3], options);
   if ((item.id.startsWith('w:') || item.id.startsWith('n:')) && item.mode === 'read') return readWord(view, item, item.id.slice(2), options);
+  const line = item.id.startsWith('s:') && item.mode === 'read' ? options.lines.get(item.id.slice(2)) : undefined;
+  if (line) return readLine(view, line.id, line.text, options);
+  const scene = item.id.startsWith('q:') && item.mode === 'pick' ? options.scenes.get(item.id.slice(2)) : undefined;
+  if (scene?.question) return askPicture(view, scene, options);
   console.warn(`The cards round cannot show ${item.id} in mode ${item.mode}; skipping it.`);
   return Promise.resolve(null);
 }
@@ -660,8 +737,10 @@ export async function run(el, ctx, round, hooks) {
   const instructed = new Set();
   const modeled = new Set();
   let madeUp = false;
+  const scenes = new Map((ctx.content?.story ?? []).flatMap(( ch) => [...ch.scenes, ...ch.side]).map(( scene) => [scene.id, scene]));
+  const lines = new Map([...scenes.values()].flatMap((scene) => scene.sentences).map(( s) => [s.id, s]));
   try {
-    await view.prompt(['v.cards.start']);
+    if (!hooks.review) await view.prompt(['v.cards.start']);
     await runRound(view, round, hooks, {
       play: (item, { canUndo, abandon }) => {
         const first = !instructed.has(item.mode);
@@ -669,12 +748,13 @@ export async function run(el, ctx, round, hooks) {
         if (first) abandon?.onAbort(() => instructed.delete(item.mode));
         const made = item.id.startsWith('n:') && !madeUp;
         if (made) madeUp = true;
-        return playCard(view, item, { copilot, first, modeled, made, canUndo, abandon });
+        return playCard(view, item, { copilot, first, modeled, made, canUndo, abandon, lines, scenes });
       },
       easy: (used) => easyCard(ctx, used),
       undo: true,
       judged: (item) => item.mode === 'read' || (item.mode === 'see' && item.id.startsWith('g:')),
     });
+    if (view.live()) hooks.answersIn?.();
     await view.sayKept();
   } finally {
     view.destroy();

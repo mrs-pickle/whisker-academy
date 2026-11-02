@@ -1,7 +1,7 @@
 import { h } from '../core/dom.js';
 import { phonemeCodes } from '../curriculum/phonemes.js';
 import { artUrl, bigButton, pawButton, tile } from '../ui/components.js';
-import { BLEND_PRAISE, STRETCH_GAP_MS, cardSoundClips, chooseOne, countPraiseLines, createActivityView, judgeAloud, listenDisc, now, runRound, secondClick, soundPraiseLines, untilHerTurn, wait } from './cards.js';
+import { BLEND_PRAISE, STRETCH_GAP_MS, cardSoundClips, chooseOne, countPraiseLines, createActivityView, judgeAloud, listenDisc, now, offerPass, runRound, secondClick, soundPraiseLines, untilHerTurn, wait } from './cards.js';
 
 
 const PAW_LIGHT_MS = 450;
@@ -115,7 +115,15 @@ async function segment(view, pa, first) {
       paw.disabled = false;
       accepting = true;
       view.choosing(true);
+      const stopPass = offerPass(view, () => {
+        accepting = false;
+        settle = null;
+        paw.disabled = true;
+        view.choosing(false);
+        resolve(null);
+      });
       settle = () => {
+        stopPass();
         accepting = false;
         settle = null;
         paw.disabled = true;
@@ -124,6 +132,7 @@ async function segment(view, pa, first) {
         resolve(taps);
       };
     });
+    if (count === null) return { pass: true };
     ms ??= Math.round(now() - start);
     const right = count === total;
     if (!right) misses++;
@@ -168,10 +177,14 @@ async function sayAloud(view, pa, { copilot, first }) {
 
   let heard = () => {};
   const clicked = new Promise((resolve) => { heard = resolve; });
+  let hearing = false;
+  let stopPass = () => {};
   const hear = bigButton({ label: 'Hear it', icon: 'ui/speaker', onClick: (event) => {
     if (secondClick(event)) return;
     const at = now();
     view.lock.run(async () => {
+      hearing = true;
+      stopPass();
       view.choosing(false);
       await view.say([answer], 500);
       heard(at);
@@ -184,7 +197,9 @@ async function sayAloud(view, pa, { copilot, first }) {
   await view.prompt(full, { play: first ? full : ask });
   const start = now();
   view.choosing(true);
+  if (!hearing) stopPass = offerPass(view, () => { view.choosing(false); heard(null); });
   const at = (await clicked);
+  if (at === null) return { pass: true };
   const judged = await judgeAloud(view, { copilot, kind: 'said', model: [answer], target: hear });
   return { ...judged, ms: Math.round(Math.max(0, at - start)) };
 }
@@ -216,7 +231,7 @@ export async function run(el, ctx, round, hooks) {
   const items = new Map(ctx.content.warmup.map(( it) => [`pa:${it.id}`, it]));
   const instructed = new Set();
   try {
-    await view.prompt(['v.warmup.start']);
+    if (!hooks.review) await view.prompt(['v.warmup.start']);
     await runRound(view, round, hooks, {
       play: (item) => {
         const pa = items.get(item.id);
@@ -230,6 +245,7 @@ export async function run(el, ctx, round, hooks) {
       },
       easy: (used) => easyWarmup(ctx, used),
     });
+    if (view.live()) hooks.answersIn?.();
     await view.sayKept();
   } finally {
     view.destroy();
