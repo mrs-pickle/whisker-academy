@@ -1,10 +1,11 @@
 import { h } from '../../core/dom.js';
 import { TINTS } from '../../core/stage.js';
 import { LESSONS } from '../../curriculum/lessons.js';
+import { HEROES, heroOf, heroWords, withHero } from '../../profile/hero.js';
 import { MIX_IT_UP, normalizeSettings } from '../../profile/settings.js';
 import { BREAK_STYLES } from '../break.js';
 import { checkPin, cornerFrame, hashPin, isValidPin } from './gate.js';
-import { cleanName, contentNote, NAME_MAX } from './setup.js';
+import { cleanName, contentNote, HERO_LABELS, NAME_MAX } from './setup.js';
 import { startOverSection } from './start-over.js';
 
 
@@ -66,6 +67,7 @@ export async function checkPinChange({ current, next, again, hash, viaHold }) {
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'settings');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
 
   const status = h('p', { class: 'gu-saved', role: 'status', 'aria-live': 'polite' });
   const say = (text) => { status.textContent = text; };
@@ -84,12 +86,12 @@ export function mount(el, ctx, params = {}) {
   };
 
   const row = (key, ...control) => h('section', { class: 'gu-setting', 'data-setting': key },
-    h('h2', { class: 'gu-setting-label' }, SETTING_HELP[key].label),
-    h('p', { class: 'gu-help' }, SETTING_HELP[key].help),
+    h('h2', { class: 'gu-setting-label' }, hx(SETTING_HELP[key].label)),
+    h('p', { class: 'gu-help' }, hx(SETTING_HELP[key].help)),
     ...control);
 
   const segmented = (key) => {
-    const group = h('div', { class: 'gu-segmented', role: 'group', 'aria-label': SETTING_HELP[key].label });
+    const group = h('div', { class: 'gu-segmented', role: 'group', 'aria-label': hx(SETTING_HELP[key].label) });
     const draw = () => group.replaceChildren(...CHOICES[key].map(([value, label]) => h('button', {
       type: 'button', class: 'gu-choice', 'aria-pressed': String(ctx.settings[key] === value),
       onClick: () => { change(key, value); draw(); },
@@ -105,7 +107,7 @@ export function mount(el, ctx, params = {}) {
     const beyond = contentNote(n, ctx.content);
     lessonNotes.replaceChildren(...[
       beyond && h('p', { class: 'gu-hint' }, beyond),
-      missing.length > 0 && h('p', { class: 'gu-hint' }, `Heart words up to lesson ${n} that aren't on her Instant words list yet: ${missing.join(', ')}. Mark them in Instant words once her tutor has taught them.`),
+      missing.length > 0 && h('p', { class: 'gu-hint' }, `Heart words up to lesson ${n} ${hx("that aren't on her Instant words list yet:")} ${missing.join(', ')}. ${hx('Mark them in Instant words once her tutor has taught them.')}`),
     ].filter((note) => note));
   };
   const lesson = h('select', { class: 'gu-select', 'aria-label': SETTING_HELP.taughtUpTo.label,
@@ -138,6 +140,13 @@ export function mount(el, ctx, params = {}) {
     tipsMessage.textContent = 'The grown-up tips will show again, each the next time it is needed.';
   } }, 'Show grown-up tips again');
 
+  const heroChoices = h('div', { class: 'gu-segmented', role: 'group', 'aria-label': 'The hero' });
+  const drawHero = () => heroChoices.replaceChildren(...HEROES.map((hero) => h('button', {
+    type: 'button', class: 'gu-choice', 'aria-pressed': String(heroOf(ctx.profile) === hero),
+    onClick: () => { ctx.profile = withHero(ctx.profile, hero); drawHero(); save(); },
+  }, HERO_LABELS[hero])));
+  drawHero();
+
   const nameMessage = h('p', { class: 'gu-message', role: 'status', 'aria-live': 'polite' });
   const nameField = (label, id, value) => h('div', { class: 'gu-field' }, h('label', { class: 'gu-label', for: id }, label),
     h('input', { class: 'gu-input', id, value, maxlength: String(NAME_MAX), autocomplete: 'off' }));
@@ -151,8 +160,8 @@ export function mount(el, ctx, params = {}) {
     save();
   } },
   h('div', { class: 'gu-row gu-wrap' },
-    nameField("Her princess's name", 'gu-name-princess', ctx.profile.princessName ?? ''),
-    nameField("Her kitten's name", 'gu-name-kitten', ctx.profile.kittenName ?? '')),
+    nameField(hx("Her princess's name"), 'gu-name-princess', ctx.profile.princessName ?? ''),
+    nameField(hx("Her kitten's name"), 'gu-name-kitten', ctx.profile.kittenName ?? '')),
   h('button', { type: 'submit', class: 'gu-button' }, 'Save names'),
   nameMessage);
 
@@ -171,7 +180,11 @@ export function mount(el, ctx, params = {}) {
     row('pin', pinForm),
     h('section', { class: 'gu-setting', 'data-setting': 'names' },
       h('h2', { class: 'gu-setting-label' }, 'Names'),
-      h('p', { class: 'gu-help' }, 'Her princess and her kitten, as she sees them in the game. To have the narrator say them, record them in Sound check.'),
+      h('p', { class: 'gu-help' }, hx('Her princess and her kitten, as she sees them in the game. To have the narrator say them, record them in Sound check.')),
+      h('div', { 'data-setting': 'hero' },
+        h('p', { class: 'gu-label' }, 'The hero'),
+        heroChoices,
+        h('p', { class: 'gu-help' }, hx('The hero she sees, and the word the narrator uses. Coloring pages she has already earned keep their pictures.'))),
       nameForm),
     startOverSection(ctx));
   return () => {};

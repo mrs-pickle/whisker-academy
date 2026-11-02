@@ -1,4 +1,5 @@
 import { h } from '../core/dom.js';
+import { heroText } from '../profile/hero.js';
 
 export const COPILOT_TURN = Object.freeze({
   read: "Grown-up's turn: did she read it?",
@@ -119,8 +120,9 @@ export function pawButton({ onTap }) {
 
 let bannerCount = 0;
 
-export function copilotBanner({ onYes, onAgain, onHelp, onUndo, onPass, helpText = COPILOT_HELP, kind = 'read' }) {
-  const help = h('p', { class: 'copilot-help', id: `copilot-help-${++bannerCount}`, hidden: true }, helpText);
+export function copilotBanner({ onYes, onAgain, onHelp, onUndo, onPass, helpText = COPILOT_HELP, kind = 'read', hero = 'princess' }) {
+  const hx = (text) => heroText(text, hero);
+  const help = h('p', { class: 'copilot-help', id: `copilot-help-${++bannerCount}`, hidden: true }, hx(helpText));
   const rule = h('button', { type: 'button', class: 'copilot-rule', 'aria-label': 'How to judge', 'aria-expanded': 'false', 'aria-controls': help.id,
     onClick: () => { help.hidden = !help.hidden; rule.setAttribute('aria-expanded', String(!help.hidden)); } }, '?');
   const keys = {};
@@ -135,7 +137,7 @@ export function copilotBanner({ onYes, onAgain, onHelp, onUndo, onPass, helpText
       h('span', { class: 'copilot-mark', 'aria-hidden': 'true' }, '↶'), h('span', {}, 'Undo'))
     : null;
   const banner = h('div', { class: 'copilot-banner', role: 'group', 'aria-label': "Grown-up's turn" },
-    h('p', { class: 'copilot-title' }, COPILOT_TURN[kind] ?? COPILOT_TURN.read),
+    h('p', { class: 'copilot-title' }, hx(COPILOT_TURN[kind] ?? COPILOT_TURN.read)),
     h('div', { class: 'copilot-tips' }),
     undo,
     rule,

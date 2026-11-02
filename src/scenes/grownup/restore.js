@@ -1,19 +1,21 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
 import { checkBackup, importBackup } from '../../profile/backup.js';
+import { heroWords } from '../../profile/hero.js';
 import { readSaved } from '../../profile/saved.js';
 
 export const EMPTY_BACKUP = 'This backup has no progress in it; restoring it removes her progress here.';
 
-export const restoreQuestion = (name, { hasProgress = true } = {}) => (hasProgress
-  ? `Restore "${name}"? It replaces her progress, the settings (including the grown-up PIN) and the recordings in this browser with the ones in the file.`
-  : `Restore "${name}"? ${EMPTY_BACKUP} It also replaces the settings (including the grown-up PIN) and the recordings in this browser with the ones in the file.`);
+export const restoreQuestion = (name, { hasProgress = true } = {}, hx = ( text) => text) => (hasProgress
+  ? `Restore "${name}"? ${hx('It replaces her progress, the settings (including the grown-up PIN) and the recordings in this browser with the ones in the file.')}`
+  : `Restore "${name}"? ${hx(EMPTY_BACKUP)} It also replaces the settings (including the grown-up PIN) and the recordings in this browser with the ones in the file.`);
 
 export const RESTORED_MESSAGE = 'Backup restored. Her progress, the settings and the recordings are back. The grown-up PIN is now the one from the backup, so use that PIN from now on.';
 
 export const NO_PIN_MESSAGE = "That backup was made before setup was finished, so it can't be used to start here. Answer the setup questions instead.";
 
 export function restoreControls(ctx, { needsPin = false, onRestored } = {}) {
+  const hx = heroWords(ctx);
   const lock = createLock();
   const message = h('p', { class: 'gu-message', role: 'status', 'aria-live': 'polite' });
   const confirmBox = h('div', { class: 'gu-confirm', hidden: true });
@@ -41,7 +43,7 @@ export function restoreControls(ctx, { needsPin = false, onRestored } = {}) {
     if (needsPin && !checked.hasPin) { message.textContent = NO_PIN_MESSAGE; return; }
     picked = { name: file.name, text };
     confirmBox.replaceChildren(
-      h('p', {}, restoreQuestion(file.name, checked)),
+      h('p', {}, restoreQuestion(file.name, checked, hx)),
       h('div', { class: 'gu-row' },
         h('button', { type: 'button', class: 'gu-button gu-primary', onClick: () => { restore(); } }, 'Restore this backup'),
         h('button', { type: 'button', class: 'gu-button', onClick: () => { picked = null; confirmBox.hidden = true; } }, 'Cancel')));
@@ -64,7 +66,7 @@ export function restoreControls(ctx, { needsPin = false, onRestored } = {}) {
     ctx.pages = null;
     await ctx.audio.reloadOverrides();
     await ctx.save();
-    message.textContent = RESTORED_MESSAGE;
+    message.textContent = hx(RESTORED_MESSAGE);
     onRestored?.();
   }).catch((err) => {
     console.error('The backup could not be restored', err);

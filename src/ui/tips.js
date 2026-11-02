@@ -1,4 +1,5 @@
 import { h } from '../core/dom.js';
+import { heroLine, heroOf } from '../profile/hero.js';
 
 export const GROWNUP_TIPS = Object.freeze(['copilot.turn', 'copilot.turn.said', 'copilot.wait', 'copilot.hint', 'copilot.rule', 'copilot.timing']);
 
@@ -48,6 +49,8 @@ function aim(box, control) {
   });
 }
 
+const tipText = (ctx, id) => heroLine(ctx?.content?.voice?.[id], heroOf(ctx?.profile));
+
 function remembering(ctx) {
   let queued = false;
   return (id) => {
@@ -66,9 +69,9 @@ export function offerTips(ctx, host, ids) {
   const controls = host.querySelectorAll('.copilot-choice');
   const remember = remembering(ctx);
   const boxes = ids
-    .filter((id) => shouldShowTip(ctx?.settings?.tipsSeen, id) && typeof ctx?.content?.voice?.[id]?.text === 'string'
+    .filter((id) => shouldShowTip(ctx?.settings?.tipsSeen, id) && typeof tipText(ctx, id) === 'string'
       && !slot.querySelector(`[data-tip="${id}"]`))
-    .map((id) => tipBox({ id, text: ctx.content.voice[id].text, controls: [...controls], onDismiss: remember }));
+    .map((id) => tipBox({ id, text: tipText(ctx, id), controls: [...controls], onDismiss: remember }));
   for (const box of boxes) {
     box.setAttribute('data-at', POINTS_AT[box.getAttribute('data-tip') ?? ''] ?? 'yes');
     slot.append(box);

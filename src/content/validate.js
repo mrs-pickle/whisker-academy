@@ -21,7 +21,12 @@ const NASALS = new Set(['M', 'N', 'NG']);
 
 const PICTURE_MAX = 200;
 
+const PRINCE_TWIN = '.prince';
+
 const LAYERED_CAST = new Set(['princess', 'kitten']);
+
+const hasPrince = (record) => record?.prince !== undefined;
+const PRINCESS = /\bprincess\b/i;
 
 const list = (v) => (Array.isArray(v) ? v : []);
 const lower = (s) => String(s).toLowerCase();
@@ -258,8 +263,28 @@ function checkStory(c, r) {
       for (const s of list(scene?.sentences)) {
         const blockers = sentenceBlockers(String(s?.text ?? ''), ctx);
         if (blockers.length > 0) r.error(`${label} ${scene.id} sentence ${s?.id}: "${s?.text}" is not readable at lesson ${taughtUpTo}: ${blockers.join(', ')}`);
+        if (typeof s?.prince !== 'string') continue;
+        const hisBlockers = sentenceBlockers(s.prince, ctx);
+        if (hisBlockers.length > 0) r.error(`${label} ${scene.id} sentence ${s?.id} (prince): "${s.prince}" is not readable at lesson ${taughtUpTo}: ${hisBlockers.join(', ')}`);
       }
     }
+  }
+}
+
+const HERO_WORN = new Set(['outfit', 'crown']);
+const PAGE_TWIN = '-prince';
+
+function checkPrinceThings(c, r) {
+  for (const item of c.wardrobe) {
+    if (!HERO_WORN.has(item?.slot)) continue;
+    if (typeof item.prince !== 'string' || item.prince.trim() === '') r.error(`${LIST_FILES.wardrobe} ${item.id}: an outfit or crown needs a prince label`);
+  }
+  const ids = new Set(c.colorin.map(p => p?.id));
+  for (const page of c.colorin) {
+    const id = page?.id;
+    if (typeof id !== 'string' || !id.endsWith(PAGE_TWIN)) continue;
+    const base = id.slice(0, -PAGE_TWIN.length);
+    if (!ids.has(base)) r.error(`${LIST_FILES.colorin} ${id}: a ${PAGE_TWIN} page needs the page it twins, ${base}`);
   }
 }
 
@@ -287,12 +312,28 @@ function* stringsIn(v) {
   else if (v !== null && typeof v === 'object') for (const x of Object.values(v)) yield* stringsIn(x);
 }
 
+function checkPrince(label, record, r) {
+  if (!hasPrince(record)) return;
+  const { prince, text } = record;
+  if (typeof prince !== 'string' || prince.trim() === '') r.error(`${label}: prince must be a non-empty string`);
+  else if (prince === text) r.error(`${label}: prince is the same as its text; leave it out`);
+}
+
 function checkVoice(c, content, r) {
   const has = (id) => typeof id === 'string' && Object.hasOwn(c.voice, id);
   for (const ch of c.story) {
     for (const scene of scenesOf(ch)) {
       const lines = [...list(scene?.intro), ...list(scene?.outro), ...(scene?.question?.line === undefined ? [] : [scene.question.line])];
       for (const id of lines) if (!has(id)) r.error(`story ${ch.id} ${scene.id}: voice line "${id}" is not in voice.json`);
+      for (const s of list(scene?.sentences)) checkPrince(`story ${ch.id} ${scene.id} sentence ${s?.id}`, s, r);
+    }
+  }
+  for (const [id, line] of Object.entries(c.voice)) {
+    if (id.endsWith(PRINCE_TWIN)) r.error(`voice.json ${id}: a voice key may not end in ${PRINCE_TWIN}; that ending is kept for a line's second clip`);
+    checkPrince(`voice.json ${id}`, line, r);
+    if (typeof line?.text === 'string' && PRINCESS.test(line.text)) {
+      if (!hasPrince(line)) r.error(`voice.json ${id}: it says princess, so it needs a prince version`);
+      else if (typeof line.prince === 'string' && PRINCESS.test(line.prince)) r.error(`voice.json ${id}: its prince version still says princess`);
     }
   }
   for (const [key, value] of Object.entries(content)) {
@@ -320,8 +361,20 @@ function clipRefs(c) {
     if (WARMUP_SAYS_ANSWER.has(it?.type)) addWord(it.answer);
   }
   for (const it of c.warmup) for (const s of list(it?.sounds)) refs.add(`p.${s}`);
-  for (const ch of c.story) for (const scene of scenesOf(ch)) for (const s of list(scene?.sentences)) refs.add(`s.${s?.id}`);
-  for (const id of Object.keys(c.voice)) refs.add(`v.${id}`);
+  for (const ch of c.story) {
+    for (const scene of scenesOf(ch)) {
+      for (const s of list(scene?.sentences)) {
+        const clip = `s.${s?.id}`;
+        refs.add(clip);
+        if (hasPrince(s)) refs.add(clip + PRINCE_TWIN);
+      }
+    }
+  }
+  for (const [id, line] of Object.entries(c.voice)) {
+    const clip = `v.${id}`;
+    refs.add(clip);
+    if (hasPrince(line)) refs.add(clip + PRINCE_TWIN);
+  }
   return refs;
 }
 
@@ -350,7 +403,10 @@ function artRefs(c) {
       for (const x of list(scene?.question?.choices)) add(label, x, 'tricks');
     }
   }
-  for (const item of c.wardrobe) add(`${LIST_FILES.wardrobe} ${item?.id}`, item?.art, 'wardrobe');
+  for (const item of c.wardrobe) {
+    add(`${LIST_FILES.wardrobe} ${item?.id}`, item?.art, 'wardrobe');
+    if (HERO_WORN.has(item?.slot) && typeof item?.id === 'string') add(`${LIST_FILES.wardrobe} ${item.id}`, `prince/${item.id}`, 'prince');
+  }
   for (const page of c.colorin) add(`${LIST_FILES.colorin} ${page?.id}`, page?.svg, 'colorin', '.svg');
   return refs;
 }
@@ -385,5 +441,6 @@ export function validateContent(content, { cmu, audioManifest, artExists } = {})
     for (const [path, label] of artRefs(c)) if (!artExists(path)) r.error(`${label}: art ${path} does not exist`);
   }
   checkPictures(c, r);
+  checkPrinceThings(c, r);
   return { errors: [...errors], warnings: [...warnings] };
 }

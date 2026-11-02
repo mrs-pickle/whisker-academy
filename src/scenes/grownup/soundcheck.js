@@ -1,10 +1,12 @@
 import { h } from '../../core/dom.js';
 import { PHONEMES } from '../../curriculum/phonemes.js';
+import { heroWords } from '../../profile/hero.js';
 import { cornerFrame } from './gate.js';
 
 export const FLAGS_KEY = 'soundFlags';
 const MANIFEST = 'assets/audio/manifest.json';
 const RECORDING_PREFIX = 'rec:';
+const PRINCE_TWIN = '.prince';
 const MIME_TYPES = Object.freeze(['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm']);
 const MAX_RECORDING_MS = 15000;
 const SEARCH_LIMIT = 80;
@@ -61,17 +63,20 @@ export function groupClips(ids) {
   return [...GROUPS, OTHER].flatMap(([key, title]) => (byKey.has(key) ? [{ key, title, ids: [... (byKey.get(key))].sort(byCodePoint) }] : []));
 }
 
-function labeler(content) {
+function labeler(content, hx = (text) => text) {
   const sentences = new Map();
   for (const chapter of content?.story ?? []) {
     for (const scene of [...(chapter.scenes ?? []), ...(chapter.side ?? [])]) {
-      for (const sentence of scene.sentences ?? []) sentences.set(sentence.id, sentence.text);
+      for (const sentence of scene.sentences ?? []) {
+        sentences.set(sentence.id, sentence.text);
+        if (sentence.prince) sentences.set(`${sentence.id}.prince`, sentence.prince);
+      }
     }
   }
   const passage = content?.entrance?.passage;
   if (passage?.id) sentences.set(passage.id, passage.text);
   return (id) => {
-    if (Object.hasOwn(NAME_TEXT, id)) return NAME_TEXT[ (id)];
+    if (Object.hasOwn(NAME_TEXT, id)) return hx(NAME_TEXT[ (id)]);
     const dot = id.indexOf('.');
     const kind = id.slice(0, dot);
     const rest = id.slice(dot + 1);
@@ -80,6 +85,7 @@ function labeler(content) {
     if (kind === 'w') return rest;
     if (kind === 'ws') return `${rest}, stretched`;
     if (kind === 's') return sentences.get(rest) ?? id;
+    if (kind === 'v' && rest.endsWith(PRINCE_TWIN)) return content?.voice?.[rest.slice(0, -PRINCE_TWIN.length)]?.prince ?? id;
     if (kind === 'v') return content?.voice?.[rest]?.text ?? id;
     return id;
   };
@@ -108,7 +114,8 @@ export function mount(el, ctx, params = {}) {
   if (!body) return () => {};
 
   let alive = true;
-  const text = labeler(ctx.content);
+  const hx = heroWords(ctx);
+  const text = labeler(ctx.content, hx);
   const recorded = new Set();
   let flags = [];
   let active = null;
@@ -258,12 +265,12 @@ export function mount(el, ctx, params = {}) {
 
   body.append(
     h('p', {}, "Listen to each clip. If one sounds off, flag it, or record it again in your own voice: your recording replaces it everywhere in the game. Start with Sounds (about 45 short clips, 5 minutes). Sounds should have no extra \"uh\": /b/, not \"buh\"."),
-    h('p', { class: 'gu-hint' }, 'Flag marks a clip you want to come back to (to record it again, or to ask her tutor). It adds a "flagged" tag here and changes nothing in the game. Type "flagged" in the search to list the clips you flagged. The small "clip" name under each line is only a label for finding it.'),
+    h('p', { class: 'gu-hint' }, hx('Flag marks a clip you want to come back to (to record it again, or to ask her tutor). It adds a "flagged" tag here and changes nothing in the game. Type "flagged" in the search to list the clips you flagged. The small "clip" name under each line is only a label for finding it.')),
     message,
     h('section', { class: 'gu-names' },
-      h('h2', { class: 'gu-subtitle' }, 'Her names (optional)'),
-      h('p', { class: 'gu-hint' }, 'The narrator says "Princess" and "Kitty". Record the names she chose, and they are said after the greeting at the castle and when the Entrance Quest ends.'),
-      NAME_SLOTS.map((slot) => clipRow(slot.id, { title: slot.label, flaggable: false }))),
+      h('h2', { class: 'gu-subtitle' }, hx('Her names (optional)')),
+      h('p', { class: 'gu-hint' }, hx('The narrator says "Princess" and "Kitty". Record the names she chose, and they are said after the greeting at the castle and when the Entrance Quest ends.')),
+      NAME_SLOTS.map((slot) => clipRow(slot.id, { title: hx(slot.label), flaggable: false }))),
     keywords,
     h('h2', { class: 'gu-subtitle' }, "The narrator's clips"),
     search,
@@ -284,7 +291,7 @@ export function mount(el, ctx, params = {}) {
     const groups = groupClips(ids);
     if (groups.length === 0) {
       search.hidden = true;
-      listing.replaceChildren(h('p', { class: 'gu-empty' }, "The narrator's clips haven't been made yet, so there is nothing to listen to here yet. You can still record her names above."));
+      listing.replaceChildren(h('p', { class: 'gu-empty' }, hx("The narrator's clips haven't been made yet, so there is nothing to listen to here yet. You can still record her names above.")));
       return;
     }
     listing.replaceChildren(...groups.map((group) => {

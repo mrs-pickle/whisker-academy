@@ -1,3 +1,4 @@
+import { heroOf } from '../profile/hero.js';
 import { readingOrder, scenesRead } from './story-place.js';
 
 
@@ -10,7 +11,6 @@ export const MAX_CAST = 3;
 export const MAX_THINGS = 4;
 const THINGS_ROW = 16;
 const OPTIONS = 3;
-const FRIENDS = Object.freeze(['princess', 'kitten']);
 
 const placePart = (id) => `place-${id}`;
 const castPart = (id) => `cast-${id}`;
@@ -100,12 +100,15 @@ function latestPoses(cast) {
 
 export function dayOptions({ content, parts, profile, states, scene, practice, day }) {
   const isCast = ( id) => parts.has(castPart(id));
+  const hero = heroOf(profile);
+  const cast = (id) => (id === 'princess' ? hero : id);
+  const FRIENDS = [hero, 'kitten'];
   const isThing = ( id) => parts.has(thingPart(id));
   const reached = reachedScenes(content.story ?? [], profile, states, scene).filter((s) => parts.has(placePart(s.bg)));
   if (reached.length === 0) return null;
   const today = reached.find((s) => s.id === scene) ?? (reached.at(-1));
   const others = reached.filter((s) => s !== today).reverse();
-  const everyone = [...FRIENDS, ...reached.flatMap((s) => s.cast), ...today.cast].filter(isCast);
+  const everyone = [...FRIENDS, ...reached.flatMap((s) => s.cast.map(cast)), ...today.cast.map(cast)].filter(isCast);
   const latest = latestPoses(everyone);
   const met = unique(everyone).filter((id) => latest.has(id));
   if (met.length === 0) return null;
@@ -114,8 +117,8 @@ export function dayOptions({ content, parts, profile, states, scene, practice, d
   const read = wordsRead(states.keys());
   const fromWords = (content.words ?? []).map((w) => w.w).filter((w) => read.has(w) && isThing(w));
   const tricksOf = (s) => s.sentences.flatMap((line) => line.trick ?? []).filter(isThing);
-  const recipeOf = (s, place = s.bg, cast = unique(s.cast.filter(isCast).flatMap(inRow))) => ({ place, scene: s.id,
-    cast: (cast.length > 0 ? cast : met).slice(0, MAX_CAST),
+  const recipeOf = (s, place = s.bg, who = unique(s.cast.map(cast).filter(isCast).flatMap(inRow))) => ({ place, scene: s.id,
+    cast: (who.length > 0 ? who : met).slice(0, MAX_CAST),
     things: unique([...hers, ...tricksOf(s), ...fromWords]).slice(0, MAX_THINGS) });
   const options = [];
   const offer = (r) => { if (options.length < OPTIONS && !options.some((o) => sameDrawing(o, r))) options.push(r); };
@@ -132,7 +135,7 @@ export function dayOptions({ content, parts, profile, states, scene, practice, d
   });
   for (const place of [...turned(unshown, day), ...turned(shown, day)]) {
     const from = (reached.findLast((s) => s.bg === place));
-    for (const cast of casts) offer(recipeOf(from, place, cast));
+    for (const who of casts) offer(recipeOf(from, place, who));
   }
 
   const things = [...hers, ...options.flatMap((o) => o.things), ...reached.flatMap(tricksOf), ...fromWords];

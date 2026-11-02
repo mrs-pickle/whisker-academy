@@ -7,7 +7,8 @@ import { applyResult, newItemState } from '../engine/itemstate.js';
 import { dayOptions } from '../engine/page-recipe.js';
 import { closedPass, howOf, markedBack, passesToReturn, reopenedPass, reviewRounds, withBackResult, withPass } from '../engine/passes.js';
 import { nextSpellTier } from '../engine/spell-tier.js';
-import { earnMadePage, earnPage, firstWaiting, pagesNow } from '../profile/pages.js';
+import { heroOf } from '../profile/hero.js';
+import { earnMadePage, earnPage, firstWaiting, pagesNow, princeTwin } from '../profile/pages.js';
 import { isExtraPractice, latestAccuracy } from '../profile/profile.js';
 import { artUrl, bigButton, layeredArt, lessonBar, pathStones, setLessonBar } from '../ui/components.js';
 import { wordsBuilt, wordsForStrip } from '../ui/print-pages.js';
@@ -264,9 +265,10 @@ export function answeredToday(applied, states, day) {
     .map((key) => key.slice(0, -'#spell'.length));
 }
 
-function preferring(catalog, first) {
+function preferring(catalog, first, hero) {
   const pages = copy(catalog);
-  const page = pages.find((p) => p?.id === first);
+  const twin = hero === 'prince' && typeof first === 'string' ? pages.find((p) => p?.id === princeTwin(first)) : undefined;
+  const page = twin ?? pages.find((p) => p?.id === first);
   return page ? [page, ...pages.filter((p) => p !== page)] : pages;
 }
 
@@ -286,7 +288,7 @@ export function finishSession(profile, today, { ms, answered, right, copilot, ap
     if (!made.earned) return none;
     return { gifts, profile: kept, pages: made.pages, page: made.earned, maker: { ...offer, family: firstWaiting(pages), parts } };
   }
-  const day = earnPage(pages, preferring(content.colorin, today.colorin), kept, today.day);
+  const day = earnPage(pages, preferring(content.colorin, today.colorin, heroOf(kept)), kept, today.day);
   if (!day.earned) return none;
   const earned = day.earned;
   const page = { ...earned, words };

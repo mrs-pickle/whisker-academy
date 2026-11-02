@@ -1,5 +1,6 @@
 import { h } from '../../core/dom.js';
 import { summarize } from '../../engine/progress.js';
+import { heroOf, heroWords } from '../../profile/hero.js';
 import { isComplete } from '../../profile/profile.js';
 import { isTooFast, passageLines, passageTimer, TOO_FAST_NOTE } from '../passage-timer.js';
 import { cornerFrame } from './gate.js';
@@ -49,12 +50,13 @@ const outOf = (part) => (part && part.total > 0 ? `${part.correct} of ${part.tot
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'progress');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
   const r = progressReport(ctx.states, ctx.profile);
   const b = r.baseline;
 
   const passage = ctx.content?.entrance?.passage;
   const passageCell = h('td', { class: 'gu-passage-cell' });
-  const retime = h('div', { class: 'gu-retime', role: 'group', 'aria-label': 'Time her reading again', hidden: true });
+  const retime = h('div', { class: 'gu-retime', role: 'group', 'aria-label': hx('Time her reading again'), hidden: true });
   const retimeMessage = h('p', { class: 'gu-message', role: 'status', 'aria-live': 'polite' });
   const retimeNote = h('p', { class: 'gu-message', role: 'status', 'aria-live': 'polite' });
   const drawPassage = () => {
@@ -71,9 +73,9 @@ export function mount(el, ctx, params = {}) {
     retime.replaceChildren(
       h('div', { class: 'gu-retime-head' },
         h('button', { type: 'button', class: 'gu-button gu-small', onClick: () => { retime.hidden = true; } }, 'Cancel'),
-        h('p', { class: 'gu-hint' }, 'Have her read the story aloud again, and time it here. Her new timing replaces the old one.')),
+        h('p', { class: 'gu-hint' }, hx('Have her read the story aloud again, and time it here. Her new timing replaces the old one.'))),
       h('div', { class: 'gu-retime-page passage-page', lang: 'en' }, passageLines(passage.text).map((line) => h('p', { class: 'story-line' }, line))),
-      passageTimer({ wordCount: passage.wordCount, title: 'Time her reading', finishLabel: 'Save this timing', onFinish: ({ wcpm, errors }) => {
+      passageTimer({ wordCount: passage.wordCount, title: hx('Time her reading'), finishLabel: 'Save this timing', hero: heroOf(ctx.profile), onFinish: ({ wcpm, errors }) => {
         if (wcpm === null) { retimeNote.textContent = 'That was too short to time.'; return; }
         const detail = ctx.profile.baselineDetail;
         ctx.profile = { ...ctx.profile, baseline: { ...ctx.profile.baseline, passage: { wcpm, errors } },
@@ -93,14 +95,14 @@ export function mount(el, ctx, params = {}) {
 
   body.append(...[
     storyNoteBox(ctx).el,
-    h('p', { class: 'gu-note' }, "What to watch here is steady practice, more words and sounds mastered, and her baseline compared with later checks."),
+    h('p', { class: 'gu-note' }, hx("What to watch here is steady practice, more words and sounds mastered, and her baseline compared with later checks.")),
 
     h('h2', { class: 'gu-subtitle' }, 'Practice'),
     r.weeks.length === 0 ? h('p', { class: 'gu-empty' }, 'No sessions yet.') : h('table', { class: 'gu-table' },
       h('thead', {}, h('tr', {}, h('th', {}, 'Week of'), h('th', {}, 'Sessions'), h('th', {}, 'Rounds'), h('th', {}, 'Active minutes'))),
       h('tbody', {}, r.weeks.map((w) => h('tr', {}, h('td', {}, weekLabel(w.week)),
         h('td', {}, w.partPlayed > 0 ? `${w.sessions} (${w.partPlayed} part-played)` : w.sessions), h('td', {}, w.rounds), h('td', {}, w.minutes))))),
-    !r.weeks.some((w) => w.partPlayed > 0) ? null : h('p', { class: 'gu-hint' }, 'A part-played session is one she left before the end of the path. Its rounds and minutes count, and coming back the same day carries on from the first round she had not finished.'),
+    !r.weeks.some((w) => w.partPlayed > 0) ? null : h('p', { class: 'gu-hint' }, hx('A part-played session is one she left before the end of the path. Its rounds and minutes count, and coming back the same day carries on from the first round she had not finished.')),
 
     h('h2', { class: 'gu-subtitle' }, 'Mastered'),
     h('div', { class: 'gu-stats' },
@@ -108,9 +110,9 @@ export function mount(el, ctx, params = {}) {
       stat('sound cards', r.mastered.cards),
       stat('instant words mastered in play', r.mastered.instant),
       stat('still learning', r.learning),
-      stat('instant words marked Known (her list)', r.instantKnown)),
-    h('p', { class: 'gu-hint' }, 'Mastered means right without help on 2 different days, after several reviews. A later slip sends an item back for more practice; its history is kept. "Marked Known" is different: those are the words you marked Known in Instant words, whether or not she has practiced them yet.'),
-    h('p', { class: 'gu-hint' }, '"Sound cards" here counts the cards she has mastered in play. The Sound cards screen\'s Mastered is different: it is your mark of how her tutor sees each card, and it only changes which cards the drill shows more often.'),
+      stat(hx('instant words marked Known (her list)'), r.instantKnown)),
+    h('p', { class: 'gu-hint' }, hx('Mastered means right without help on 2 different days, after several reviews. A later slip sends an item back for more practice; its history is kept. "Marked Known" is different: those are the words you marked Known in Instant words, whether or not she has practiced them yet.')),
+    h('p', { class: 'gu-hint' }, hx('"Sound cards" here counts the cards she has mastered in play. The Sound cards screen\'s Mastered is different: it is your mark of how her tutor sees each card, and it only changes which cards the drill shows more often.')),
 
     h('h2', { class: 'gu-subtitle' }, 'Accuracy, latest sessions'),
     r.accuracy.length === 0 ? h('p', { class: 'gu-empty' }, r.totalSessions === 0 ? 'No sessions yet.' : 'No answers to score yet.') : h('div', { class: 'gu-trend', role: 'img', 'aria-label': `Accuracy, oldest first: ${r.accuracy.map((a, i) => `${shortDate(r.accuracyDays[i])}: ${a}%`).join(', ')}` },
@@ -127,13 +129,13 @@ export function mount(el, ctx, params = {}) {
       h('tr', {}, h('th', {}, 'Made-up words read'), h('td', {}, outOf(b.nonsense))),
       h('tr', {}, h('th', {}, 'Dictated words spelled'), h('td', {}, `${outOf(b.dictation)}${b.dictation?.tier ? ` (spelling starts at tier ${b.dictation.tier}: ${TIER_NOTES[ (b.dictation.tier)] ?? 'the easiest words first'})` : ''}`)),
       h('tr', {}, h('th', {}, 'Passage'), passageCell)))
-      : h('p', { class: 'gu-empty' }, "The Entrance Quest hasn't been played yet. It starts the first time she presses Play."),
+      : h('p', { class: 'gu-empty' }, hx("The Entrance Quest hasn't been played yet. It starts the first time she presses Play.")),
     b ? h('button', { type: 'button', class: 'gu-button', onClick: () => {
       ctx.router.go('grownup/quest-results', { unlocked: true }).catch(( err) => console.error('Quest results could not open', err));
     } }, 'See every answer') : null,
     b ? retimeMessage : null,
 
-    h('p', { class: 'gu-hint' }, 'To erase her progress and begin again with the Entrance Quest, use Start over at the end of Settings.')].filter((node) => node !== null));
+    h('p', { class: 'gu-hint' }, hx('To erase her progress and begin again with the Entrance Quest, use Start over at the end of Settings.'))].filter((node) => node !== null));
   if (b) (body.closest('.grownup') ?? el).append(retime);
   return () => {};
 }

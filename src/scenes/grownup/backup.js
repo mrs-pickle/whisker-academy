@@ -1,6 +1,7 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
 import { exportBackup } from '../../profile/backup.js';
+import { heroWords } from '../../profile/hero.js';
 import { cornerFrame } from './gate.js';
 import { restoreControls } from './restore.js';
 
@@ -11,6 +12,7 @@ export const backupFileName = (day) => `whisker-academy-backup-${new Date(day * 
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'backup');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
   const lock = createLock();
   const urls = [];
 
@@ -33,16 +35,16 @@ export function mount(el, ctx, params = {}) {
     el.append(link);
     link.click();
     link.remove();
-    exportMessage.textContent = `Backup file made: ${name}. Your browser puts it in your Downloads. Keep it somewhere safe; it holds her progress and your recordings.`;
+    exportMessage.textContent = `Backup file made: ${name}. ${hx('Your browser puts it in your Downloads. Keep it somewhere safe; it holds her progress and your recordings.')}`;
   });
 
   const restoring = restoreControls(ctx);
 
   body.append(
-    h('p', {}, "Her progress lives only in this browser on this computer. Save a backup now and then, and before moving to another computer: restore it there from this screen."),
+    h('p', {}, hx("Her progress lives only in this browser on this computer. Save a backup now and then, and before moving to another computer: restore it there from this screen.")),
     h('section', { class: 'gu-setting' },
       h('h2', { class: 'gu-setting-label' }, 'Save a backup file'),
-      h('p', { class: 'gu-help' }, 'One .json file with her progress, the settings, the color-in pages and your recordings.'),
+      h('p', { class: 'gu-help' }, hx('One .json file with her progress, the settings, the color-in pages and your recordings.')),
       h('button', { type: 'button', class: 'gu-button gu-primary', onClick: () => { save().catch((err) => console.error(err)); } }, 'Save a backup file'),
       exportMessage),
     h('section', { class: 'gu-setting' },

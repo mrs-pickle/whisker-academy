@@ -89,7 +89,7 @@ const isNumber = (v) => typeof v === 'number' && Number.isFinite(v);
 const isStrings = (v) => Array.isArray(v) && v.every(isString);
 const CARD_STATUSES = Object.freeze(['learning', 'mastered']);
 const INSTANT_STATUSES = Object.freeze(['learning', 'known']);
-const LOOK_FIELDS = Object.freeze(['skin', 'hair', 'hairColor', 'outfit', 'crown', 'kittenFur', 'kittenAcc']);
+const LOOK_FIELDS = Object.freeze(['skin', 'hair', 'hairColor', 'outfit', 'crown', 'kittenFur', 'kittenAcc', 'hero']);
 const UNLOCKED_FIELDS = Object.freeze(['wardrobe', 'colorin', 'crayons', 'tricks', 'charms', 'sparkles']);
 const MAX_TIER = 4;
 export const CUSTOM_WORD = /^[a-z]+(?:'[a-z]+)?$/;

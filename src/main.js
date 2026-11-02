@@ -2,6 +2,7 @@ import { openStore } from './core/storage.js';
 import { createOneWindow, flagFailedSaves } from './core/one-window.js';
 import { loadContent } from './content/load.js';
 import { readSaved } from './profile/saved.js';
+import { heroVariant } from './profile/hero.js';
 import { todayFrom } from './core/dates.js';
 import { createRng } from './core/rng.js';
 import { createAudio, unlockOnGestures } from './core/audio.js';
@@ -92,6 +93,7 @@ async function boot() {
     base: AUDIO_BASE,
     store,
     onMissing: (id) => console.debug(`No audio for ${id}`),
+    variant: () => heroVariant(ctx?.profile),
   });
   await audio.reloadOverrides();
   const playing = await starting;

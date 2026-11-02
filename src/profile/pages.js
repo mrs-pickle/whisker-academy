@@ -1,4 +1,5 @@
 import { isRecipe, sameRecipe } from '../engine/page-recipe.js';
+import { heroOf } from './hero.js';
 import { owns, withUnlocked } from './profile.js';
 
 
@@ -12,6 +13,18 @@ export const pageBlobId = (id) => PICTURE_PREFIX + id;
 export const pageFillKey = (id) => FILL_PREFIX + id;
 export const storyFillKey = (id) => STORY_FILL_PREFIX + id;
 export const isFillKey = (key) => key.startsWith(FILL_PREFIX) || key.startsWith(STORY_FILL_PREFIX);
+
+const PRINCE_TWIN = '-prince';
+
+export function pagesForHero(catalog, hero) {
+  const pages = (Array.isArray(catalog) ? catalog : []);
+  const idOf = (p) => (typeof p?.id === 'string' ? p.id : '');
+  if (hero !== 'prince') return pages.filter((p) => !idOf(p).endsWith(PRINCE_TWIN));
+  const twinned = new Set(pages.map(idOf).filter((id) => id.endsWith(PRINCE_TWIN)).map((id) => id.slice(0, -PRINCE_TWIN.length)));
+  return pages.filter((p) => !twinned.has(idOf(p)));
+}
+
+export const princeTwin = (id) => id + PRINCE_TWIN;
 
 export const madePageId = (day) => `made-${day}`;
 
@@ -143,7 +156,7 @@ export function earnPage(pages, colorinCatalog, profile, day) {
     return { pages: pages.map((p) => (p === family ? earned : p)), profile, earned };
   }
   const listed = new Set(pages.map((p) => p.id));
-  const story = (Array.isArray(colorinCatalog) ? colorinCatalog : []).find((c) => typeof c?.id === 'string' && c.id !== ''
+  const story = pagesForHero(colorinCatalog, heroOf(profile)).find(( c) => typeof c?.id === 'string' && c.id !== ''
     && !listed.has(c.id) && !owns(profile, { type: 'colorin', id: c.id }));
   if (!story) return none;
   const earned = { id: story.id, source: 'story', name: typeof story.title === 'string' && story.title !== '' ? story.title : story.id,

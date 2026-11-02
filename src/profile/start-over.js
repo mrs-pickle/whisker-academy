@@ -28,6 +28,7 @@ export const LOOK_FATES = Object.freeze({
   hair: 'keep',
   hairColor: 'keep',
   kittenFur: 'keep',
+  hero: 'keep',
   outfit: 'reset',
   crown: 'reset',
   kittenAcc: 'reset',

@@ -1,7 +1,8 @@
 import { h } from '../core/dom.js';
 import { createLock } from '../core/lock.js';
 import { artUrl, bigButton, layeredArt } from '../ui/components.js';
-import { castArt, LOOK_OPTIONS } from '../ui/story-stage.js';
+import { heroLine, heroOf, heroWords } from '../profile/hero.js';
+import { castArt, LOOK_OPTIONS, outfitArt } from '../ui/story-stage.js';
 
 
 export const DRESSUP_LINES = Object.freeze({ start: 'dressup.start', kitten: 'dressup.kitten', done: 'dressup.done' });
@@ -14,12 +15,13 @@ const FUR_LABELS = Object.freeze({ orange: 'Orange kitten', gray: 'Gray kitten',
 
 export function dressupChoices(wardrobe, profile) {
   const kept = profile?.unlocked?.wardrobe;
+  const hero = heroOf(profile);
   const owned = new Set(Array.isArray(kept) ? kept : []);
   const items = (Array.isArray(wardrobe) ? wardrobe : []).filter((w) =>
     typeof w?.id === 'string' && typeof w.slot === 'string' && (w.starter === true || owned.has(w.id)));
   const named = (id, label) => (typeof label === 'string' && label !== '' ? label : id);
   const slot = (name, field, value = (id) => id) => items.filter((w) => w.slot === name)
-    .map((w) => ({ field, value: value(w.id), label: named(w.id, w.label) }));
+    .map((w) => ({ field, value: value(w.id), label: named(w.id, heroLine(w, hero, 'label')) }));
   return {
     outfit: slot('outfit', 'outfit'),
     crown: slot('crown', 'crown', (id) => id.replace(/^crown-/, '')).filter((c) => LOOK_OPTIONS.crown.includes(c.value)),
@@ -46,7 +48,7 @@ const CROPS = Object.freeze({
 });
 
 function swatchArt(choice, look) {
-  if (choice.field === 'outfit') return [`wardrobe/${choice.value}`];
+  if (choice.field === 'outfit') return [outfitArt(choice.value, look)];
   if (choice.field === 'crown') return castArt('princess', { ...look, crown: choice.value });
   if (choice.field === 'kittenFur') return castArt('kitten', { kittenFur: choice.value, kittenAcc: '' });
   return castArt('kitten', { ...look, kittenAcc: choice.value });
@@ -69,6 +71,7 @@ const SPARKLE_MS = 900;
 
 export function mount(el, ctx, params = {}) {
   const back = params?.from === 'session' ? 'session' : 'hub';
+  const hx = heroWords(ctx);
   const lock = createLock();
   let live = true;
   const look = () => (ctx.profile?.look ?? {});
@@ -126,7 +129,7 @@ export function mount(el, ctx, params = {}) {
 
   el.append(h('div', { class: 'dressup' },
     h('img', { class: 'scene-bg', src: artUrl('bg/dressup'), alt: '' }),
-    h('div', { class: 'dressup-panel dressup-panel-princess', role: 'group', 'aria-label': 'Princess clothes' },
+    h('div', { class: 'dressup-panel dressup-panel-princess', role: 'group', 'aria-label': hx('Princess clothes') },
       group(choices.outfit, 'outfits'), group(choices.crown, 'crowns')),
     princess,
     kitten,

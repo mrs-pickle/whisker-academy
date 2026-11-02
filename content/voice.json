@@ -1,10 +1,10 @@
 {
-"door.welcome": {"text": "Hello, Princess! Come on in."},
+"door.welcome": {"text": "Hello, Princess! Come on in.", "prince": "Hello, Prince! Come on in."},
 "window.elsewhere": {"text": "Whisker Academy is open in another window. To play here, click Play here instead."},
-"hub.hello": {"text": "Mew! Hello, Princess! I'm so happy you're here."},
+"hub.hello": {"text": "Mew! Hello, Princess! I'm so happy you're here.", "prince": "Mew! Hello, Prince! I'm so happy you're here."},
 "hub.entrance": {"text": "Your first adventure is the Entrance Quest. Click the path when you're ready."},
 "hub.adventure": {"text": "Ready for today's adventure? Click the path to start."},
-"hub.dressup": {"text": "Want to dress up? Click your princess."},
+"hub.dressup": {"text": "Want to dress up? Click your princess.", "prince": "Want to dress up? Click your prince."},
 "hub.colorin": {"text": "Want to color a picture? Click the crayons."},
 "session.copilot": {"text": "Is a grown-up playing with you today?"},
 "session.go": {"text": "When you're ready, click the paw to start!"},
@@ -116,7 +116,7 @@
 "break.parade.1": {"text": "March in place, with your knees up high."},
 "break.parade.2": {"text": "Wave to the crowd with one paw. Now wave with the other paw."},
 "break.parade.3": {"text": "Hold your crown on, and turn all the way around."},
-"break.parade.4": {"text": "Stand tall like a princess, and take a slow, deep breath."},
+"break.parade.4": {"text": "Stand tall like a princess, and take a slow, deep breath.", "prince": "Stand tall like a prince, and take a slow, deep breath."},
 "break.done": {"text": "Ahh. All stretched out! Back to the magic."},
 "break.cuddle": {"text": "Let's give Kitty a cuddle. Ahh. Nice and cozy."},
 "break.cuddle.done": {"text": "All better. Let's do an easy one together."},
@@ -131,13 +131,13 @@
 "colorin.start": {"text": "Pick a crayon, then click part of the picture to color it."},
 "colorin.empty": {"text": "Your coloring book is waiting for its first page. Pages come with the story!"},
 
-"copilot.turn": {"text": "Grown-up's turn: did she read it?"},
-"copilot.turn.said": {"text": "Grown-up's turn: did she say it?"},
+"copilot.turn": {"text": "Grown-up's turn: did she read it?", "prince": "Grown-up's turn: did he read it?"},
+"copilot.turn.said": {"text": "Grown-up's turn: did she say it?", "prince": "Grown-up's turn: did he say it?"},
 "copilot.readto": {"text": "Read it out loud to your grown-up."},
 "copilot.wait": {"text": "Grown-up: wait five seconds before helping."},
 "copilot.hint": {"text": "Grown-up: instead of saying the word, try saying, check each sound."},
-"copilot.rule": {"text": "Grown-up: count it if she read the right word."},
-"copilot.timing": {"text": "Grown-up: click start when she begins reading, and done when she finishes."},
+"copilot.rule": {"text": "Grown-up: count it if she read the right word.", "prince": "Grown-up: count it when he reads the right word."},
+"copilot.timing": {"text": "Grown-up: click start when she begins reading, and done when she finishes.", "prince": "Grown-up: click start when he begins reading, and done when he finishes."},
 "selfcheck.read": {"text": "Did you read it? Click 'I read it!' or 'Let me hear it.'"},
 "selfcheck.said": {"text": "Did you say it? Click 'I said it!' or 'Let me try again.'"},
 
@@ -183,11 +183,11 @@
 "kitten.protege.again": {"text": "Hmm, is that the part? Let's look again, sound by sound."},
 "kitten.protege.thanks": {"text": "Oh! Thank you! Now I know it. I'll remember."},
 
-"story.prologue-1.intro.1": {"text": "Welcome to Whisker Academy, Princess! This castle is a school for magic, and today is your very first day."},
+"story.prologue-1.intro.1": {"text": "Welcome to Whisker Academy, Princess! This castle is a school for magic, and today is your very first day.", "prince": "Welcome to Whisker Academy, Prince! This castle is a school for magic, and today is your very first day."},
 "story.prologue-1.intro.2": {"text": "Here is the secret every student learns: at Whisker Academy, every spell is a word. When you read a word out loud, its magic comes alive."},
 "story.prologue-1.intro.3": {"text": "You already finished the Entrance Quest, the reading walk every new student takes. Now let's get you inside."},
 "story.prologue-1.outro.1": {"text": "Your map glows, and a twinkly path appears across it, leading straight through the castle doors."},
-"story.prologue-1.outro.2": {"text": "Look at that. You read four lines, and the magic followed you. Welcome in, Princess."},
+"story.prologue-1.outro.2": {"text": "Look at that. You read four lines, and the magic followed you. Welcome in, Princess.", "prince": "Look at that. You read four lines, and the magic followed you. Welcome in, Prince."},
 
 "story.prologue-2.intro.1": {"text": "Every student at Whisker Academy gets a familiar: a magic animal friend who learns right beside them."},
 "story.prologue-2.intro.2": {"text": "Out on the lawn, something is wiggling. And mewing!"},
@@ -205,7 +205,7 @@
 "story.prologue-4.intro.2": {"text": "Two toys live here: a teddy bear named Ted and a rag doll named Dot. When the grown-ups leave the room, the toys wake up!"},
 "story.prologue-4.intro.3": {"text": "Ted looks a little nervous. He has a very important question for Dot."},
 "story.prologue-4.outro.1": {"text": "Inside Ted's little box are two tiny gold rings. Ted and Dot are getting married!"},
-"story.prologue-4.outro.2": {"text": "'Oh, my stuffing,' sighs Ted happily. 'A royal toy wedding! Will you help us keep the wedding safe, Princess?' Of course you will."},
+"story.prologue-4.outro.2": {"text": "'Oh, my stuffing,' sighs Ted happily. 'A royal toy wedding! Will you help us keep the wedding safe, Princess?' Of course you will.", "prince": "'Oh, my stuffing,' sighs Ted happily. 'A royal toy wedding! Will you help us keep the wedding safe, Prince?' Of course you will."},
 
 "story.prologue-5.intro.1": {"text": "In the main hall, you meet a classmate named Bix. Bix's magic makes things float."},
 "story.prologue-5.intro.2": {"text": "Across the hall, another classmate, Chip, is making a ball bounce higher and higher. Chip's magic makes things bounce!"},
@@ -215,7 +215,7 @@
 "story.prologue-5.question": {"text": "Who got caught in the net? Click the picture."},
 
 "story.prologue-6.intro.1": {"text": "That night, the castle is quiet. Too quiet. Tiptoe, tiptoe… Queen Vex is sneaking toward the toy room, with Gus right behind her."},
-"story.prologue-6.intro.2": {"text": "The grown-ups are all asleep, so it's up to you, Princess. Bix and Kitty are ready. Read the tricks to set them!"},
+"story.prologue-6.intro.2": {"text": "The grown-ups are all asleep, so it's up to you, Princess. Bix and Kitty are ready. Read the tricks to set them!", "prince": "The grown-ups are all asleep, so it's up to you, Prince. Bix and Kitty are ready. Read the tricks to set them!"},
 "story.prologue-6.outro.1": {"text": "Sticky with jam and blown about by the fan, Queen Vex huffs away. 'This isn't over!' she calls. 'I will get those rings!'"},
 "story.prologue-6.outro.2": {"text": "Ted and Dot's rings are safe, for now. On your very first day, your words saved the wedding."},
 

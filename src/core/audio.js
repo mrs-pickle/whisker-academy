@@ -7,7 +7,7 @@ const TIMED_OUT = Symbol('timed out');
 
 
 
-export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing }) {
+export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing, variant }) {
   const files = new Map(Object.entries(manifest ?? {}).filter(([, file]) => typeof file === 'string' && file !== ''));
   const prefix = base && !base.endsWith('/') ? `${base}/` : (base ?? '');
   const fetchClip = fetchFn ?? ((url, init) => globalThis.fetch(url, init));
@@ -42,6 +42,14 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing }) 
       context.addEventListener('statechange', wakeWaiters);
     }
     return context;
+  }
+
+  function chosen(id) {
+    let version = null;
+    try { version = variant?.(); } catch { return id; }
+    if (!version) return id;
+    const twin = `${id}.${version}`;
+    return files.has(twin) || overrides.has(twin) ? twin : id;
   }
 
   const urlFor = (file) => prefix + file.split('/').map(encodeURIComponent).join('/');
@@ -206,16 +214,18 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing }) 
 
     unlocked: () => pressed,
 
-    has(id) {
+    has(asked) {
+      const id = chosen(asked);
       return (overrides.has(id) && !badRecordings.has(id)) || (files.has(id) && !badFiles.has(id));
     },
 
     play(id) {
-      return playOne(id, interrupt());
+      return playOne(chosen(id), interrupt());
     },
 
-    async playSeq(ids, gapMs = CLIP_GAP_MS, lead = 0) {
+    async playSeq(asked, gapMs = CLIP_GAP_MS, lead = 0) {
       const gen = interrupt();
+      const ids = asked.map(chosen);
       for (const id of new Set(ids)) bufferFor(id, false).catch(() => {});
       let whole = true;
       for (let i = 0; i < ids.length; i++) {

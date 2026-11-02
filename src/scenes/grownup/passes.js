@@ -1,5 +1,6 @@
 import { shownWord } from '../../activities/charm.js';
 import { h } from '../../core/dom.js';
+import { heroLine, heroOf, heroWords } from '../../profile/hero.js';
 import { cornerFrame } from './gate.js';
 import { shortDate } from './progress.js';
 
@@ -8,7 +9,7 @@ const HOW_WORDS = Object.freeze({ right: 'right', helped: 'with help', missed: '
 
 const scenesOf = (content) => (content?.story ?? []).flatMap(( ch) => [...ch.scenes, ...ch.side]);
 
-export function passLabel({ id, mode }, content) {
+export function passLabel({ id, mode }, content, hero = 'princess') {
   const at = id.indexOf(':');
   const kind = id.slice(0, at);
   const name = id.slice(at + 1);
@@ -28,11 +29,11 @@ export function passLabel({ id, mode }, content) {
     case 'iw': return `Word charm: ${shownWord(name)}`;
     case 's': {
       const line = scenesOf(content).flatMap((scene) => scene.sentences).find((s) => s.id === name);
-      return line ? `Story line: ${line.text}` : id;
+      return line ? `Story line: ${heroLine(line, hero)}` : id;
     }
     case 'q': {
       const question = scenesOf(content).find((scene) => scene.id === name)?.question;
-      const text = question && content.voice?.[question.line]?.text;
+      const text = question && heroLine(content.voice?.[question.line], hero);
       return text ? `Story question: ${text}` : id;
     }
     default: return id;
@@ -58,12 +59,13 @@ function inOrder(passes) {
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'passes');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
   const passes = inOrder(ctx.profile.passes ?? []);
   body.append(
-    h('p', { class: 'gu-hint' }, 'What she passed, and where each one stands. A pass is not scored.'),
+    h('p', { class: 'gu-hint' }, hx('What she passed, and where each one stands. A pass is not scored.')),
     passes.length === 0 ? h('p', { class: 'gu-empty' }, 'No passes yet.') : h('table', { class: 'gu-table' },
       h('thead', {}, h('tr', {}, h('th', {}, 'What'), h('th', {}, 'Passed on'), h('th', {}, 'Lessons'), h('th', {}, 'Where it stands'))),
       h('tbody', {}, passes.map((record) => h('tr', {},
-        h('td', {}, passLabel(record, ctx.content)), h('td', {}, shortDate(record.day)), h('td', {}, record.times), h('td', {}, passStatus(record)))))));
+        h('td', {}, passLabel(record, ctx.content, heroOf(ctx.profile))), h('td', {}, shortDate(record.day)), h('td', {}, record.times), h('td', {}, hx(passStatus(record))))))));
   return () => {};
 }

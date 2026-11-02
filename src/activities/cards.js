@@ -3,6 +3,7 @@ import { CLIP_GAP_MS } from '../core/audio.js';
 import { createLock } from '../core/lock.js';
 import { CORRESPONDENCES } from '../curriculum/correspondences.js';
 import { PHONEMES, phonemeCodes } from '../curriculum/phonemes.js';
+import { heroOf } from '../profile/hero.js';
 import { artUrl, bigButton, copilotBanner, copilotHold, copilotUndoAside, keysOnPage, nextButton, passButton, setUndo, tile } from '../ui/components.js';
 import { HELP_TIPS, markTipSeen, offerTips, TURN_TIPS } from '../ui/tips.js';
 
@@ -471,7 +472,7 @@ export function judgeAloud(view, { copilot, kind, model, target, praise, praiseL
       });
     };
     if (copilot) {
-      panel = copilotBanner({ onYes: yes, onAgain: again, onHelp: help, onUndo: undo, onPass: pass, kind });
+      panel = copilotBanner({ onYes: yes, onAgain: again, onHelp: help, onUndo: undo, onPass: pass, kind, hero: heroOf(view.ctx?.profile) });
       showUndo();
     } else {
       const passing = ['Pass', { glyph: '→' }, pass];

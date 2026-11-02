@@ -1,4 +1,5 @@
 import { h } from '../../core/dom.js';
+import { heroWords } from '../../profile/hero.js';
 import { COPILOT_HELP } from '../../ui/components.js';
 import { cornerFrame } from './gate.js';
 
@@ -21,17 +22,18 @@ export const TIPS = Object.freeze([
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'tips');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
   body.append(
-    h('ul', { class: 'gu-tips' }, TIPS.map((tip) => h('li', {}, tip))),
+    h('ul', { class: 'gu-tips' }, TIPS.map((tip) => h('li', {}, hx(tip)))),
     h('h2', { class: 'gu-subtitle' }, "On the Grown-up's turn"),
     h('p', {}, 'Press 1 for ✓ Yes, 2 for ↻ Try again, 3 for 🔊 Help, and 4 for → Pass, without reaching for the trackpad. The "?" on the banner shows the scoring rule.'),
     h('p', {}, UNDO_TIP),
     h('p', {}, CONTINUE_TIP),
     h('p', {}, PASS_TIP),
-    h('p', {}, TAKE_BACK_TIP),
+    h('p', {}, hx(TAKE_BACK_TIP)),
     h('p', {}, 'On the screen before each adventure, "Grown-up playing today?" has Yes or No. On days with no grown-up, choose No: those moments become self-checks and are not scored. (Settings has the usual answer.)'),
     h('h2', { class: 'gu-subtitle' }, 'Stopping and printing'),
-    h('p', {}, STOP_TIP),
-    h('p', {}, PRINT_TIP));
+    h('p', {}, hx(STOP_TIP)),
+    h('p', {}, hx(PRINT_TIP)));
   return () => {};
 }

@@ -1,5 +1,6 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
+import { heroWords } from '../../profile/hero.js';
 import { PAGE_TYPES, addFamilyPages, firstWaiting, keepPages, movePage, newlyEarned, pageBlobId, pagesNow, removePage, waitingQueue } from '../../profile/pages.js';
 import { pageUrl } from '../../ui/page-parts.js';
 import { prepare } from '../../ui/prepare-image.js';
@@ -25,13 +26,14 @@ export function pageStatus(page) {
   return { kind: 'waiting', label: 'Waiting' };
 }
 
-export const nextPageNote = (pages) => (firstWaiting(pages)
-  ? 'Her next finished day offers the first waiting page below, beside the pages made from the story.'
-  : 'None of your pages are waiting, so her next finished day offers pages made from the story. Add pages to give her one more choice.');
+export const nextPageNote = (pages, hx = ( text) => text) => (firstWaiting(pages)
+  ? hx('Her next finished day offers the first waiting page below, beside the pages made from the story.')
+  : hx('None of your pages are waiting, so her next finished day offers pages made from the story. Add pages to give her one more choice.'));
 
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'pages');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
   const day = ctx.day;
   const lock = createLock();
   let live = true;
@@ -210,7 +212,7 @@ export function mount(el, ctx, params = {}) {
       h('button', { type: 'button', class: 'gu-button', onClick: () => { deleting = page.id; draw(); } }, 'Delete'),
     ];
     const confirm = deleting !== page.id ? null : h('div', { class: 'gu-confirm' },
-      h('p', {}, isEarned(page) ? "Delete this page? Her coloring of it goes too, and it can't be undone." : "Delete this page? It can't be undone."),
+      h('p', {}, isEarned(page) ? hx("Delete this page? Her coloring of it goes too, and it can't be undone.") : "Delete this page? It can't be undone."),
       h('div', { class: 'gu-row' },
         h('button', { type: 'button', class: 'gu-button gu-primary', onClick: () => { remove(page.id); } }, 'Delete it'),
         h('button', { type: 'button', class: 'gu-button', onClick: () => { deleting = null; draw(); } }, 'Keep it')));
@@ -228,7 +230,7 @@ export function mount(el, ctx, params = {}) {
     if (!live || !pages) return;
     const shown = listOrder(pages);
     const queue = waitingQueue(pages);
-    note.textContent = nextPageNote(pages);
+    note.textContent = nextPageNote(pages, hx);
     const due = newlyEarned(pages).length;
     printAll.textContent = `Print all new pages (${due})`;
     printAll.disabled = due === 0;
@@ -252,21 +254,21 @@ export function mount(el, ctx, params = {}) {
 
   body.append(
     saved,
-    h('p', {}, 'Each day she finishes her adventure earns her one coloring page, however the day went. The game makes it from the story she read, with things from the words she has read and the words of her day printed along the bottom, and she can change it. The first of your pages waiting below is one more choice; the others wait their turn.'),
+    h('p', {}, hx('Each day she finishes her adventure earns her one coloring page, however the day went. The game makes it from the story she read, with things from the words she has read and the words of her day printed along the bottom, and she can change it. The first of your pages waiting below is one more choice; the others wait their turn.')),
     h('section', { class: 'gu-setting', 'data-section': 'add' },
       h('h2', { class: 'gu-setting-label' }, 'Add pages'),
       h('p', { class: 'gu-help' }, 'Add your own pictures to color: PNG, JPEG or WebP. You can pick several at once; they go at the end of the queue.'),
       addButton, input, addMessage),
     h('section', { class: 'gu-setting', 'data-section': 'print' },
       h('h2', { class: 'gu-setting-label' }, 'Print new pages'),
-      h('p', { class: 'gu-help' }, 'Prints every page she has earned and not printed yet, blank, in one go, one page to a sheet. To print a page as she has colored it, use Hold to print in the color-in room.'),
+      h('p', { class: 'gu-help' }, hx('Prints every page she has earned and not printed yet, blank, in one go, one page to a sheet. To print a page as she has colored it, use Hold to print in the color-in room.')),
       printAll, printMessage),
     h('section', { class: 'gu-setting', 'data-section': 'strip' },
-      h('h2', { class: 'gu-setting-label' }, SETTING_HELP.printWords.label),
-      h('p', { class: 'gu-help' }, SETTING_HELP.printWords.help),
+      h('h2', { class: 'gu-setting-label' }, hx(SETTING_HELP.printWords.label)),
+      h('p', { class: 'gu-help' }, hx(SETTING_HELP.printWords.help)),
       strip),
     h('section', { class: 'gu-setting', 'data-section': 'pages' },
-      h('h2', { class: 'gu-setting-label' }, 'Her pages'),
+      h('h2', { class: 'gu-setting-label' }, hx('Her pages')),
       note,
       list));
   return () => {

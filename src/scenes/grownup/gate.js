@@ -1,5 +1,6 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
+import { heroWords } from '../../profile/hero.js';
 import { artUrl, bigButton, holdToActivate } from '../../ui/components.js';
 
 export const SCREENS = Object.freeze([
@@ -41,9 +42,10 @@ export function unsavedBanner(ctx) {
       ' Use Backup to keep a copy before you close it.');
   }
   if (ctx.saveFailed !== true) return null;
+  const hx = heroWords(ctx);
   return h('p', { class: 'gu-warning', role: 'status' },
     h('strong', {}, "The last save didn't work."),
-    ' Use Backup to keep a copy of her progress, then reload the page.');
+    hx(' Use Backup to keep a copy of her progress, then reload the page.'));
 }
 
 export function cornerFrame(el, ctx, params, screen) {

@@ -1,5 +1,6 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
+import { heroWords } from '../../profile/hero.js';
 import { cornerFrame } from './gate.js';
 
 
@@ -22,6 +23,7 @@ export const keywordNote = (keyword, audio) => (keyword && !audio.has(`w.${keywo
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'deck');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
 
   const status = h('p', { class: 'gu-saved', role: 'status', 'aria-live': 'polite' });
   const lock = createLock();
@@ -73,7 +75,7 @@ export function mount(el, ctx, params = {}) {
   };
 
   body.append(
-    h('p', {}, 'Mark each sound card as her tutor sees it. The deck only chooses what comes up in the sound-card drill. Marking a card mastered never unlocks words; the lesson in Settings does that.'),
+    h('p', {}, hx('Mark each sound card as her tutor sees it. The deck only chooses what comes up in the sound-card drill. Marking a card mastered never unlocks words; the lesson in Settings does that.')),
     h('p', { class: 'gu-hint' }, 'Key words are optional, and used only when Settings has the "Letter name, key word, sound" routine.'),
     status,
     h('div', { class: 'gu-deck' }, ctx.profile.deck.map(row)));

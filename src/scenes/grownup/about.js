@@ -1,4 +1,5 @@
 import { h } from '../../core/dom.js';
+import { heroWords } from '../../profile/hero.js';
 import { cornerFrame } from './gate.js';
 import { PRINT_TIP } from './tips.js';
 
@@ -14,10 +15,11 @@ export const NOTICES = Object.freeze([
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'about');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
   body.append(
-    h('p', {}, "Meadowlark's World: Whisker Academy is a home practice game for reading and spelling, played with a grown-up beside her. It practices only what has been taught, in UFLI Foundations order."),
-    h('p', {}, 'Her names, progress and your recordings stay in this browser on this computer. Nothing is sent anywhere: there are no accounts, ads or tracking. Use Backup to keep a copy.'),
-    h('p', {}, PRINT_TIP),
+    h('p', {}, hx("Meadowlark's World: Whisker Academy is a home practice game for reading and spelling, played with a grown-up beside her. It practices only what has been taught, in UFLI Foundations order.")),
+    h('p', {}, hx('Her names, progress and your recordings stay in this browser on this computer. Nothing is sent anywhere: there are no accounts, ads or tracking. Use Backup to keep a copy.')),
+    h('p', {}, hx(PRINT_TIP)),
     h('h2', { class: 'gu-subtitle' }, 'Notices'),
     h('p', {}, NOTICES[0]),
     h('p', {}, 'Third-party material used in this game:'),

@@ -1,4 +1,5 @@
 import { h } from '../core/dom.js';
+import { heroText } from '../profile/hero.js';
 
 export const MAX_PLAUSIBLE_WCPM = 250;
 export const MIN_TIMED_MS = 2000;
@@ -19,7 +20,8 @@ export function passageLines(text) {
   return String(text ?? '').trim().split(/(?<=[.!?]["”’']?)\s+(?=["“‘']?[A-Z])/).filter(line => line !== '');
 }
 
-export function passageTimer({ wordCount, onFinish, title = "Grown-up's turn: time her reading", finishLabel = 'Finish' }) {
+export function passageTimer({ wordCount, onFinish, title, finishLabel = 'Finish', hero = 'princess' }) {
+  const hx = (text) => heroText(text, hero);
   let started = 0;
   let took = 0;
   let missed = 0;
@@ -65,13 +67,13 @@ export function passageTimer({ wordCount, onFinish, title = "Grown-up's turn: ti
     judge();
   }, true);
   const missedGroup = h('div', { class: 'entrance-missed', role: 'group', 'aria-label': 'Missed words', hidden: true },
-    h('span', {}, 'How many words did she miss?'),
+    h('span', {}, hx('How many words did she miss?')),
     h('button', { type: 'button', class: 'entrance-step', 'aria-label': 'One fewer missed word', onClick: () => setMissed(missed - 1) }, '−'),
     count,
     h('button', { type: 'button', class: 'entrance-step', 'aria-label': 'One more missed word', onClick: () => setMissed(missed + 1) }, '+'));
 
-  return h('div', { class: 'passage-timer', role: 'group', 'aria-label': 'Time her reading' },
-    h('p', { class: 'copilot-title' }, title),
+  return h('div', { class: 'passage-timer', role: 'group', 'aria-label': hx('Time her reading') },
+    h('p', { class: 'copilot-title' }, hx(title ?? "Grown-up's turn: time her reading")),
     h('div', { class: 'copilot-tips' }),
     h('div', { class: 'copilot-choices' }, start, done, missedGroup, finish, again),
     note);

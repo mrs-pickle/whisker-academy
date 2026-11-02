@@ -22,15 +22,20 @@ const valid = (value, allowed, fallback) => {
 
 const optional = (value, allowed, fallback) => (value === undefined ? fallback : valid(value, allowed, '') || null);
 
+const isPrince = (look) => look?.hero === 'prince';
+
+export const outfitArt = (id, look) => `${isPrince(look) ? 'prince' : 'wardrobe'}/${id}`;
+
 export function castArt(id, look, pose = 'sit') {
   const l = look ?? DEFAULT_LOOK;
   if (id === 'princess') {
+    const hero = isPrince(l) ? 'prince' : 'princess';
     const crown = optional(l.crown, CROWNS, DEFAULT_LOOK.crown);
     return [
-      `princess/body-${valid(l.skin, SKINS, DEFAULT_LOOK.skin)}`,
-      `wardrobe/${valid(l.outfit, OUTFIT, DEFAULT_LOOK.outfit)}`,
-      `princess/hair-${valid(l.hair, HAIRS, DEFAULT_LOOK.hair)}-${valid(l.hairColor, HAIR_COLORS, DEFAULT_LOOK.hairColor)}`,
-      ...(crown ? [`princess/crown-${crown}`] : []),
+      `${hero}/body-${valid(l.skin, SKINS, DEFAULT_LOOK.skin)}`,
+      outfitArt(valid(l.outfit, OUTFIT, DEFAULT_LOOK.outfit), l),
+      `${hero}/hair-${valid(l.hair, HAIRS, DEFAULT_LOOK.hair)}-${valid(l.hairColor, HAIR_COLORS, DEFAULT_LOOK.hairColor)}`,
+      ...(crown ? [`${hero}/crown-${crown}`] : []),
     ];
   }
   if (id === 'kitten') {

@@ -1,5 +1,6 @@
 import { h } from '../core/dom.js';
 import { nextSideQuest, nextStoryScene, previousMainScene, rereadDay } from '../engine/story-place.js';
+import { heroWords } from '../profile/hero.js';
 import { artUrl } from '../ui/components.js';
 import { createStoryStage, sceneArt } from '../ui/story-stage.js';
 import { offerTips, TIMING_TIPS } from '../ui/tips.js';
@@ -234,6 +235,7 @@ async function modelLines(view, stage, scene, lines) {
 const SHOW_SPEED = 'Show words per minute';
 
 export function timeReading(view, scene, onDone) {
+  const hx = heroWords(view.ctx);
   return new Promise((resolve) => {
     let started = 0;
     let readout = '';
@@ -263,7 +265,7 @@ export function timeReading(view, scene, onDone) {
     show.setAttribute('aria-pressed', 'false');
     const finish = button('Finish', 'again', () => view.lock.run(async () => { banner.remove(); resolve(undefined); }), true);
     const banner = h('div', { class: 'copilot-banner story-timing', role: 'group', 'aria-label': "Grown-up's turn" },
-      h('p', { class: 'copilot-title' }, "Grown-up's turn: time her reading"),
+      h('p', { class: 'copilot-title' }, hx("Grown-up's turn: time her reading")),
       h('div', { class: 'copilot-tips' }),
       h('div', { class: 'copilot-choices' }, start, done, show, finish));
     view.root.append(banner);

@@ -1,6 +1,7 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
 import { isQuestDetail, rebuildQuestDetail } from '../../engine/quest-results.js';
+import { heroWords } from '../../profile/hero.js';
 import { esc, FONT_URL, printHtml } from '../../ui/print-pages.js';
 import { cornerFrame } from './gate.js';
 import { weekLabel } from './progress.js';
@@ -10,8 +11,9 @@ import { weekLabel } from './progress.js';
 export const REBUILT_NOTE = 'Rebuilt from saved records: missed words are exact.';
 export const REBUILT_UNSURE_NOTE = 'Rebuilt from saved records: some marks could not be recovered. Those words say "not recorded".';
 export const REBUILT_MISMATCH_NOTE = 'Rebuilt from saved records: the marks do not quite add up to the saved scores, so a "try again" may be a word she read right in the quest and missed in practice later that day.';
-const noteFor = (detail) => (!detail.rebuilt ? null
-  : detail.checked === 'unsure' ? REBUILT_UNSURE_NOTE : detail.checked === 'mismatch' ? REBUILT_MISMATCH_NOTE : REBUILT_NOTE);
+const same = (text) => text;
+const noteFor = (detail, hx) => (!detail.rebuilt ? null
+  : detail.checked === 'unsure' ? REBUILT_UNSURE_NOTE : detail.checked === 'mismatch' ? hx(REBUILT_MISMATCH_NOTE) : REBUILT_NOTE);
 const TITLE = 'Entrance Quest results';
 
 export function markChip(mark) {
@@ -51,10 +53,10 @@ function questRecord(profile, content, states) {
   return { detail: rebuildQuestDetail(baseline, content, states, profile.startLesson), kept: false };
 }
 
-export function resultsDocument(detail) {
+export function resultsDocument(detail, hx = same) {
   const sections = resultSections(detail).map((s) => `<h2>${esc(s.title)}</h2>`
     + (s.text !== undefined ? `<p>${esc(s.text)}</p>`
-      : s.rows.length === 0 ? '<p class="empty">None in her quest.</p>'
+      : s.rows.length === 0 ? `<p class="empty">${hx('None in her quest.')}</p>`
         : s.rows.map((row) => `<p class="line">${row.map((c) => `<span class="chip ${c.kind}">${esc(chipText(c))}</span>`).join(' ')}</p>`).join('')));
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${TITLE}</title><style>`
     + `@font-face { font-family: 'Andika'; src: url("${FONT_URL}") format('woff2'); font-weight: 400; font-style: normal; }`
@@ -66,16 +68,17 @@ export function resultsDocument(detail) {
     + '.chip { display: inline-block; margin: 0.4mm 1mm 0.4mm 0; padding: 0 2mm; border: 0.3mm solid #000; border-radius: 3mm; white-space: nowrap; }'
     + '.chip.missed { font-weight: 700; border-width: 0.6mm; } .chip.unreached { color: #444; border-style: dashed; } .chip.unknown { color: #444; border-style: dotted; }'
     + `</style></head><body><h1>${TITLE}</h1><p>${esc(playedOn(detail))}</p>`
-    + (noteFor(detail) ? `<p class="note">${esc(noteFor(detail) ?? '')}</p>` : '')
+    + (noteFor(detail, hx) ? `<p class="note">${esc(noteFor(detail, hx) ?? '')}</p>` : '')
     + `${sections.join('')}</body></html>`;
 }
 
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'quest-results');
   if (!body) return () => {};
+  const hx = heroWords(ctx);
   const record = questRecord(ctx.profile, ctx.content, ctx.states);
   if (!record) {
-    body.append(h('p', { class: 'gu-empty' }, "The Entrance Quest hasn't been played yet. It starts the first time she presses Play."));
+    body.append(h('p', { class: 'gu-empty' }, hx("The Entrance Quest hasn't been played yet. It starts the first time she presses Play.")));
     return () => {};
   }
   const { detail } = record;
@@ -89,7 +92,7 @@ export function mount(el, ctx, params = {}) {
   const print = () => lock.run(async () => {
     message.textContent = '';
     try {
-      if (!(await printHtml(resultsDocument(detail), { doc: el.ownerDocument }))) message.textContent = "The print window didn't open. Try again.";
+      if (!(await printHtml(resultsDocument(detail, hx), { doc: el.ownerDocument }))) message.textContent = "The print window didn't open. Try again.";
     } catch (err) {
       console.error('The Entrance Quest results could not be printed', err);
       message.textContent = "The results couldn't be printed in this browser window.";
@@ -101,14 +104,14 @@ export function mount(el, ctx, params = {}) {
     h('span', { class: 'gu-answer-mark' }, chip.label),
     chip.built ? ` (built: ${chip.built})` : null);
   body.append(...[
-    noteFor(detail) ? h('p', { class: 'gu-note' }, noteFor(detail)) : null,
+    noteFor(detail, hx) ? h('p', { class: 'gu-note' }, noteFor(detail, hx)) : null,
     h('p', { class: 'gu-hint' }, playedOn(detail)),
     h('div', { class: 'gu-row' }, h('button', { type: 'button', class: 'gu-button gu-primary', onClick: () => { print().catch((err) => console.error('The Entrance Quest results could not be printed', err)); } }, 'Print')),
     message,
     ...resultSections(detail).map((section) => h('section', { class: 'gu-quest-section' },
       h('h2', { class: 'gu-subtitle' }, section.title),
       section.text !== undefined ? h('p', {}, section.text)
-        : section.rows.length === 0 ? h('p', { class: 'gu-empty' }, 'None in her quest.')
+        : section.rows.length === 0 ? h('p', { class: 'gu-empty' }, hx('None in her quest.'))
           : section.rows.map((row) => h('div', { class: 'gu-answer-line' }, row.map(chipEl)))))].filter((node) => node !== null));
   return () => {};
 }

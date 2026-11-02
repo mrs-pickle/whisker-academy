@@ -11,6 +11,7 @@ import { castArt } from '../ui/story-stage.js';
 import { HELP_TIPS, offerTips, TIMING_TIPS, TURN_TIPS } from '../ui/tips.js';
 import { passageLines, passageTimer, wordsCorrectPerMinute } from './passage-timer.js';
 import { earnPage } from '../profile/pages.js';
+import { heroOf, heroWords } from '../profile/hero.js';
 import { wordsForStrip } from '../ui/print-pages.js';
 import { createActiveClock, libraryForTheDay } from './session.js';
 
@@ -152,7 +153,8 @@ async function readLines(view, lines, { open }) {
     for (const word of on?.children ?? []) word.classList.remove('current');
     await wait(ADVANCE_MS);
   };
-  const banner = copilotBanner({ onYes: () => mark(true, false), onAgain: () => mark(false, false), onHelp: () => mark(false, true), onUndo: undo, helpText: ENTRANCE_HELP });
+  const hx = heroWords(view.ctx);
+  const banner = copilotBanner({ onYes: () => mark(true, false), onAgain: () => mark(false, false), onHelp: () => mark(false, true), onUndo: undo, helpText: hx(ENTRANCE_HELP), hero: heroOf(view.ctx?.profile) });
   banner.classList.add('waiting');
   const showLine = (n) => {
     const row = h('div', { class: 'entrance-line', lang: 'en' }, lines[n].words.map(w => h('span', { class: 'entrance-word' }, w.w)));
@@ -296,7 +298,7 @@ async function readPassage(view, passage) {
   view.root.classList.add('activity-passage');
   view.show(h('div', { class: 'story-page entrance-passage passage-page', lang: 'en' }, passageLines(passage.text).map(line => h('p', { class: 'story-line' }, line))));
   const { wcpm, errors } = await new Promise((resolve) => {
-    const timer = passageTimer({ wordCount: passage.wordCount, onFinish: ({ wcpm: score, errors: missed }) => view.lock.run(async () => {
+    const timer = passageTimer({ wordCount: passage.wordCount, hero: heroOf(view.ctx?.profile), onFinish: ({ wcpm: score, errors: missed }) => view.lock.run(async () => {
       banner.remove();
       resolve({ wcpm: score, errors: missed });
     }) });
