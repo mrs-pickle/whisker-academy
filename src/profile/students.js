@@ -7,7 +7,7 @@ export const MAX_STUDENTS = 2;
 export const STUDENTS_KEY = 'students';
 export const CURRENT_KEY = 'current';
 export const BACKUP_KEY_PREFIX = 'backup:';
-export const DEVICE_SETTINGS = Object.freeze( (['pin', 'tipsSeen']));
+export const DEVICE_SETTINGS = Object.freeze( (['pin', 'tipsSeen', 'muted']));
 const SETTINGS_KEY = 'settings';
 const STUDENT_ID = /^s[1-9][0-9]{0,3}$/;
 

@@ -1,7 +1,7 @@
 import { h } from '../core/dom.js';
-import { LESSONS } from '../curriculum/lessons.js';
+import { LAST_LESSON, LESSONS } from '../curriculum/lessons.js';
 import { questDetail } from '../engine/quest-results.js';
-import { ASSESSMENT_DEADLINES, assessmentPlan, atLesson, confirmNew, confirmRetake, ladderLines, ladderOpen, suggestLesson } from '../engine/placement.js';
+import { ASSESSMENT_DEADLINES, assessmentPlan, atLesson, confirmNew, confirmRetake, ladderLines, ladderStart, nextLadderLine, suggestLesson } from '../engine/placement.js';
 import { createActivityView, wait } from '../activities/cards.js';
 import { heroWords } from '../profile/hero.js';
 import { clampTaughtUpTo } from '../profile/settings.js';
@@ -23,6 +23,8 @@ export const ASSESSMENT_VOICE = Object.freeze({
   lines: { real: 'v.entrance.real', nonsense: 'v.entrance.nonsense', next: 'v.entrance.next' },
   dictation: 'v.entrance.dictation',
 });
+export const ladderGuess = (profile, settings) => (Number.isInteger(profile?.assessFrom) ? (profile.assessFrom) : settings.taughtUpTo);
+
 const CLOSE_MS = 1800;
 const FIRST_WORDS_LESSON = 4;
 
@@ -85,7 +87,9 @@ export function mount(el, ctx) {
     await view.prompt([voice.welcome]);
 
     const ladder = ladderLines(ctx.content);
-    const climbed = await readLines(view, ladder, { open: (_, log) => open('ladder') && ladderOpen(log), voice: ASSESSMENT_VOICE.lines, helpText: HELP });
+    const start = ladderStart(ladder, ladderGuess(ctx.profile, ctx.settings));
+    const climbed = await readLines(view, ladder, { open: () => open('ladder'), voice: ASSESSMENT_VOICE.lines, helpText: HELP,
+      pick: (at, log) => nextLadderLine(start, ladder.length, at.map((i, k) => ({ at: i, line: log[k] }))) });
     const suggested = suggestLesson(ladder, climbed.lines);
     const plan = assessmentPlan(ctx.content, suggested, ctx.profile);
     if (climbed.lines.length > 0 && view.live()) await view.say([voice.thanks], 700);
@@ -139,14 +143,14 @@ export function mount(el, ctx) {
   function askGrownUp({ suggested, before, summary, dictation, passage }) {
     return new Promise((resolve) => {
       const start = suggested ?? (first ? FIRST_WORDS_LESSON : before);
-      const input = (h('input', { class: 'gu-input assess-lesson', id: 'assess-lesson', type: 'number', min: '1', max: '68', step: '1', value: String(start), inputmode: 'numeric' }));
+      const input = (h('input', { class: 'gu-input assess-lesson', id: 'assess-lesson', type: 'number', min: '1', max: String(LAST_LESSON), step: '1', value: String(start), inputmode: 'numeric' }));
       const message = h('p', { class: 'gu-message', role: 'status', 'aria-live': 'polite' });
       const tier = spellTierFromDictation(dictation);
       const offerTier = !first && dictation.length > 0 && tier !== ctx.profile.spellTier;
       const tierBox = (h('input', { type: 'checkbox', id: 'assess-tier' }));
       const use = () => {
         const n = Number(input.value);
-        if (!Number.isInteger(n) || n < 1 || n > 68) { message.textContent = 'Type a lesson from 1 to 68.'; input.focus(); return; }
+        if (!Number.isInteger(n) || n < 1 || n > LAST_LESSON) { message.textContent = `Type a lesson from 1 to ${LAST_LESSON}.`; input.focus(); return; }
         resolve({ lesson: clampTaughtUpTo(n), ...(offerTier && tierBox.checked ? { spellTier: tier } : {}) });
       };
       const keep = () => resolve({ lesson: null, ...(offerTier && tierBox.checked ? { spellTier: tier } : {}) });

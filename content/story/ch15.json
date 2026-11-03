@@ -1,0 +1,128 @@
+{
+  "id": "ch15",
+  "title": "Un-do It!",
+  "book": 2,
+  "page": "knot",
+  "lessons": [98, 99, 100, 101, 102, 103, 104, 105, 106],
+  "requiresKnown": ["a", "the"],
+  "scenes": [
+    {
+      "id": "ch15-1",
+      "bg": "tower",
+      "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
+      "picture": "At the top of a tall dark tower, a silly queen leans out of a window writing with a big feather pen, and a friendly crow flaps down to the children at the gate.",
+      "intro": ["story.ch15-1.intro.1", "story.ch15-1.intro.2"],
+      "sentences": [
+        {"id": "ch15-1.1", "text": "Vex is up in the tower.", "effect": "float", "trick": null},
+        {"id": "ch15-1.2", "text": "Knock on the gate!", "effect": "bounce", "trick": "gate"},
+        {"id": "ch15-1.3", "text": "Vex will write a spell.", "effect": "sparkle", "trick": "page"}
+      ],
+      "outro": ["story.ch15-1.outro.1"]
+    },
+    {
+      "id": "ch15-2",
+      "lesson": 99,
+      "bg": "tower",
+      "cast": ["princess", "kitten", "gus-flap", "bix"],
+      "picture": "A friendly crow lets down a long rope with a knot every few steps from a high tower window, and a cheerful boy starts to climb it.",
+      "intro": ["story.ch15-2.intro.1"],
+      "sentences": [
+        {"id": "ch15-2.1", "text": "Gus has a rope with knots.", "effect": "item-pop", "trick": "rope"},
+        {"id": "ch15-2.2", "text": "Bix can go up the rope.", "effect": "float", "trick": "rope"},
+        {"id": "ch15-2.3", "text": "It is a fantastic rope!", "effect": "kitten-cheer", "trick": "rope"}
+      ],
+      "outro": ["story.ch15-2.outro.1"],
+      "question": {"line": "story.ch15-2.question", "choices": ["tricks/rope", "tricks/train", "tricks/boat"], "answer": "tricks/rope"}
+    },
+    {
+      "id": "ch15-3",
+      "lesson": 100,
+      "bg": "tower",
+      "cast": ["princess", "kitten", "vex-grab", "tess"],
+      "picture": "In a round room at the top of the tower, a silly queen tugs at a glowing page tied up in a big knot, and a clever girl watches.",
+      "intro": ["story.ch15-3.intro.1"],
+      "sentences": [
+        {"id": "ch15-3.1", "text": "The page is in a knot.", "effect": "sparkle", "trick": "knot"},
+        {"id": "ch15-3.2", "text": "Vex tugs at the knot.", "effect": "bounce", "trick": "knot"},
+        {"id": "ch15-3.3", "text": "Now the knot is thicker!", "effect": "item-pop", "trick": "knot"},
+        {"id": "ch15-3.4", "text": "Vex yells louder and louder.", "effect": "bounce", "trick": null}
+      ],
+      "outro": ["story.ch15-3.outro.1"]
+    },
+    {
+      "id": "ch15-4",
+      "lesson": 101,
+      "bg": "tower",
+      "cast": ["princess", "kitten", "vex-jam", "gus-idle"],
+      "picture": "A kitten tiptoes toward a knotted page, a silly queen steps back in surprise, and a big pot of jam tips over onto the floor.",
+      "intro": ["story.ch15-4.intro.1"],
+      "sentences": [
+        {"id": "ch15-4.1", "text": "Kitty sits softly by the knot.", "effect": "kitten-cheer", "trick": "knot"},
+        {"id": "ch15-4.2", "text": "Vex steps back quickly.", "effect": "bounce", "trick": null},
+        {"id": "ch15-4.3", "text": "The jam tips!", "effect": "vex-slip", "trick": "jam"},
+        {"id": "ch15-4.4", "text": "Vex is stuck in the jam!", "effect": "vex-slip", "trick": "jam"}
+      ],
+      "outro": ["story.ch15-4.outro.1"],
+      "question": {"line": "story.ch15-4.question", "choices": ["tricks/jam", "tricks/mud", "tricks/web"], "answer": "tricks/jam"}
+    },
+    {
+      "id": "ch15-5",
+      "lesson": 102,
+      "bg": "tower",
+      "cast": ["princess", "kitten", "vex-jam", "chip"],
+      "picture": "A silly queen sits stuck in a sticky puddle of jam, and a bouncy boy runs up with a mop.",
+      "intro": ["story.ch15-5.intro.1"],
+      "sentences": [
+        {"id": "ch15-5.1", "text": "Vex is helpless in the jam.", "effect": "vex-slip", "trick": "jam"},
+        {"id": "ch15-5.2", "text": "Chip is a helpful boy.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch15-5.3", "text": "Chip will get a mop.", "effect": "item-pop", "trick": "mop"}
+      ],
+      "outro": ["story.ch15-5.outro.1"]
+    },
+    {
+      "id": "ch15-6",
+      "lesson": 103,
+      "bg": "tower",
+      "cast": ["princess", "kitten", "vex-slip", "tess", "bix"],
+      "picture": "A child holds up a glowing page as a knot falls loose, and a silly queen hops up out of a puddle of jam, free at last.",
+      "intro": ["story.ch15-6.intro.1"],
+      "sentences": [
+        {"id": "ch15-6.1", "text": "Untie the knot!", "effect": "sparkle", "trick": "knot"},
+        {"id": "ch15-6.2", "text": "Unwrap the page!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch15-6.3", "text": "Vex is unstuck!", "effect": "bounce", "trick": "jam"},
+        {"id": "ch15-6.4", "text": "Vex is not so unkind now.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch15-6.outro.1", "story.ch15-6.outro.2", "story.ch15-6.outro.3"],
+      "reward": {"wardrobe": "o-knight"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch15-side-1",
+      "bg": "tower",
+      "cast": ["princess", "kitten", "phil", "dash"],
+      "picture": "In a corner of the tower, a small stuffed elephant cuddles a fluffy white toy lamb, and a small dog gives the lamb a lick.",
+      "intro": ["story.ch15-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch15-side-1.1", "text": "Phil has a lamb.", "effect": "item-pop", "trick": "lamb"},
+        {"id": "ch15-side-1.2", "text": "Dash licks the lamb.", "effect": "bounce", "trick": "lamb"},
+        {"id": "ch15-side-1.3", "text": "The lamb is soft.", "effect": "kitten-cheer", "trick": "lamb"}
+      ],
+      "outro": ["story.ch15-side-1.outro.1"]
+    },
+    {
+      "id": "ch15-side-2",
+      "lesson": 104,
+      "bg": "tower",
+      "cast": ["princess", "kitten", "thud", "nell"],
+      "picture": "A very big sleepy cat curls up beside a pile of books, and a baby holds up the same book again and again.",
+      "intro": ["story.ch15-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch15-side-2.1", "text": "Nell has a book.", "effect": "item-pop", "trick": "book"},
+        {"id": "ch15-side-2.2", "text": "Thud will reread it.", "effect": "sparkle", "trick": "book"},
+        {"id": "ch15-side-2.3", "text": "Nell will refill the cup.", "effect": "item-pop", "trick": "cup"}
+      ],
+      "outro": ["story.ch15-side-2.outro.1"]
+    }
+  ]
+}

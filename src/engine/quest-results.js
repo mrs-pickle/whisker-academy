@@ -32,7 +32,7 @@ export function questSelection(content, taughtUpTo) {
   const bank = (list) => new Map((list ?? []).map(w => [w.w, w]));
   const words = bank(content.words);
   const nonsense = bank(content.nonsense);
-  const readable = (w) => w !== undefined && w.lesson <= taughtUpTo && isDecodable(w.segs, taughtUpTo);
+  const readable = (w) => w !== undefined && w.lesson <= taughtUpTo && isDecodable(w.segs, taughtUpTo, w);
   const entrance = content.entrance ?? {};
   const lines = (entrance.lines ?? []).flatMap(( line) => {
     const found = line.words.map(( w) => (line.kind === 'nonsense' ? nonsense : words).get(w));

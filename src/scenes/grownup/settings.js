@@ -1,6 +1,6 @@
 import { h } from '../../core/dom.js';
 import { TINTS } from '../../core/stage.js';
-import { LESSONS } from '../../curriculum/lessons.js';
+import { CHOOSABLE_LESSONS, LESSONS } from '../../curriculum/lessons.js';
 import { HEROES, heroOf, heroWords, withHero } from '../../profile/hero.js';
 import { withTaughtLessons } from '../../profile/profile.js';
 import { MIX_IT_UP, normalizeSettings } from '../../profile/settings.js';
@@ -21,6 +21,8 @@ export const SETTING_HELP = Object.freeze({
     help: "Off: 'sh' words are still read and spelled, but 's' is never put beside 'sh' as a choice (listening game, sound cards, letter tiles and word chains). On: all of those contrasts come in." },
   ieEmphasis: { label: 'Extra short i and short e practice',
     help: 'Adds i/e listening pairs (pig/peg, sit/set) and picks words with short i or e more often.' },
+  newWordPace: { label: 'New-word pace',
+    help: "How many new words come into each session. Steady is the usual pace. Gentle brings fewer, for a child who likes more practice first. Quick brings more, and more again in a big lesson, for a child racing ahead; with \"Play more\" at the end of a session she can play several sessions a day, each with its own new words. Every pace uses only the lessons her tutor has taught: when she has met them all, she practices them until the lesson moves on." },
   cardRoutine: { label: 'Sound card routine',
     help: "How she answers a sound card, to match her tutor's drill. \"Letter name, key word, sound\" is used only for cards with a key word (set them in Sound cards); other cards stay sound only." },
   breakStyle: { label: 'Movement break style',
@@ -29,6 +31,8 @@ export const SETTING_HELP = Object.freeze({
     help: 'Wide spaces the letters and the words a little further apart.' },
   tint: { label: 'Background tint',
     help: 'Changes the background color of the game.' },
+  muted: { label: 'Game sound',
+    help: 'Off: nothing in the game plays aloud, not the narrator, the words and sounds, your recordings or the effects, and nothing waits for them. It is the same as the speaker-with-a-slash button beside the replay speaker at the top left, and it is kept on this device for both students. Pressing the replay speaker while the sound is off turns it back on.' },
   pin: { label: 'Grown-up PIN',
     help: 'The PIN that opens this corner (4 to 8 digits). Holding the button on the gate for 3 seconds also opens it, so if you forget the PIN, open the corner that way and choose a new one here.' },
   printWords: { label: '"Words I can read" strip',
@@ -47,11 +51,13 @@ const CHOICES = Object.freeze({
   copilot: [[true, 'On'], [false, 'Off']],
   sShContrast: [[false, 'Off'], [true, 'On']],
   ieEmphasis: [[true, 'On'], [false, 'Off']],
+  newWordPace: [['gentle', 'Gentle'], ['steady', 'Steady'], ['quick', 'Quick']],
   flash: [[false, 'Off'], [true, 'On']],
   cardRoutine: [['sound', 'Sound only'], ['name-key-sound', 'Letter name, key word, sound']],
   breakStyle: [[MIX_IT_UP, 'Mix it up'], ...BREAK_STYLES.map((style) => [style, BREAK_LABELS[ (style)] ?? capitalized(style)])],
   textSpacing: [['normal', 'Normal'], ['wide', 'Wide']],
   tint: TINTS.map((tint) => [tint, capitalized(tint)]),
+  muted: [[false, 'On'], [true, 'Off']],
 });
 
 export const updateSetting = (settings, key, value) => normalizeSettings({ ...settings, [key]: value });
@@ -127,7 +133,7 @@ export function mount(el, ctx, params = {}) {
       addedCard ||= ctx.profile.deck.length > before.deck.length;
       drawLessonNotes();
     } },
-  LESSONS.map((l) => h('option', { value: String(l.n), selected: l.n === ctx.settings.taughtUpTo }, `${l.n}: ${l.concept}`)));
+  CHOOSABLE_LESSONS.map((l) => h('option', { value: String(l.n), selected: l.n === ctx.settings.taughtUpTo }, `${l.n}: ${l.concept}`)));
   drawLessonNotes();
 
   const viaHold = ctx.cornerEntry === 'hold';
@@ -184,6 +190,7 @@ export function mount(el, ctx, params = {}) {
     status,
     row('taughtUpTo', lesson, lessonNotes),
     row('sessionMinutes', segmented('sessionMinutes')),
+    row('newWordPace', segmented('newWordPace')),
     row('copilot', segmented('copilot')),
     row('sShContrast', segmented('sShContrast')),
     row('ieEmphasis', segmented('ieEmphasis')),
@@ -191,6 +198,7 @@ export function mount(el, ctx, params = {}) {
     row('breakStyle', segmented('breakStyle')),
     row('textSpacing', segmented('textSpacing')),
     row('tint', segmented('tint')),
+    row('muted', segmented('muted')),
     row('flash', segmented('flash')),
     row('tipsSeen', tipsAgain, tipsMessage),
     row('pin', pinForm),

@@ -1,6 +1,6 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
-import { accuracyBySession, masteredBySet, minutesByWeek, newWordsRead, pointerOverTime, rereadSpeeds } from '../../engine/dashboard.js';
+import { accuracyBySession, masteredByUnit, minutesByWeek, newWordsRead, pointerOverTime, rereadSpeeds } from '../../engine/dashboard.js';
 import { heroWords } from '../../profile/hero.js';
 import { readSaved } from '../../profile/saved.js';
 import { barGraph, lineGraph } from '../../ui/graphs.js';
@@ -34,7 +34,7 @@ export const DASHBOARD_LINKS = Object.freeze([
 export function dashboardGraphs({ profile, states, content, day, hx = (text) => text }) {
   const weeks = minutesByWeek(profile, day);
   const accuracy = accuracyBySession(profile);
-  const sets = masteredBySet(states, content);
+  const units = masteredByUnit(states, content);
   const fresh = newWordsRead(profile, content?.checks ?? {});
   const rereads = rereadSpeeds(profile);
   const pointer = pointerOverTime(profile);
@@ -60,16 +60,16 @@ export function dashboardGraphs({ profile, states, content, day, hx = (text) => 
       })), { max: 1, fmt: pct, title: 'Accuracy per session' }) : null,
     },
     {
-      id: 'mastered', title: 'Words mastered, by lesson set',
-      note: hx('Of the words in each set of 5 lessons, how many she has mastered in practice (the dark part of the bar).'),
+      id: 'mastered', title: 'Words mastered, by unit',
+      note: hx('Of the words in each unit, how many she has mastered in practice (the dark part of the bar). Each bar is labelled with its lessons; point at it for the name of its unit.'),
       legend: ([['graph-a', 'Mastered'], ['graph-a-light', 'Not yet']]),
-      svg: sets.some((s) => s.mastered > 0) ? barGraph(sets.map((s) => ({
-        label: `${s.from}–${s.to}`,
+      svg: units.some((u) => u.mastered > 0) ? barGraph(units.map((u) => ({
+        label: u.from === u.to ? String(u.from) : `${u.from}–${u.to}`,
         parts: [
-          { value: s.mastered, cls: 'graph-a', tip: `Lessons ${s.from} to ${s.to}: ${s.mastered} of ${s.words} words mastered` },
-          { value: s.words - s.mastered, cls: 'graph-a-light', tip: `Lessons ${s.from} to ${s.to}: ${s.words - s.mastered} not yet` },
+          { value: u.mastered, cls: 'graph-a', tip: `${u.name} (lessons ${u.from} to ${u.to}): ${u.mastered} of ${u.words} words mastered` },
+          { value: u.words - u.mastered, cls: 'graph-a-light', tip: `${u.name} (lessons ${u.from} to ${u.to}): ${u.words - u.mastered} not yet` },
         ],
-      })), { title: 'Words mastered, by lesson set' }) : null,
+      })), { title: 'Words mastered, by unit' }) : null,
     },
     {
       id: 'new-words', title: 'New words read',

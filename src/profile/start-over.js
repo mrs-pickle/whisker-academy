@@ -28,6 +28,7 @@ export const PROFILE_FATES = Object.freeze({
   flash: 'reset',
   flashMs: 'reset',
   assessFirst: 'reset',
+  assessFrom: 'reset',
   placements: 'reset',
   pointerLog: 'keep',
 });

@@ -6,7 +6,7 @@ import { visibleScenes } from '../engine/story-place.js';
 import { bigButton } from '../ui/components.js';
 
 export function mount(el, ctx, params = {}) {
-  const pages = visibleScenes(ctx.content?.story ?? [], ctx.profile);
+  const pages = visibleScenes(ctx.content?.story ?? [], ctx.profile, ctx.settings);
   let at = pages.findIndex((p) => p.scene.id === params.scene);
   if (at < 0) {
     ctx.router.go('chapters').catch(( err) => console.error('Chapters could not open', err));

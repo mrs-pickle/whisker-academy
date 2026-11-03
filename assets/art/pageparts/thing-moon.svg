@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="234" viewBox="0 0 150 234">
+<!-- The picture of moon, as line art. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<path class="fill" fill="#ffffff" d="M135.8,3 C98.9,26.9 68.5,65.9 64.1,115.8 C59.8,165.8 88,209.2 146.6,228.7 C72.8,241.7 9.9,202.7 3.4,139.7 C-3.1,70.3 51.1,9.5 135.8,3 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M135.8,3 C98.9,26.9 68.5,65.9 64.1,115.8 C59.8,165.8 88,209.2 146.6,228.7 C72.8,241.7 9.9,202.7 3.4,139.7 C-3.1,70.3 51.1,9.5 135.8,3 Z" stroke-width="6"/><path d="M31.6,105 Q40.3,113.7 49,105" stroke-width="4.2"/><path d="M31.6,150.6 Q42.4,159.3 53.3,150.6" stroke-width="3.6"/></g>
+</svg>

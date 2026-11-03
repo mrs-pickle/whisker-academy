@@ -1,16 +1,19 @@
+import { wordSoundClips } from '../curriculum/chunks.js';
 import { h } from '../core/dom.js';
 import { isDecodable } from '../curriculum/decodable.js';
 import { tierOf } from '../curriculum/tiers.js';
-import { eligibleChains, eligibleWords, rWordAllowed } from '../engine/session-builder.js';
+import { eligibleChains, eligibleWords, rSpellAllowed, rWordAllowed } from '../engine/session-builder.js';
 import { artUrl, kittenBubble, soundBoxes, tile } from '../ui/components.js';
 import { bounce, createActivityView, createOnce, isKnown, knownInstant, listenDisc, now, offerPass, runRound, showNext, sparkle, typeToPick } from './cards.js';
 import { chainTray, createChainController, diffStep, protegeError } from './chain-controller.js';
-import { segClips } from './spell.js';
+import { nameClips, segClips } from './spell.js';
 
 
 const LEAVE_MS = 400;
 const PICTURE_OUT_MS = 450;
 const TILE_SIZE = 110;
+
+const RULE_LINES = Object.freeze({ double: 'v.chain.rule.double', 'drop-e': 'v.chain.rule.drop-e', 'y-to-i': 'v.chain.rule.y-to-i' });
 
 export function playable(steps) {
   return steps.length >= 2 && steps.slice(1).every((s, i) => diffStep(steps[i].segs, s.segs) !== null);
@@ -85,7 +88,7 @@ function chooseBox({ view, c, board, hint, answered, passable }) {
   return new Promise((resolve) => {
     const { change, current } = c.state();
     const target = (change);
-    const gaps = target.op === 'ins';
+    const gaps = target.op === 'ins' || target.op === 'rule';
     let targets = [];
     let made = false;
     let stopPass = () => {};
@@ -138,7 +141,7 @@ async function chooseTile({ view, c, board, bottom, prompt, once, passable }) {
   const target = (change);
   const seg = (nextSeg);
   const labels = current.map(([g]) => g);
-  if (target.op === 'ins') labels.splice(target.index, 0, null);
+  if (target.op === 'ins' || target.op === 'rule') labels.splice(target.index, 0, null);
   const draw = (options = {}) => {
     const el = wordBoxes(labels, options);
     board.replaceChildren(el);
@@ -156,7 +159,7 @@ async function chooseTile({ view, c, board, bottom, prompt, once, passable }) {
       const before = c.state();
       c.pickTile(g);
       const after = c.state();
-      if (after.stepIndex === before.stepIndex && after.misses === before.misses) return;
+      if (after.stepIndex === before.stepIndex && after.misses === before.misses && after.nears === before.nears) return;
       const picked = (tiles.get(g));
       view.choosing(false);
       c.setLocked(true);
@@ -165,11 +168,15 @@ async function chooseTile({ view, c, board, bottom, prompt, once, passable }) {
           stopPass();
           stopKeys();
           bottom.replaceChildren();
-          resolve(before.feedback?.kind === 'reveal' ? segClips(seg) : []);
+          resolve(before.feedback?.kind === 'reveal' || before.feedback?.kind === 'near' ? segClips(seg) : []);
           return;
         }
         bounce(picked);
-        if (after.feedback?.kind === 'reveal') {
+        if (after.feedback?.kind === 'near') {
+          for (const [x, t] of tiles) t.classList.add(x === target.to ? 'glow' : 'dim');
+          draw({ mark: target.index });
+          await view.say(['v.error.near', ...nameClips(target.to)], 900);
+        } else if (after.feedback?.kind === 'reveal') {
           for (const [x, t] of tiles) t.classList.add(x === target.to ? 'glow' : 'dim');
           draw({ mark: target.index });
           await view.say(['v.error.tricky', 'v.error.reveal'], 900);
@@ -217,7 +224,7 @@ async function playChain(view, steps, once) {
   while (c.state().phase !== 'done' && view.live()) {
     const { next, change, misses } = c.state();
     const op = (change).op;
-    const how = op === 'ins' ? 'v.chain.add' : op === 'del' ? 'v.chain.drop' : 'v.chain.box';
+    const how = op === 'ins' ? 'v.chain.add' : op === 'rule' ? 'v.chain.ending' : op === 'del' ? 'v.chain.drop' : 'v.chain.box';
     const word = `w.${next}`;
     discClips.splice(0, discClips.length, word);
     const prompt = ['v.chain.next', word, how];
@@ -228,12 +235,14 @@ async function playChain(view, steps, once) {
 
     const made = steps[c.state().stepIndex];
     const boxes = wordBoxes(labelsOf(made));
-    if (op !== 'del') boxes.children[ (change).index].classList.add('placed');
+    const changed = (change);
+    if (op !== 'del') boxes.children[changed.at ?? changed.index].classList.add('placed');
     showMade(board, boxes, !picture.show(made));
     view.cheer();
     const last = c.state().phase === 'done';
     const later = last && c.state().helped ? ['v.error.later'] : [];
-    after = showNext(view, [...lastSound, word, ...(c.state().misses === misses ? view.praise('chain') : []), ...later]).pressed;
+    const named = changed.rule ? [RULE_LINES[changed.rule]] : [];
+    after = showNext(view, [...lastSound, ...named, word, ...(c.state().misses === misses ? view.praise('chain') : []), ...later]).pressed;
     if (!last) await after;
   }
   if (c.state().phase !== 'done') return null;
@@ -262,7 +271,7 @@ async function kittenTries(view, word, mixup, once) {
   }
   const lastSound = await makeChange({
     view, c, board, bottom, prompt, once,
-    hint: ['v.kitten.protege.again', ...word.segs.flatMap(segClips)],
+    hint: ['v.kitten.protege.again', ...wordSoundClips(word)],
     answered: () => {},
   });
   showMade(board, wordBoxes(labelsOf(word)), true);
@@ -274,8 +283,8 @@ async function kittenTries(view, word, mixup, once) {
 export function pickProtege(ctx, preferred, passed = new Set()) {
   const { content, settings, profile } = ctx;
   const spellable = (word) => {
-    const tier = word.tier ?? tierOf(word.segs);
-    return tier <= profile.spellTier && rWordAllowed(profile, tier) && !passed.has( (word).w);
+    const tier = word.tier ?? tierOf(word.segs, (word));
+    return tier <= profile.spellTier && rWordAllowed(profile, tier) && rSpellAllowed(profile, word.segs) && !passed.has( (word).w);
   };
   const candidates = [
     ...ctx.rng.shuffle(preferred.filter(spellable)),
@@ -286,7 +295,8 @@ export function pickProtege(ctx, preferred, passed = new Set()) {
     if (isKnown(profile, w)) return true;
     const rec = content.byWord?.get(w);
     const taught = typeof rec?.lesson !== 'number' || rec.lesson <= settings.taughtUpTo;
-    return taught && isDecodable(segs, settings.taughtUpTo) && rWordAllowed(profile, rec?.tier ?? tierOf(segs));
+    const shape = rec && segs === rec.segs ? rec : undefined;
+    return taught && isDecodable(segs, settings.taughtUpTo, shape) && rWordAllowed(profile, rec?.tier ?? tierOf(segs, shape));
   };
   for (const word of candidates) {
     const mixup = protegeError(word, content, ctx.rng, readable);

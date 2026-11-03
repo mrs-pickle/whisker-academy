@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="168" height="233" viewBox="0 0 168 233">
+<!-- The picture of kite, as line art. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M84,175.6 C73.3,196.9 115.9,201.2 126.6,216.1 C135.1,226.7 154.3,224.6 164.9,231" stroke-width="3.5"/></g>
+<path class="fill" fill="#ffffff" d="M84,86.1 L84,3 L164.9,86.1 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M84,84 L84,3 L164.9,86.1" stroke-width="4.7"/></g>
+<path class="fill" fill="#ffffff" d="M84,86.1 L164.9,86.1 L84,175.6 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M84,86.1 L164.9,86.1 L84,175.6 Z" stroke-width="4.7"/></g>
+<path class="fill" fill="#ffffff" d="M84,86.1 L84,175.6 L3,86.1 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M84,86.1 L84,175.6 L3,86.1 Z" stroke-width="4.7"/></g>
+<path class="fill" fill="#ffffff" d="M84,86.1 L3,86.1 L84,3 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M84,86.1 L3,86.1 L84,3 Z" stroke-width="4.7"/><path d="M84,3 L84,175.6 M3,86.1 L164.9,86.1" stroke-width="4.7"/></g>
+</svg>

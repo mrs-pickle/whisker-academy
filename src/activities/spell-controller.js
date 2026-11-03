@@ -1,5 +1,7 @@
 import { CORRESPONDENCES } from '../curriculum/correspondences.js';
 import { beforeNasal } from '../curriculum/ie-nasal.js';
+import { phonemeCodes } from '../curriculum/phonemes.js';
+import { competingBoxes } from '../curriculum/tiers.js';
 import { CONFUSIONS } from './cards.js';
 
 
@@ -9,6 +11,8 @@ import { CONFUSIONS } from './cards.js';
 
 export function createSpellController({ word, scaffold, tray }) {
   const targets = word.segs.map(([g]) => g);
+  const competing = new Set(competingBoxes(word.segs));
+  let nears = 0;
   const boxes = targets.map(() => null);
   let cursor = 0;
   let misses = 0;
@@ -22,7 +26,7 @@ export function createSpellController({ word, scaffold, tray }) {
 
   return {
     state: () => ({
-      boxes: [...boxes], cursor, misses, phase, feedback: feedback && { ...feedback }, taps, helped, tray: [...tray],
+      boxes: [...boxes], cursor, misses, phase, feedback: feedback && { ...feedback }, taps, helped, nears, tray: [...tray],
     }),
     tapPaw() {
       if (locked || phase !== 'count') return;
@@ -49,6 +53,12 @@ export function createSpellController({ word, scaffold, tray }) {
         return;
       }
       if (boxMisses >= 2) return;
+      if (competing.has(cursor) && sameSoundTiles(word.segs[cursor]).includes(grapheme)) {
+        nears++;
+        boxMisses = 2;
+        feedback = { kind: 'near', box: cursor, tile: grapheme };
+        return;
+      }
       misses++;
       tileMisses++;
       boxMisses++;
@@ -93,14 +103,32 @@ const MAX_DISTRACTORS = 3;
 const TAUGHT = (() => {
   const map = new Map();
   for (const c of CORRESPONDENCES) {
-    if (c.before !== undefined || c.p === '') continue;
-    const entry = map.get(c.g) ?? { lesson: Infinity, sounds: new Set() };
+    if (c.before !== undefined || c.after !== undefined || c.p === '') continue;
+    const entry = map.get(c.g) ?? { lesson: Infinity, sounds: new Map() };
     entry.lesson = Math.min(entry.lesson, c.lesson);
-    entry.sounds.add(c.p);
+    entry.sounds.set(c.p, Math.min(entry.sounds.get(c.p) ?? Infinity, c.lesson));
     map.set(c.g, entry);
   }
   return map;
 })();
+
+const saysBy = (x, n) => [...(TAUGHT.get(x)?.sounds ?? [])].flatMap(([p, lesson]) => (lesson <= n ? [p] : []));
+
+const PLAIN_BY_SOUND = (() => {
+  const map = new Map();
+  for (const c of CORRESPONDENCES) {
+    if (c.before !== undefined || c.after !== undefined || c.p === '') continue;
+    const of = map.get(c.p) ?? new Map();
+    of.set(c.g, Math.min(of.get(c.g) ?? Infinity, c.lesson));
+    map.set(c.p, of);
+  }
+  return map;
+})();
+
+export function sameSoundTiles([g, p], taughtUpTo = Infinity) {
+  const of = PLAIN_BY_SOUND.get(phonemeCodes(p).join(' ')) ?? new Map();
+  return [...of].filter(([x, lesson]) => x !== g && lesson <= taughtUpTo).map(([x]) => x);
+}
 
 function partnersOf(g) {
   const map = CONFUSIONS;
@@ -124,16 +152,22 @@ export function buildTray(word, settings, rng, after) {
   const swap = voiced.map(otherIE).filter(x => x !== null && !needed.includes(x) && !nasalSwaps.has(x));
   const single = voiced.flatMap(g => {
     const x = (SINGLE_OF)[g];
-    return x !== undefined && ok(x) && !word.segs.some(([other, p]) => other !== g && TAUGHT.get(x)?.sounds.has(p)) ? [x] : [];
+    return x !== undefined && ok(x) && !word.segs.some(([other, p]) => other !== g && saysBy(x, settings.taughtUpTo).includes(p)) ? [x] : [];
   });
-  const alike = voiced.flatMap(partnersOf).filter(ok);
+  const alike = voiced.flatMap(partnersOf).filter(x => ok(x) && !saysBy(x, settings.taughtUpTo).some(p => sounds.has(p)));
+  const competing = competingBoxes(word.segs);
+  const sameSound = competing.flatMap(i => sameSoundTiles(word.segs[i], settings.taughtUpTo))
+    .filter(x => !needed.includes(x) && !nasalSwaps.has(x) && sShOk(x)
+      && !word.segs.some(([, p], j) => !competing.includes(j) && p !== '' && saysBy(x, settings.taughtUpTo).includes(p)));
+  const longer = sameSound.filter(x => x.length >= 2);
+  const same = sameSound.length > 0 ? [rng.pick(longer.length > 0 ? longer : sameSound)] : [];
   const near = [...new Set([...swap, ...single, ...alike])];
-  const otherVowels = VOWELS.filter(v => ok(v) && !near.includes(v));
+  const otherVowels = VOWELS.filter(v => ok(v) && !near.includes(v) && !saysBy(v, settings.taughtUpTo).some(p => sounds.has(p)));
   const vowel = voiced.some(g => VOWELS.includes(g)) && !near.some(x => VOWELS.includes(x)) && otherVowels.length > 0
     ? [rng.pick(otherVowels)] : [];
-  const fill = rng.shuffle([...TAUGHT].filter(([x, { sounds: own }]) =>
-    x.length === 1 && ok(x) && !near.includes(x) && !vowel.includes(x) && ![...own].some(p => sounds.has(p))).map(([x]) => x));
+  const fill = rng.shuffle([...TAUGHT.keys()].filter((x) =>
+    x.length === 1 && ok(x) && !near.includes(x) && !vowel.includes(x) && !saysBy(x, settings.taughtUpTo).some(p => sounds.has(p))));
   const count = Math.min(MAX_DISTRACTORS, Math.max(2 + rng.int(2), near.length));
-  const ranked = [...new Set([...swap, ...single, ...vowel, ...alike])];
+  const ranked = [...new Set([...same, ...swap, ...single, ...vowel, ...alike])];
   return rng.shuffle([...needed, ...[...ranked, ...fill].slice(0, count)]);
 }

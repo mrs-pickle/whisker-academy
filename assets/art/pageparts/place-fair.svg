@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+<!-- The old fair on the hill: bunting, a balloon, a striped tent at each edge, and a path up the green hill. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<path class="fill" fill="#ffffff" d="M0,0 L1280,0 L1280,440 L0,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,0 L1280,0 L1280,440 L0,440 Z" stroke-width="6"/><path d="M0,6 Q640,14 1280,6" stroke-width="4"/></g>
+<path class="fill" fill="#ffffff" d="M11.4,6.1 L130.8,7.5 L71.1,78.8 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M11.4,6.1 L130.8,7.5 L71.1,78.8 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M153.6,7.7 L273.1,8.7 L213.3,80.2 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M153.6,7.7 L273.1,8.7 L213.3,80.2 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M295.8,8.8 L415.3,9.5 L355.6,81.2 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M295.8,8.8 L415.3,9.5 L355.6,81.2 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M438,9.6 L557.5,9.9 L497.8,81.8 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M438,9.6 L557.5,9.9 L497.8,81.8 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M580.3,10 L699.7,10 L640,82 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M580.3,10 L699.7,10 L640,82 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M722.5,9.9 L842,9.6 L782.2,81.8 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M722.5,9.9 L842,9.6 L782.2,81.8 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M864.7,9.5 L984.2,8.8 L924.4,81.2 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M864.7,9.5 L984.2,8.8 L924.4,81.2 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M1006.9,8.7 L1126.4,7.7 L1066.7,80.2 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M1006.9,8.7 L1126.4,7.7 L1066.7,80.2 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M1149.2,7.5 L1268.6,6.1 L1208.9,78.8 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M1149.2,7.5 L1268.6,6.1 L1208.9,78.8 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M880,230 C880,254.3 864.8,274 846,274 C827.2,274 812,254.3 812,230 C812,205.7 827.2,186 846,186 C864.8,186 880,205.7 880,230 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M880,230 C880,254.3 864.8,274 846,274 C827.2,274 812,254.3 812,230 C812,205.7 827.2,186 846,186 C864.8,186 880,205.7 880,230 Z" stroke-width="6"/><path d="M846,274 Q840,330 850,380" stroke-width="3"/></g>
+<path class="fill" fill="#ffffff" d="M0,330 C220,290 420,310 640,320 C860,310 1060,290 1280,330 L1280,440 L0,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,330 C220,290 420,310 640,320 C860,310 1060,290 1280,330 L1280,440 L0,440 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M0,440 L0,210 L40,150 L80,210 L80,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,440 L0,210 L40,150 L80,210 L80,440 Z" stroke-width="6"/><path d="M40,210 L40,440" stroke-width="4"/></g>
+<path class="fill" fill="#ffffff" d="M1280,440 L1280,210 L1240,150 L1200,210 L1200,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M1280,440 L1280,210 L1240,150 L1200,210 L1200,440 Z" stroke-width="6"/><path d="M1240,210 L1240,440" stroke-width="4"/></g>
+<path class="fill" fill="#ffffff" d="M0,430 C300,418 980,442 1280,426 L1280,800 L0,800 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,430 C300,418 980,442 1280,426 L1280,800 L0,800 Z" stroke-width="6"/><path d="M50,490 Q48,476 42,468 M60,490 Q61,472 58,460 M70,490 Q73,478 80,470" stroke-width="3.5"/><path d="M330,480 Q328,466 322,458 M340,480 Q341,462 338,450 M350,480 Q353,468 360,460" stroke-width="3.5"/><path d="M910,480 Q908,466 902,458 M920,480 Q921,462 918,450 M930,480 Q933,468 940,460" stroke-width="3.5"/><path d="M1220,490 Q1218,476 1212,468 M1230,490 Q1231,472 1228,460 M1240,490 Q1243,478 1250,470" stroke-width="3.5"/><path d="M310,790 Q308,776 302,768 M320,790 Q321,772 318,760 M330,790 Q333,778 340,770" stroke-width="3.5"/><path d="M990,790 Q988,776 982,768 M1000,790 Q1001,772 998,760 M1010,790 Q1013,778 1020,770" stroke-width="3.5"/></g>
+<path class="fill" fill="#ffffff" d="M612,440 L668,440 C664,560 660,680 674,800 L606,800 C620,680 616,560 612,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M612,440 L668,440 C664,560 660,680 674,800 L606,800 C620,680 616,560 612,440 Z" stroke-width="6"/><path d="M22,4 L1258,4 Q1276,4 1276,22 L1276,778 Q1276,796 1258,796 L22,796 Q4,796 4,778 L4,22 Q4,4 22,4 Z" stroke-width="8"/></g>
+</svg>

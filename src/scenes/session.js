@@ -250,7 +250,7 @@ export function afterRound(profile, today, { ms, answered, right, applied, copil
 }
 
 export function afterScene(profile, today, pick) {
-  const moved = pick?.kind === 'main' || pick?.kind === 'side';
+  const moved = (pick?.kind === 'main' || pick?.kind === 'side') && pick?.forced !== true;
   const { colorin, wardrobe } = (moved && pick.scene?.reward) || {};
   const scene = pick?.scene?.id;
   const gift = typeof wardrobe === 'string' && wardrobe !== '' && !owns(profile, { type: 'wardrobe', id: wardrobe });

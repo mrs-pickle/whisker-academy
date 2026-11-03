@@ -2,7 +2,9 @@ import { beforeNasal } from '../curriculum/ie-nasal.js';
 import { consonantClusters, phonemeCodes } from '../curriculum/phonemes.js';
 import { tierOf } from '../curriculum/tiers.js';
 import { CONFUSION_PAIRS, swapsSForSh } from '../engine/session-builder.js';
-import { buildTray, sShTiles } from './spell-controller.js';
+import { buildTray, sameSoundTiles, sShTiles } from './spell-controller.js';
+import { competingBoxes } from '../curriculum/tiers.js';
+import { ruleStep } from '../curriculum/affixes.js';
 
 
 
@@ -11,6 +13,8 @@ const spelling = (seg) => String(seg[0]).toLowerCase();
 const sameBox = (a, b) => a[0] === b[0] && phonemeCodes(a[1]).join(' ') === phonemeCodes(b[1]).join(' ');
 
 export function diffStep(fromSegs, toSegs) {
+  const rule = ruleStep(fromSegs, toSegs);
+  if (rule) return { op: 'rule', index: fromSegs.length, to: toSegs[rule.at][0], rule: rule.rule, at: rule.at };
   const a = fromSegs.map(spelling);
   const b = toSegs.map(spelling);
   if (a.length === b.length) {
@@ -43,6 +47,7 @@ export function createChainController({ steps }) {
   let misses = 0;
   let tries = 0;
   let helped = false;
+  let nears = 0;
   let locked = false;
 
   const change = () => (changes[stepIndex]);
@@ -65,7 +70,7 @@ export function createChainController({ steps }) {
     state() {
       const ch = changes[stepIndex] ?? null;
       const next = words[stepIndex + 1] ?? null;
-      const nextSeg = ch && ch.op !== 'del' && next ? ([...next.segs[ch.index]]) : null;
+      const nextSeg = ch && ch.op !== 'del' && next ? ([...next.segs[ch.at ?? ch.index]]) : null;
       return {
         current: words[stepIndex].segs.map(seg => ([...seg])),
         word: words[stepIndex].w,
@@ -77,25 +82,35 @@ export function createChainController({ steps }) {
         nextSeg,
         misses,
         helped,
+        nears,
       };
     },
     pickBox(i) {
       if (!open()) return;
       const ch = change();
-      if (ch.op === 'ins' || i !== ch.index) { miss(); return; }
+      if (ch.op === 'ins' || ch.op === 'rule' || i !== ch.index) { miss(); return; }
       right();
       if (ch.op === 'del') advance(); else phase = 'choose-tile';
     },
     pickGap(i) {
       if (!open()) return;
       const ch = change();
-      if (ch.op !== 'ins' || i !== ch.index) { miss(); return; }
+      if ((ch.op !== 'ins' && ch.op !== 'rule') || i !== ch.index) { miss(); return; }
       right();
       phase = 'choose-tile';
     },
     pickTile(g) {
       if (locked || phase !== 'choose-tile') return;
-      if (g === change().to) advance(); else miss();
+      const ch = change();
+      if (g === ch.to) { advance(); return; }
+      const next = words[stepIndex + 1].segs;
+      if (tries < 2 && competingBoxes(next).includes(ch.at ?? ch.index) && sameSoundTiles(next[ch.at ?? ch.index]).includes(g)) {
+        nears++;
+        tries = 2;
+        feedback = { kind: 'near', tile: g };
+        return;
+      }
+      miss();
     },
     get locked() { return locked; },
     setLocked(b) { locked = Boolean(b); },
@@ -112,7 +127,8 @@ export function chainTray(seg, old, settings, rng, after) {
   const ie = ( g) => g === 'i' || g === 'e';
   if (ie(from) && ie(to) && after !== undefined && beforeNasal([seg, after], 0)) return tray;
   const swap = to === 'i' ? 'e' : to === 'e' ? 'i' : null;
-  const drop = tray.findLastIndex(g => g !== to && g !== swap);
+  const same = new Set(sameSoundTiles(seg));
+  const drop = tray.findLastIndex(g => g !== to && g !== swap && !same.has(g));
   return rng.shuffle([...tray.filter((_, i) => i !== drop), from]);
 }
 

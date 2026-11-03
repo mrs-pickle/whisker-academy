@@ -14,7 +14,7 @@ export function readingContext(content, profile, settings) {
   const instant = profile.instant ?? {};
   const taughtUpTo = settings.taughtUpTo;
   return {
-    lookup: (w) => content.byWord?.get(w)?.segs ?? null,
+    lookup: (w) => content.byWord?.get(w) ?? null,
     knownInstant: new Set(Object.keys(instant).filter(w => instant[w] === 'known')),
     names: new Set((content.names ?? []).filter(n => isDecodable(n.segs, taughtUpTo)).map(n => String(n.display ?? n.id).toLowerCase())),
     taughtUpTo,
@@ -66,13 +66,20 @@ export function nextStoryScene(content, profile, settings) {
   return nextSideQuest(content, profile, settings, ci);
 }
 
-export function visibleScenes(story, profile) {
+export function visibleScenes(story, profile, settings) {
   const { ci, si } = mainPlace(story, profile);
+  const reached = (c) => c < ci || (c === ci && (si > 0 || !settings || chapterOpen(story[c], settings)));
   return readingOrder(story).filter(({ chapterId, scene, kind, index }) => {
-    if (scene.surprise !== true) return true;
     const c = story.findIndex((ch) => ch.id === chapterId);
+    if ( (story[c]).book === 2 && !reached(c)) return false;
+    if (scene.surprise !== true) return true;
     return c < ci || (c === ci && (kind === 'side' || index <= si));
   });
+}
+
+export function pagesWon(story, profile) {
+  const { ci } = mainPlace(story, profile);
+  return story.slice(0, ci).filter((ch) => ch.book === 2 && typeof ch.page === 'string').map((ch) => ({ chapterId: ch.id, page: `tricks/${ch.page}` }));
 }
 
 export function nextSideQuest(content, profile, settings, upTo) {

@@ -1,3 +1,5 @@
+import { chunkOfGrapheme } from '../curriculum/chunks.js';
+import { splitWord } from '../curriculum/syllables.js';
 import { h } from '../core/dom.js';
 import { CLIP_GAP_MS } from '../core/audio.js';
 import { createLock } from '../core/lock.js';
@@ -26,10 +28,12 @@ const CARD_SOUNDS = Object.freeze({ th: Object.freeze(['th', 'dh']) });
 
 export function cardSoundClips(g) {
   const key = String(g).toLowerCase();
+  const chunk = chunkOfGrapheme(key);
+  if (chunk) return [chunk];
   const own = CARD_SOUNDS[ (key)];
   let sounds = own ?? [];
   if (!own) {
-    const entry = CORRESPONDENCES.find(c => c.g === key && c.before === undefined && c.p !== '');
+    const entry = CORRESPONDENCES.find(c => c.g === key && c.before === undefined && c.after === undefined && c.p !== '');
     if (entry) sounds = [entry.p];
     else if (key !== '' && Object.hasOwn(PHONEMES, key)) sounds = [key];
   }
@@ -397,7 +401,7 @@ function selfCheck(buttons) {
     }));
 }
 
-export function judgeAloud(view, { copilot, kind, model, target, praise, praiseLines, canUndo = false, tips = [] }) {
+export function judgeAloud(view, { copilot, kind, model, target, praise, praiseLines, canUndo = false, tips = [], firstHelp }) {
   return new Promise((resolve) => {
     if (!view.live()) return;
     const start = now();
@@ -444,7 +448,15 @@ export function judgeAloud(view, { copilot, kind, model, target, praise, praiseL
       target.classList.remove('glow');
       finish({ correct: false, helped: true, ms });
     });
+    let softHelp = firstHelp;
     const help = () => view.lock.run(async () => {
+      if (softHelp) {
+        const show = softHelp;
+        softHelp = undefined;
+        offerHelpTips();
+        await show();
+        return;
+      }
       helped = true;
       reach = false;
       showUndo();
@@ -691,7 +703,14 @@ async function readWord(view, item, word, { copilot, modeled, made, canUndo = fa
   await view.prompt([...spoken, copilot ? 'v.copilot.readto' : null]);
   if (!copilot && spoken.length > 0) await wait(CLIP_GAP_MS);
   const th = item.id.startsWith('n:') && view.ctx.content?.byWord?.get(word)?.segs.some(( [g]) => g === 'th');
-  return judgeAloud(view, { copilot, kind: 'read', model: [`w.${word}`], target: card, praise: 'read', canUndo, tips: th ? TH_TIPS : [] });
+  const segs = view.ctx.content?.byWord?.get(word)?.segs;
+  const parts = Array.isArray(segs) ? splitWord(segs, (w) => view.ctx.content.byWord.has(w)) : null;
+  const firstHelp = parts ? async () => {
+    card.replaceChildren(h('span', { class: 'syl' }, parts[0]), h('span', { class: 'syl' }, parts[1]));
+    card.classList.add('split');
+    await view.say(['v.cards.split'], 600);
+  } : undefined;
+  return judgeAloud(view, { copilot, kind: 'read', model: [`w.${word}`], target: card, praise: 'read', canUndo, tips: th ? TH_TIPS : [], firstHelp });
 }
 
 async function readLine(view, id, text, { copilot, canUndo = false }) {

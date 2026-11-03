@@ -1,0 +1,132 @@
+{
+  "id": "ch10",
+  "title": "The Patch and the Badge",
+  "book": 2,
+  "page": "badge",
+  "lessons": [69, 70, 71, 72, 73, 74, 75, 76],
+  "requiresKnown": ["a", "are", "of", "the", "to", "you"],
+  "scenes": [
+    {
+      "id": "ch10-1",
+      "bg": "camp",
+      "cast": ["princess", "kitten", "gus-flap", "vex-idle"],
+      "picture": "At a scout camp in the pine woods, a silly queen holds up a round stitched patch with a glowing page sewn onto it, next to a tent, while a goofy crow points.",
+      "intro": ["story.ch10-1.intro.1", "story.ch10-1.intro.2"],
+      "sentences": [
+        {"id": "ch10-1.1", "text": "Vex has a big patch.", "effect": "item-pop", "trick": "patch"},
+        {"id": "ch10-1.2", "text": "The spell is on the patch!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch10-1.3", "text": "Vex will stitch it to a tent.", "effect": "item-pop", "trick": "tent"},
+        {"id": "ch10-1.4", "text": "Catch the patch!", "effect": "bounce", "trick": "patch"}
+      ],
+      "outro": ["story.ch10-1.outro.1"]
+    },
+    {
+      "id": "ch10-2",
+      "lesson": 70,
+      "bg": "camp",
+      "cast": ["princess", "kitten", "chip", "tess", "vex-grab"],
+      "picture": "In a scout camp, a silly queen peeks out of a hedge by a little wooden bridge, holding a shiny gold badge, while a hedgehog sits on a ledge.",
+      "intro": ["story.ch10-2.intro.1"],
+      "sentences": [
+        {"id": "ch10-2.1", "text": "Vex is in the hedge.", "effect": "item-pop", "trick": null},
+        {"id": "ch10-2.2", "text": "Chip ran on the bridge.", "effect": "bounce", "trick": null},
+        {"id": "ch10-2.3", "text": "A hedgehog is on the ledge.", "effect": "item-pop", "trick": "hedgehog"},
+        {"id": "ch10-2.4", "text": "Vex made the patch a badge!", "effect": "sparkle", "trick": "badge"}
+      ],
+      "outro": ["story.ch10-2.outro.1"],
+      "question": {"line": "story.ch10-2.question", "choices": ["cast/vex-grab", "cast/chip", "cast/tess"], "answer": "cast/vex-grab"}
+    },
+    {
+      "id": "ch10-3",
+      "lesson": 72,
+      "bg": "camp",
+      "cast": ["princess", "kitten", "bix", "nell", "gus-idle"],
+      "picture": "In the cold, wild pine woods, a cheerful boy carries a baby on his back, and a goofy crow points up at something gold in a tall tree.",
+      "intro": ["story.ch10-3.intro.1"],
+      "sentences": [
+        {"id": "ch10-3.1", "text": "It is cold in the camp.", "effect": "sparkle", "trick": null},
+        {"id": "ch10-3.2", "text": "Bix will hold the child.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch10-3.3", "text": "Can we find the gold badge?", "effect": "sparkle", "trick": "badge"},
+        {"id": "ch10-3.4", "text": "Gus is kind to Nell.", "effect": "crow-flap", "trick": null}
+      ],
+      "outro": ["story.ch10-3.outro.1"]
+    },
+    {
+      "id": "ch10-4",
+      "lesson": 73,
+      "bg": "camp",
+      "cast": ["princess", "kitten", "gus-flap", "vex-idle"],
+      "picture": "At the top of a tall pine tree, a silly queen with a gold badge on her hat sits on a branch, and a goofy crow flies up to her across the sky.",
+      "intro": ["story.ch10-4.intro.1"],
+      "sentences": [
+        {"id": "ch10-4.1", "text": "Gus can fly up to Vex.", "effect": "crow-flap", "trick": null},
+        {"id": "ch10-4.2", "text": "Try to get the badge, Gus!", "effect": "crow-flap", "trick": "badge"},
+        {"id": "ch10-4.3", "text": "Vex and Gus are in the sky.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch10-4.outro.1"],
+      "question": {"line": "story.ch10-4.question", "choices": ["cast/gus-flap", "cast/chip", "cast/nell"], "answer": "cast/gus-flap"}
+    },
+    {
+      "id": "ch10-5",
+      "lesson": 74,
+      "bg": "camp",
+      "cast": ["princess", "kitten", "nell", "ted", "dot"],
+      "picture": "By a pond in a scout camp, a teddy bear and a rag doll share candy with a happy baby, and a little kitten in a wizard hat dances, while a badge glows under the water.",
+      "intro": ["story.ch10-5.intro.1"],
+      "sentences": [
+        {"id": "ch10-5.1", "text": "Nell is a happy baby.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch10-5.2", "text": "Ted and Dot have candy.", "effect": "item-pop", "trick": null},
+        {"id": "ch10-5.3", "text": "The cat is silly and jolly.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch10-5.4", "text": "The badge is in the pond!", "effect": "sparkle", "trick": "badge"}
+      ],
+      "outro": ["story.ch10-5.outro.1"]
+    },
+    {
+      "id": "ch10-6",
+      "lesson": 75,
+      "bg": "camp",
+      "cast": ["princess", "kitten", "vex-slip", "tess", "bix"],
+      "picture": "At the edge of a pond, a clever girl holds a little candle, bubbles rise, a child lifts out a glowing badge, and a silly queen slips into a puddle.",
+      "intro": ["story.ch10-6.intro.1"],
+      "sentences": [
+        {"id": "ch10-6.1", "text": "Tess has a little candle.", "effect": "item-pop", "trick": "candle"},
+        {"id": "ch10-6.2", "text": "Bubbles pop in the puddle.", "effect": "bounce", "trick": null},
+        {"id": "ch10-6.3", "text": "You can grab the badge!", "effect": "sparkle", "trick": "badge"},
+        {"id": "ch10-6.4", "text": "Vex fell in the puddle.", "effect": "vex-slip", "trick": null},
+        {"id": "ch10-6.5", "text": "You got the spell!", "effect": "sparkle", "trick": "page"}
+      ],
+      "outro": ["story.ch10-6.outro.1", "story.ch10-6.outro.2"],
+      "reward": {"wardrobe": "o-scout"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch10-side-1",
+      "lesson": 70,
+      "bg": "camp",
+      "cast": ["princess", "kitten", "chip", "phil"],
+      "picture": "By a campfire, a bouncy boy stirs a pot of fudge, and a small stuffed elephant sits in the fudge pot, sticky and happy, refusing to move.",
+      "intro": ["story.ch10-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch10-side-1.1", "text": "Chip has a batch of fudge.", "effect": "item-pop", "trick": null},
+        {"id": "ch10-side-1.2", "text": "Phil has fudge on his trunk.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch10-side-1.3", "text": "Phil will not budge!", "effect": "bounce", "trick": null}
+      ],
+      "outro": ["story.ch10-side-1.outro.1"]
+    },
+    {
+      "id": "ch10-side-2",
+      "lesson": 75,
+      "bg": "camp",
+      "cast": ["princess", "kitten", "thud", "nell"],
+      "picture": "In a big camp tent, a baby does a jigsaw puzzle on a little table, and a very big sleepy cat naps right on top of the table.",
+      "intro": ["story.ch10-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch10-side-2.1", "text": "Thud has a puzzle.", "effect": "item-pop", "trick": "puzzle"},
+        {"id": "ch10-side-2.2", "text": "Nell will help with the puzzle.", "effect": "kitten-cheer", "trick": "puzzle"},
+        {"id": "ch10-side-2.3", "text": "Thud had a nap on the table.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch10-side-2.outro.1"]
+    }
+  ]
+}

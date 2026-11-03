@@ -1,0 +1,126 @@
+{
+  "id": "ch16",
+  "title": "The Copy Spell",
+  "book": 2,
+  "page": "bunny",
+  "lessons": [107, 108, 109, 110],
+  "requiresKnown": ["a", "are", "of", "the", "to", "you"],
+  "scenes": [
+    {
+      "id": "ch16-1",
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
+      "picture": "In the magic workshop, a silly queen hops up and down, tapping a glowing page with her finger, and copies of the page start flying out of it like birds.",
+      "intro": ["story.ch16-1.intro.1", "story.ch16-1.intro.2"],
+      "sentences": [
+        {"id": "ch16-1.1", "text": "Vex is hopping up and down.", "effect": "bounce", "trick": null},
+        {"id": "ch16-1.2", "text": "Vex grabbed a page.", "effect": "item-pop", "trick": "page"},
+        {"id": "ch16-1.3", "text": "Vex tapped the page.", "effect": "sparkle", "trick": "page"}
+      ],
+      "outro": ["story.ch16-1.outro.1"]
+    },
+    {
+      "id": "ch16-2",
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "dash", "phil"],
+      "picture": "Pages fly all around the workshop, a small dog leaps and snaps one out of the air, and a small stuffed elephant claps.",
+      "intro": ["story.ch16-2.intro.1"],
+      "sentences": [
+        {"id": "ch16-2.1", "text": "Dash is running and hopping.", "effect": "bounce", "trick": null},
+        {"id": "ch16-2.2", "text": "Dash grabbed a page!", "effect": "item-pop", "trick": "page"},
+        {"id": "ch16-2.3", "text": "It is not the real page.", "effect": "shrink", "trick": "page"}
+      ],
+      "outro": ["story.ch16-2.outro.1"]
+    },
+    {
+      "id": "ch16-3",
+      "lesson": 108,
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "A stack of pages grows and grows on the workshop floor, and a clever girl holds up one page that glows warm and red.",
+      "intro": ["story.ch16-3.intro.1"],
+      "sentences": [
+        {"id": "ch16-3.1", "text": "The stack is bigger and bigger.", "effect": "item-pop", "trick": null},
+        {"id": "ch16-3.2", "text": "Tess spotted a red page.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch16-3.3", "text": "This page is hotter!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch16-3.4", "text": "It is the real spell!", "effect": "kitten-cheer", "trick": "page"}
+      ],
+      "outro": ["story.ch16-3.outro.1"],
+      "question": {"line": "story.ch16-3.question", "choices": ["cast/tess", "cast/bix", "cast/chip"], "answer": "cast/tess"}
+    },
+    {
+      "id": "ch16-4",
+      "lesson": 109,
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "vex-grab", "tess"],
+      "picture": "A silly queen chases a clever girl around a workbench, and the girl tucks a glowing page under a big hat while a kitten grins.",
+      "intro": ["story.ch16-4.intro.1"],
+      "sentences": [
+        {"id": "ch16-4.1", "text": "Vex chased Tess.", "effect": "bounce", "trick": null},
+        {"id": "ch16-4.2", "text": "Tess is hiding the page.", "effect": "shrink", "trick": "page"},
+        {"id": "ch16-4.3", "text": "Kitty is smiling.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch16-4.outro.1"]
+    },
+    {
+      "id": "ch16-5",
+      "lesson": 110,
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "vex-slip", "nell"],
+      "picture": "Fluffy bunnies and playful puppies pop out of the copied pages and tumble onto a silly queen, and a baby giggles with delight.",
+      "intro": ["story.ch16-5.intro.1"],
+      "sentences": [
+        {"id": "ch16-5.1", "text": "The spell made puppies and bunnies!", "effect": "item-pop", "trick": "bunny"},
+        {"id": "ch16-5.2", "text": "The bunnies hopped on Vex.", "effect": "vex-slip", "trick": "bunny"},
+        {"id": "ch16-5.3", "text": "Nell is the happiest of all.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch16-5.outro.1"],
+      "question": {"line": "story.ch16-5.question", "choices": ["tricks/bunny", "tricks/fish", "tricks/pig"], "answer": "tricks/bunny"}
+    },
+    {
+      "id": "ch16-6",
+      "lesson": 110,
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "vex-idle", "tess", "bix"],
+      "picture": "The copied pages fade away like soap bubbles, a child holds up the one real glowing page, and a silly queen sits on the floor and sniffles.",
+      "intro": ["story.ch16-6.intro.1"],
+      "sentences": [
+        {"id": "ch16-6.1", "text": "Vex tried to grab it.", "effect": "bounce", "trick": "page"},
+        {"id": "ch16-6.2", "text": "You got the real page!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch16-6.3", "text": "Vex sat down and cried.", "effect": "vex-slip", "trick": null},
+        {"id": "ch16-6.4", "text": "Kitty dried her chin.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch16-6.outro.1", "story.ch16-6.outro.2", "story.ch16-6.outro.3"],
+      "reward": {"wardrobe": "o-tinker"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch16-side-1",
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "thud", "chip"],
+      "picture": "A very big sleepy cat naps on a soft rug in the workshop, and a bouncy boy gently pets him.",
+      "intro": ["story.ch16-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch16-side-1.1", "text": "Thud is napping on a rug.", "effect": "float", "trick": null},
+        {"id": "ch16-side-1.2", "text": "Chip is petting Thud.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch16-side-1.3", "text": "Thud is not hopping!", "effect": "bounce", "trick": null}
+      ],
+      "outro": ["story.ch16-side-1.outro.1"]
+    },
+    {
+      "id": "ch16-side-2",
+      "lesson": 109,
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "ted", "dot"],
+      "picture": "A happy couple, just back from their trip, set a fresh cake on the workbench, and everyone gathers round.",
+      "intro": ["story.ch16-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch16-side-2.1", "text": "Ted and Dot are back!", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch16-side-2.2", "text": "Dot baked a cake.", "effect": "item-pop", "trick": "cake"},
+        {"id": "ch16-side-2.3", "text": "Ted liked the cake.", "effect": "sparkle", "trick": "cake"}
+      ],
+      "outro": ["story.ch16-side-2.outro.1"]
+    }
+  ]
+}

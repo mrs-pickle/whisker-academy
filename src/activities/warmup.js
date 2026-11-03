@@ -1,5 +1,6 @@
 import { h } from '../core/dom.js';
 import { phonemeCodes } from '../curriculum/phonemes.js';
+import { chunkClip } from '../curriculum/affixes.js';
 import { artUrl, bigButton, pawButton, tile } from '../ui/components.js';
 import { BLEND_PRAISE, STRETCH_GAP_MS, cardSoundClips, chooseOne, countPraiseLines, createActivityView, judgeAloud, listenDisc, now, offerPass, runRound, secondClick, soundPraiseLines, untilHerTurn, wait } from './cards.js';
 
@@ -85,7 +86,10 @@ async function isolate(view, pa) {
 
 async function segment(view, pa, first) {
   const { ctx } = view;
-  const total = pa.sounds.length;
+  const parts = pa.type === 'syllables';
+  const units = parts ? (pa.parts ?? []).map(p => `w.${p}`) : pa.sounds.map(s => `p.${s}`);
+  const intro = parts ? 'v.warmup.syllables' : 'v.warmup.segment';
+  const total = units.length;
   const row = h('div', { class: 'paw-row' });
   let taps = 0;
   let accepting = false;
@@ -102,7 +106,7 @@ async function segment(view, pa, first) {
   paw.disabled = true;
   view.show(wordPicture(ctx, pa.word), row, h('div', { class: 'paw-controls' }, paw, done));
   const word = `w.${pa.word}`;
-  await view.prompt(['v.warmup.segment', word], { play: first ? ['v.warmup.segment', word] : [word] });
+  await view.prompt([intro, word], { play: first ? [intro, word] : [word] });
 
   const start = now();
   let ms = null;
@@ -137,8 +141,8 @@ async function segment(view, pa, first) {
     const right = count === total;
     if (!right) misses++;
     await view.lock.run(async () => {
-      await view.say(right ? (first && misses === 0 ? ['v.warmup.segment.listen'] : []) : ['v.error.count'], 300);
-      await lightPaws(view, row, pa.sounds);
+      await view.say(right ? (first && misses === 0 ? [`${intro}.listen`] : []) : ['v.error.count'], 300);
+      await lightPaws(view, row, units);
       if (right) {
         view.cheer();
         await view.say(misses === 0 ? view.praise('count', countPraiseLines(false)) : [], 300);
@@ -151,12 +155,12 @@ async function segment(view, pa, first) {
   }
 }
 
-async function lightPaws(view, row, sounds) {
-  const prints = sounds.map(() => pawPrint());
+async function lightPaws(view, row, clips) {
+  const prints = clips.map(() => pawPrint());
   row.replaceChildren(...prints);
-  for (let i = 0; i < sounds.length; i++) {
+  for (let i = 0; i < clips.length; i++) {
     prints[i].classList.add('lit');
-    await Promise.all([view.play([`p.${sounds[i]}`]), wait(PAW_LIGHT_MS)]);
+    await Promise.all([view.play([clips[i]]), wait(PAW_LIGHT_MS)]);
   }
   await wait(300);
 }
@@ -169,11 +173,13 @@ async function sayAloud(view, pa, { copilot, first }) {
   let ask;
   if (pa.type === 'delete') {
     ask = [word, 'v.warmup.without', ...deletionClips(pa, byWord)];
+  } else if (pa.type === 'affix') {
+    ask = [word, 'v.warmup.without', chunkClip(String(pa.affix))];
   } else {
     const [from, to] = substitutionClips(pa, byWord);
     ask = [word, from, 'v.warmup.changeto', to];
   }
-  const intro = pa.type === 'delete' ? 'v.warmup.delete' : 'v.warmup.substitute';
+  const intro = pa.type === 'delete' ? 'v.warmup.delete' : pa.type === 'affix' ? 'v.warmup.affix' : 'v.warmup.substitute';
 
   let heard = () => {};
   const clicked = new Promise((resolve) => { heard = resolve; });
@@ -208,8 +214,10 @@ function playWarmup(view, pa, options) {
   switch (pa.type) {
     case 'blend': return blend(view, pa, options.first);
     case 'isolate': return isolate(view, pa);
-    case 'segment': return segment(view, pa, options.first);
+    case 'segment':
+    case 'syllables': return segment(view, pa, options.first);
     case 'delete':
+    case 'affix':
     case 'substitute': return sayAloud(view, pa, options);
     default:
       console.warn(`The warm-up cannot show a "${pa.type}" item (${pa.id}); skipping it.`);

@@ -273,17 +273,18 @@ export function mount(el, ctx, params = {}) {
     }
     await wait(600);
     if (!(await goesOn())) return;
-    kitten.replaceWith(layeredArt(castArt('kitten', ctx.profile?.look, 'sit'), 'reward-kitten sleepy'));
+    kitten.replaceWith(layeredArt(castArt('kitten', ctx.profile?.look, 'sit'), 'reward-kitten'));
     const ideas = closeIdeas(ctx.content?.voice, ctx.settings);
     const idea = ideas.length > 0 ? ctx.rng.pick(ideas) : null;
-    await say(['v.close.sleepy', ...(idea ? [`v.${idea}`] : [])], 2500);
+    await say(['v.close.more', ...(idea ? [`v.${idea}`] : [])], 2500);
     if (!(await goesOn())) return;
-    showHome();
+    showHome(true);
   };
-  const showHome = () => {
-    root.append(h('div', { class: 'reward-home' }, bigButton({ label: 'Back to the castle', icon: 'ui/door-button',
-      onClick: () => go('hub', { from: 'reward' }) })));
-    say(['v.reward.home']).catch((err) => console.error('The reward could not say the way home', err));
+  const showHome = (more = false) => {
+    root.append(h('div', { class: 'reward-home' },
+      more ? bigButton({ label: 'Play more', icon: 'ui/stone-on', onClick: () => go('session') }) : null,
+      bigButton({ label: 'Back to the castle', icon: 'ui/door-button', onClick: () => go('hub', { from: 'reward' }) })));
+    say([more ? 'v.reward.more' : 'v.reward.home']).catch((err) => console.error('The reward could not say the way home', err));
   };
   play().catch((err) => console.error('The reward stopped', err));
   return () => {

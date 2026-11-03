@@ -1,4 +1,4 @@
-import { LESSONS } from '../curriculum/lessons.js';
+import { LAST_LESSON, LESSONS } from '../curriculum/lessons.js';
 import { isPassRecord, normalizePasses } from '../engine/passes.js';
 import { isCheckRecord, isPlacement } from '../engine/quest-results.js';
 import { clampTaughtUpTo } from './settings.js';
@@ -184,6 +184,7 @@ const PROFILE_FIELDS = Object.freeze({
   flash: ( v) => Array.isArray(v) && v.every(isFlashRound),
   flashMs: isNumber,
   assessFirst: ( v) => typeof v === 'boolean',
+  assessFrom: isNumber,
   placements: ( v) => Array.isArray(v) && v.every(isPlacement),
   pointerLog: ( v) => Array.isArray(v) && v.every(isPointerEntry),
 });
@@ -254,6 +255,7 @@ export function normalizeProfile(stored, startLesson) {
   else delete profile.flash;
   if (!isNumber(stored.flashMs)) delete profile.flashMs;
   if (stored.assessFirst !== true) delete profile.assessFirst;
+  if (!(Number.isInteger(stored.assessFrom) && stored.assessFrom >= 1 && stored.assessFrom <= LAST_LESSON)) delete profile.assessFrom;
   const placements = Array.isArray(stored.placements) ? stored.placements.filter(isPlacement) : [];
   if (placements.length > 0) profile.placements = placements;
   else delete profile.placements;

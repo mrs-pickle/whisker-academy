@@ -3,9 +3,21 @@ import { phonemeCodes } from './phonemes.js';
 
 export const END = '#';
 
+export const START = '^';
+
 export const VCE = '_e';
 
+export const OPEN = 'V.CV';
+
+export const MEDIAL = 'V|V';
+
+export const UNSTRESSED = 'V0';
+
+export const SIGNAL = 'eiy';
+
 const cg =(g, p, lesson, before) => Object.freeze(before === undefined ? { g, p, lesson } : { g, p, lesson, before });
+
+const ca = (g, p, lesson, after) => Object.freeze({ g, p, lesson, after });
 
 export const CORRESPONDENCES = Object.freeze([
   cg('a', 'a', 1),
@@ -82,6 +94,98 @@ export const CORRESPONDENCES = Object.freeze([
   cg('o', 'O', 66, END),
   cg('u', 'U', 66, END),
   cg('u', 'oo', 66, END),
+  ...['b', 'd', 'g', 'm', 'n', 'p', 'r', 't'].map(c => cg(c + c, c, 67, MEDIAL)),
+  cg('cc', 'k', 67, MEDIAL),
+  cg('a', 'A', 68, OPEN),
+  cg('e', 'E', 68, OPEN),
+  cg('i', 'I', 68, OPEN),
+  cg('o', 'O', 68, OPEN),
+  cg('u', 'U', 68, OPEN),
+  cg('u', 'oo', 68, OPEN),
+
+  cg('tch', 'ch', 69),
+  cg('dge', 'j', 70),
+  cg('i', 'I', 72, 'l+d'),
+  cg('i', 'I', 72, 'n+d'),
+  cg('o', 'O', 72, 'l+d'),
+  cg('o', 'O', 72, 'l+t'),
+  cg('o', 'O', 72, 's+t'),
+  cg('y', 'I', 73, END),
+  cg('y', 'I', 73, 'ing'),
+  cg('y', 'E', 74, END),
+  cg('le', '@ l', 75, END),
+  cg('le', '@ l', 75, 's'),
+
+  cg('ar', 'ar', 77),
+  cg('or', 'or', 78),
+  cg('ore', 'or', 78),
+  cg('er', 'er', 80),
+  cg('ir', 'er', 81),
+  cg('ur', 'er', 81),
+  ca('or', 'er', 82, 'w'),
+
+  cg('ai', 'A', 84),
+  cg('ay', 'A', 84),
+  cg('ee', 'E', 85),
+  cg('ea', 'E', 85),
+  cg('ey', 'E', 85),
+  cg('oa', 'O', 86),
+  cg('ow', 'O', 86),
+  cg('oe', 'O', 86),
+  cg('ie', 'I', 87),
+  cg('igh', 'I', 87),
+
+  cg('oo', 'uu', 89),
+  cg('u', 'uu', 89),
+  cg('oo', 'oo', 90),
+  cg('ew', 'oo', 91),
+  cg('ui', 'oo', 91),
+  cg('ue', 'oo', 91),
+  cg('au', 'aw', 93),
+  cg('aw', 'aw', 93),
+  cg('augh', 'aw', 93),
+  cg('ea', 'e', 94),
+  ca('a', 'o', 94, 'w'),
+  ca('a', 'aw', 94, 'w'),
+  ca('a', 'o', 94, 'qu'),
+
+  cg('oi', 'oy', 95),
+  cg('oy', 'oy', 95),
+  cg('ou', 'ow', 96),
+  cg('ow', 'ow', 96),
+
+  ca('kn', 'n', 98, START),
+  ca('wr', 'r', 98, START),
+  ...[END, 's', 'ed', 'ing', 'er'].map(next => cg('mb', 'm', 98, next)),
+
+  ...['a', 'e', 'i', 'o', 'u'].map(v => cg(v, '@', 67, UNSTRESSED)),
+  cg('ar', 'er', 111, UNSTRESSED),
+  cg('or', 'er', 111, UNSTRESSED),
+
+  cg('air', 'air', 112),
+  cg('are', 'air', 112),
+  cg('ear', 'air', 112),
+  cg('ear', 'ear', 113),
+
+  cg('ei', 'A', 114),
+  cg('eigh', 'A', 114),
+  cg('ey', 'A', 114),
+  cg('ea', 'A', 114),
+  cg('aigh', 'A', 114),
+  cg('ew', 'U', 115),
+  cg('eu', 'U', 115),
+  cg('ue', 'U', 115),
+  cg('ou', 'oo', 115),
+  cg('ough', 'aw', 116),
+  cg('ough', 'O', 116),
+  cg('c', 's', 117, SIGNAL),
+  cg('g', 'j', 117, SIGNAL),
+  cg('ch', 'sh', 118),
+  cg('ch', 'k', 118),
+  ca('gn', 'n', 118, START),
+  ...[END, 's', 'ed', 'ing'].map(next => cg('gn', 'n', 118, next)),
+  ca('gh', 'g', 118, START),
+  cg('t', '', 118),
 ]);
 
 const BY_GRAPHEME = new Map();
@@ -90,12 +194,17 @@ for (const c of CORRESPONDENCES) {
   if (list) list.push(c); else BY_GRAPHEME.set(c.g, [c]);
 }
 
-export function findCorrespondence(g, p, nextG) {
+export function correspondencesOf(g, p) {
   const codes = phonemeCodes(p).join(' ');
-  const same = (BY_GRAPHEME.get(String(g).toLowerCase()) ?? []).filter(c => c.p === codes);
+  return (BY_GRAPHEME.get(String(g).toLowerCase()) ?? []).filter(c => c.p === codes);
+}
+
+export function findCorrespondence(g, p, nextG, prevG) {
+  const prev = prevG === undefined ? undefined : String(prevG).toLowerCase();
+  const same = correspondencesOf(g, p).filter(c => c.after === undefined || c.after === prev);
   if (nextG !== undefined) {
     const hit = same.find(c => c.before === nextG);
     if (hit || nextG === VCE) return hit ?? null;
   }
-  return same.find(c => c.before === undefined) ?? null;
+  return same.find(c => c.before === undefined && c.after !== undefined) ?? same.find(c => c.before === undefined) ?? null;
 }

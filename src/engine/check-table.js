@@ -1,9 +1,15 @@
 import { CHECK_SETS } from './check-form.js';
+import { UNITS } from '../curriculum/units.js';
 
 
 
-export const SET_NAMES = Object.freeze({ 42: 'ff, ll, ss and zz', 43: 'all, oll and ull', 44: 'ck', 45: 'sh', th: 'th', 48: 'ch', 50: 'wh' });
-const SET_LESSONS = Object.freeze({ 42: [42], 43: [43], 44: [44], 45: [45], th: [46, 47], 48: [48], 50: [50] });
+export const SET_NAMES = Object.freeze({ 42: 'ff, ll, ss and zz', 43: 'all, oll and ull', 44: 'ck', 45: 'sh', th: 'th', 48: 'ch', 50: 'wh',
+  'digraphs-end': 'ng and nk', vce: 'silent e', 'longer-words': 'ending and two-part',
+  'ending-patterns': 'tch, dge, y and -le', 'r-controlled': 'ar, or and er', 'long-teams': 'ai, ee, oa and igh', 'other-teams': 'oo, ew and aw', diphthongs: 'oi, oy, ou and ow',
+  'silent-letters': 'kn, wr and mb', 'affixes-1': 'un-, re-, -ful and -ly', 'suffix-changes': 'doubling, drop the e, y to i', 'rare-spellings': 'air, ear, eigh and other rare ones',
+  'affixes-2': '-tion, -ture, -ness and -able' });
+const SET_LESSONS = Object.freeze({ 42: [42], 43: [43], 44: [44], 45: [45], th: [46, 47], 48: [48], 50: [50],
+  ...Object.fromEntries(UNITS.filter(u => u.from > 50).map(u => [u.id, Array.from({ length: u.to - u.from + 1 }, (_, i) => u.from + i)])) });
 
 const zero = () => ({ correct: 0, total: 0 });
 const add = (a, b) => ({ correct: a.correct + b.correct, total: a.total + b.total });

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+<!-- The moon pool cave: rock around a wide arched mouth, drips, crystals and two glowing stones, and a round pool on the cave floor. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<path class="fill" fill="#ffffff" d="M0,0 L1280,0 L1280,440 L1200,440 C1200,200 1000,60 640,60 C280,60 80,200 80,440 L0,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,0 L1280,0 L1280,440 L1200,440 C1200,200 1000,60 640,60 C280,60 80,200 80,440 L0,440 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M80,440 C80,200 280,60 640,60 C1000,60 1200,200 1200,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M80,440 C80,200 280,60 640,60 C1000,60 1200,200 1200,440 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M398,96 L432,190 L466,96 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M398,96 L432,190 L466,96 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M812,96 L846,190 L880,96 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M812,96 L846,190 L880,96 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M220,44 C220,60.6 206.6,74 190,74 C173.4,74 160,60.6 160,44 C160,27.4 173.4,14 190,14 C206.6,14 220,27.4 220,44 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M220,44 C220,60.6 206.6,74 190,74 C173.4,74 160,60.6 160,44 C160,27.4 173.4,14 190,14 C206.6,14 220,27.4 220,44 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M1120,44 C1120,60.6 1106.6,74 1090,74 C1073.4,74 1060,60.6 1060,44 C1060,27.4 1073.4,14 1090,14 C1106.6,14 1120,27.4 1120,44 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M1120,44 C1120,60.6 1106.6,74 1090,74 C1073.4,74 1060,60.6 1060,44 C1060,27.4 1073.4,14 1090,14 C1106.6,14 1120,27.4 1120,44 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M34,440 L6,370 L34,300 L62,370 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M34,440 L6,370 L34,300 L62,370 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M1246,440 L1218,370 L1246,300 L1274,370 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M1246,440 L1218,370 L1246,300 L1274,370 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M432,380 L404,310 L432,240 L460,310 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M432,380 L404,310 L432,240 L460,310 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M846,380 L818,310 L846,240 L874,310 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M846,380 L818,310 L846,240 L874,310 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M0,430 C300,418 980,442 1280,426 L1280,800 L0,800 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,430 C300,418 980,442 1280,426 L1280,800 L0,800 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M670,656 C670,678.1 656.6,696 640,696 C623.4,696 610,678.1 610,656 C610,633.9 623.4,616 640,616 C656.6,616 670,633.9 670,656 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M670,656 C670,678.1 656.6,696 640,696 C623.4,696 610,678.1 610,656 C610,633.9 623.4,616 640,616 C656.6,616 670,633.9 670,656 Z" stroke-width="6"/><path d="M22,4 L1258,4 Q1276,4 1276,22 L1276,778 Q1276,796 1258,796 L22,796 Q4,796 4,778 L4,22 Q4,4 22,4 Z" stroke-width="8"/></g>
+</svg>

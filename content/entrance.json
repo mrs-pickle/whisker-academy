@@ -30,6 +30,19 @@
     { "id": "ladder-43", "lesson": 43, "words": ["bell", "kiss", "puff", "ball", "wall"] },
     { "id": "ladder-45", "lesson": 45, "words": ["duck", "rock", "ship", "fish", "shop"] },
     { "id": "ladder-48", "lesson": 48, "words": ["bath", "thin", "chin", "lunch", "chop"] },
-    { "id": "ladder-50", "lesson": 50, "words": ["when", "whip", "which", "whisk", "graph"] }
+    { "id": "ladder-50", "lesson": 50, "words": ["when", "whip", "which", "whisk", "graph"] },
+    { "id": "ladder-53", "lesson": 53, "words": ["king", "pink", "swing", "thank", "splash"] },
+    { "id": "ladder-58", "lesson": 58, "words": ["cake", "kite", "home", "rope", "cute"] },
+    { "id": "ladder-62", "lesson": 62, "words": ["nice", "face", "cage", "give", "love"] },
+    { "id": "ladder-68", "lesson": 68, "words": ["boxes", "jumped", "fishing", "napkin", "robot"] },
+    { "id": "ladder-76", "lesson": 76, "words": ["catch", "bridge", "cold", "fly", "candle"] },
+    { "id": "ladder-83", "lesson": 83, "words": ["park", "corn", "herd", "shirt", "burn"] },
+    { "id": "ladder-88", "lesson": 88, "words": ["rain", "sheep", "boat", "light", "tray"] },
+    { "id": "ladder-92", "lesson": 92, "words": ["cook", "moon", "food", "new", "blue"] },
+    { "id": "ladder-97", "lesson": 97, "words": ["saw", "bread", "coin", "boy", "cloud"] },
+    { "id": "ladder-106", "lesson": 106, "words": ["knife", "quickly", "helpful", "unlock", "rewind"] },
+    { "id": "ladder-110", "lesson": 110, "words": ["running", "hotter", "making", "cried", "babies"] },
+    { "id": "ladder-118", "lesson": 118, "words": ["dollar", "chair", "clear", "eight", "school"] },
+    { "id": "ladder-128", "lesson": 128, "words": ["action", "mixture", "farmer", "sandy", "kindness"] }
   ]
 }

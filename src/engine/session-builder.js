@@ -2,6 +2,7 @@ import { CORRESPONDENCES } from '../curriculum/correspondences.js';
 import { canDictate } from '../curriculum/dictation.js';
 import { isDecodable } from '../curriculum/decodable.js';
 import { hasShortIE } from '../curriculum/ie-nasal.js';
+import { isRControlled, shapeTier } from '../curriculum/tiers.js';
 import { finishedSessions, isExtraPractice } from '../profile/profile.js';
 import { isDue, isOverdue } from './itemstate.js';
 import { waitingPasses } from './passes.js';
@@ -44,6 +45,30 @@ const TRICK_WEIGHT = 3;
 const WORD_CARD_PART = 3;
 const PASS_PART = 3;
 const BACKFILL_WORDS = 2;
+export const PACES = Object.freeze({
+  gentle: Object.freeze({ quotaShift: -1, backfill: 1, wordPart: WORD_CARD_PART }),
+  steady: Object.freeze({ quotaShift: 0, backfill: BACKFILL_WORDS, wordPart: WORD_CARD_PART }),
+  quick: Object.freeze({ quotaShift: 1, backfill: 4, wordPart: 2 }),
+});
+const BIG_LESSON_WORDS = 25;
+const CATCH_UP = Object.freeze({
+  gentle: Object.freeze({ words: 12, max: 3, spell: 1 }),
+  steady: Object.freeze({ words: 6, max: 7, spell: 3 }),
+  quick: Object.freeze({ words: 4, max: 8, spell: 5 }),
+});
+
+export function paceOf(settings, content, unmet = 0) {
+  const name = (Object.hasOwn(PACES, settings.newWordPace ?? '') ? settings.newWordPace : 'steady');
+  const pace = PACES[name];
+  const rule = CATCH_UP[name];
+  const catchUp = Math.min(rule.max, Math.max(0, Math.floor(unmet / rule.words) - 1));
+  const spellLow = Math.min(rule.spell, catchUp);
+  const big = name === 'quick' ? Math.floor(content.words.filter(w => w.lesson === settings.taughtUpTo && w.real !== false).length / BIG_LESSON_WORDS) : 0;
+  return {
+    ...pace, quotaShift: pace.quotaShift + big + spellLow, backfill: pace.backfill + Math.max(big, catchUp),
+    morePlaces: catchUp, spellLow,
+  };
+}
 const R_WORD_SESSIONS = 10;
 export const R_WORD_TIER = 4;
 const NONSENSE_CARDS = Object.freeze({ 10: 1, 15: 1, 20: 2 });
@@ -59,8 +84,8 @@ export const needsSAndSh = (segs) => segs.some(([g]) => g === 'sh') && segs.some
 
 export function eligibleWords(content, settings, profile, mode) {
   const n = settings.taughtUpTo;
-  const spellable = (w) => w.tier <= profile.spellTier && (settings.sShContrast || !needsSAndSh(w.segs));
-  return content.words.filter(w => w.lesson <= n && isDecodable(w.segs, n) && (mode !== 'spell' || spellable(w)));
+  const spellable = (w) => w.tier <= profile.spellTier && (settings.sShContrast || !needsSAndSh(w.segs)) && rSpellAllowed(profile, w.segs);
+  return content.words.filter(w => w.lesson <= n && isDecodable(w.segs, n, w) && (mode !== 'spell' || spellable(w)));
 }
 
 export function rWordsOpen(profile) {
@@ -68,6 +93,8 @@ export function rWordsOpen(profile) {
 }
 
 export const rWordAllowed = (profile, tier) => tier < R_WORD_TIER || rWordsOpen(profile);
+
+export const rSpellAllowed = (profile, segs) => !isRControlled(segs) || rWordsOpen(profile);
 
 const warmupTier = (item) => (Array.isArray(item.sounds) && item.sounds.includes('r') ? R_WORD_TIER : 1);
 
@@ -170,8 +197,12 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const first = weightedOrder(easy.length > 0 ? easy : mastered, rng)
     .sort((a, b) => (b.state).box - (a.state).box)[0];
 
+  const pace = paceOf(settings, content, back ? 0 : p.read.filter(isNewWord).length);
   const pairMax = Math.floor(sizes.cards / 2);
-  const wordMax = Math.ceil(sizes.cards / WORD_CARD_PART);
+  const pencilCards = pencilPlanned(profile, settings, day) ? PENCIL_TRIM[ (settings.sessionMinutes)].cards : undefined;
+  const wordBase = Math.ceil(sizes.cards / pace.wordPart);
+  const wordCap = (pencilCards ?? sizes.cards) - MIN_SOUND_CARDS;
+  const wordMax = wordBase + Math.max(0, Math.min(pace.morePlaces, wordCap - wordBase));
   const spellSet = new Set(p.spell.map(c => c.id));
   const spellPassed = passing.spell.filter(c => c !== first);
   const charmPassed = passing.charm;
@@ -180,20 +211,25 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const metLearning = p.instant.filter(c => c.status === 'learning' && c.state !== undefined).length;
   const newReading = new Map(p.read.filter(isNewWord).map(c => [c.id, c]));
   const unmet = back ? [] : p.read.filter(c => isNewWord(c) && (c.lesson) < settings.taughtUpTo);
-  const held = heldPlaces(wordMax, unmet.length);
+  const held = heldPlaces(wordMax, unmet.length, pace.backfill);
+  const spellRoom = Math.max(Math.min(1, spellFree), spellFree - dueRoom(p.spell.filter(c => c !== first), sizes.spell));
   const fresh = chooseNew([
     ...p.spell.filter(isNewWord).map(c => {
       const read = newReading.get(c.id);
-      return { c, round: 'spell', ...(read ? { alt: { c: read, round: 'cards' } } : {}) };
+      const own = { c, round: 'spell', ...(read ? { alt: { c: read, round: 'cards' } } : {}) };
+      return (c.tier) < profile.spellTier ? { c, round: 'spellLow', alt: own } : own;
     }),
     ...p.read.filter(c => isNewWord(c) && !spellSet.has(c.id)).map(c => ({ c, round: 'cards' })),
     ...p.instant.filter(c => c.status === 'learning' && c.state === undefined).map(c => ({ c, round: 'charm' })),
-  ], newQuota(lastAccuracy), {
-    spell: Math.max(Math.min(1, spellFree), spellFree - dueRoom(p.spell.filter(c => c !== first), sizes.spell)),
-    cards: Math.max(0, wordMax - held - dueRoom(p.read.filter(c => !spellDue.has(c.id)), sizes.cards)),
+  ], newQuota(lastAccuracy, pace.quotaShift), {
+    spell: spellRoom,
+    spellLow: Math.max(0, Math.min(pace.spellLow, spellFree - spellRoom)),
+    cards: Math.max(0, Math.min(Math.max(wordMax - held - dueRoom(p.read.filter(c => !spellDue.has(c.id)), sizes.cards),
+      Math.min(pace.morePlaces, wordMax - 1 - held)),
+      pencilCards !== undefined && pace.morePlaces > 0 ? Math.floor((wordCap - held) / REHEARSAL_OFFSETS.length) : Infinity)),
     charm: Math.max(0, sizes.charm - charmPassed.length),
   }, metLearning < sizes.charm ? 'charm' : null, rng);
-  const freshFor = (round) => fresh.filter(f => f.round === round).map(f => f.c);
+  const freshFor = (round) => fresh.filter(f => f.round === round || (round === 'spell' && f.round === 'spellLow')).map(f => f.c);
   const newRound = (size) => createRound(size, due, late);
 
   const warmup = newRound(sizes.warmup);
@@ -315,11 +351,12 @@ export function pencilLetters(content, profile, states, day) {
 export function dictatedItems(content, settings, profile, rng) {
   const n = settings.taughtUpTo;
   const item = (id) => ({ id, mode: 'write', isNew: false, isReview: false });
-  const digraphs = CORRESPONDENCES.filter(c => c.g.length === 2 && c.g[0] !== c.g[1] && c.before === undefined && c.lesson <= n && canDictate({ segs: [[c.g, c.p]] }));
+  const digraphs = CORRESPONDENCES.filter(c => c.g.length === 2 && c.g[0] !== c.g[1] && c.before === undefined && c.after === undefined && c.lesson <= n
+    && canDictate({ segs: [[c.g, c.p]] }) && rSpellAllowed(profile, [[c.g, c.p]]));
   let newest;
   for (const c of digraphs) if (!newest || c.lesson > newest.lesson) newest = c;
   const words = eligibleWords(content, settings, profile, 'read')
-    .filter(w => w.tier <= DICTATED_TIER_MAX && rWordAllowed(profile, w.tier) && canDictate(w) && (settings.sShContrast || !needsSAndSh(w.segs)));
+    .filter(w => shapeTier(w.segs, w) <= DICTATED_TIER_MAX && rWordAllowed(profile, w.tier) && rSpellAllowed(profile, w.segs) && canDictate(w) && (settings.sShContrast || !needsSAndSh(w.segs)));
   const current = words.filter(w => w.lesson === n);
   const pool = rng.shuffle([...(current.length > 0 ? current : words)]);
   const out = newest ? [item(`g:${newest.g}`)] : [];
@@ -411,14 +448,14 @@ export function openToHer(content, settings, profile) {
 
 const passRoom = (length) => Math.ceil(length / PASS_PART);
 
-function newQuota(lastAccuracy) {
+function newQuota(lastAccuracy, shift = 0) {
   const a = lastAccuracy ?? 0;
-  return a >= 0.9 ? 3 : a >= 0.8 ? 2 : 1;
+  return Math.max(1, (a >= 0.9 ? 3 : a >= 0.8 ? 2 : 1) + shift);
 }
 
 const reviewCap = (size) => Math.max(1, Math.floor(size * OVERDUE_SHARE));
 
-export const heldPlaces = (wordMax, unmet) => Math.min(BACKFILL_WORDS, wordMax - 1, unmet);
+export const heldPlaces = (wordMax, unmet, backfill = BACKFILL_WORDS) => Math.min(backfill, wordMax - 1, unmet);
 
 function gatherPools(content, settings, profile, { again }) {
   const { taughtUpTo, sShContrast, ieEmphasis } = settings;
@@ -447,7 +484,7 @@ function gatherPools(content, settings, profile, { again }) {
       ? content.pairs.ssh.filter(pr => pr.every(sshReadable)).map(pr => pairCand(pr, 'ssh')) : [],
     read: readWords.map(w => wordCand(w, 'read', recent(w))),
     nonsense: (content.nonsense ?? [])
-      .filter(w => w.lesson <= taughtUpTo && isDecodable(w.segs, taughtUpTo) && rWordAllowed(profile, w.tier))
+      .filter(w => w.lesson <= taughtUpTo && isDecodable(w.segs, taughtUpTo, w) && rWordAllowed(profile, w.tier))
       .map(w => cand(`n:${w.w}`, 'read', { text: w.w, lesson: w.lesson, tier: w.tier })),
     spell: spellWords.map(w => wordCand(w, 'spell', unearned(w))),
     chains: eligibleChains(content, settings, profile, spellWords).map(ch => cand(`ch:${ch.id}`, 'spell')),
@@ -468,7 +505,7 @@ function chooseNew(options, quota, room, reserve, rng) {
     .sort((a, b) => (b.c.lesson) - (a.c.lesson) || tierRank(a.c) - tierRank(b.c));
   const chosen = [];
   const words = new Set();
-  const placed = (o) => (room[o.round] > 0 ? o : o.alt && room[o.alt.round] > 0 ? o.alt : null);
+  const placed = (o) => (o === undefined ? null : room[o.round] > 0 ? o : placed(o.alt));
   const fits = (o) => {
     const text = (o.c.text);
     return placed(o) !== null && !words.has(text) && !words.has(PARTNER.get(text));

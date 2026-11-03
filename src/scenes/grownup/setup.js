@@ -1,6 +1,6 @@
 import { h } from '../../core/dom.js';
 import { createLock } from '../../core/lock.js';
-import { LESSONS } from '../../curriculum/lessons.js';
+import { CHOOSABLE_LESSONS, LAST_LESSON } from '../../curriculum/lessons.js';
 import { HEROES, heroOf, heroWords, withHero } from '../../profile/hero.js';
 import { newProfile } from '../../profile/profile.js';
 import { clampTaughtUpTo, normalizeSettings } from '../../profile/settings.js';
@@ -26,7 +26,6 @@ export const setupSteps = (settings) => (typeof settings.pin === 'string' ? SETU
 
 export const NAME_MAX = 24;
 const FIRST_LESSON = 1;
-const LAST_LESSON = 68;
 
 const capitalized = (id) => id.charAt(0).toUpperCase() + id.slice(1);
 
@@ -149,7 +148,12 @@ export function mount(el, ctx) {
 
   const lessonSelect = () => h('select', { class: 'gu-select', id: 'gu-setup-lesson',
     onChange: ( e) => { answers.taughtUpTo = Number( (e.target).value); show(); } },
-  LESSONS.map((lesson) => h('option', { value: String(lesson.n), selected: lesson.n === answers.taughtUpTo }, `${lesson.n}: ${lesson.concept}`)));
+  CHOOSABLE_LESSONS.map((lesson) => h('option', { value: String(lesson.n), selected: lesson.n === answers.taughtUpTo }, `${lesson.n}: ${lesson.concept}`)));
+
+  const assessFromSelect = () => h('select', { class: 'gu-select', id: 'gu-setup-assess-from',
+    onChange: ( e) => { const v = (e.target).value; answers.assessFrom = v === '' ? null : Number(v); } },
+  h('option', { value: '', selected: answers.assessFrom == null }, 'Start from the beginning'),
+  CHOOSABLE_LESSONS.map((lesson) => h('option', { value: String(lesson.n), selected: lesson.n === answers.assessFrom }, `${lesson.n}: ${lesson.concept}`)));
 
   const restoring = restoreControls(ctx, { needsPin: true, onRestored: () => restored() });
   const restored = () => {
@@ -214,6 +218,9 @@ export function mount(el, ctx) {
     start: () => [
       h('h1', { class: 'gu-title' }, hx('Last, for the grown-up: her lesson')),
       h('p', {}, hx("The Assessment is 5 to 10 minutes of reading with you beside her, marking each word, as on her first day. She hears only that it is a day at the Academy, never a test. It suggests a UFLI lesson; you keep it or change it, and her tutor's number wins.")),
+      h('div', { class: 'gu-field' }, h('label', { class: 'gu-label', for: 'gu-setup-assess-from' }, hx('Her lesson, roughly, if you know it')),
+        assessFromSelect(),
+        h('p', { class: 'gu-hint' }, 'The reading starts just below it, and goes down by itself if that is too hard.')),
       h('div', { class: 'gu-row gu-start-choices' },
         h('button', { type: 'button', class: 'gu-button gu-primary', 'data-choice': 'start:assessment', onClick: () => finish('assessment', undefined, { assess: true }) }, 'Do the Assessment now (recommended)'),
         h('button', { type: 'button', class: 'gu-button', 'data-choice': 'start:lesson', onClick: () => forward() }, 'I know the lesson')),
@@ -271,7 +278,8 @@ export function mount(el, ctx) {
   const finish = (scene, params, { assess = false } = {}) => lock.run(async () => {
     const done = await finishSetup(ctx.settings, assess ? { ...answers, taughtUpTo: ASSESS_START } : answers, ctx.content?.wardrobe);
     ctx.settings = done.settings;
-    ctx.profile = assess ? { ...done.profile, assessFirst: true } : done.profile;
+    const from = Number.isInteger(answers.assessFrom) ? { assessFrom: answers.assessFrom } : {};
+    ctx.profile = assess ? { ...done.profile, assessFirst: true, ...from } : done.profile;
     try {
       await ctx.save();
     } catch (err) {

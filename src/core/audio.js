@@ -7,7 +7,7 @@ const TIMED_OUT = Symbol('timed out');
 
 
 
-export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing, variant }) {
+export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing, variant, muted }) {
   const files = new Map(Object.entries(manifest ?? {}).filter(([, file]) => typeof file === 'string' && file !== ''));
   const prefix = base && !base.endsWith('/') ? `${base}/` : (base ?? '');
   const fetchClip = fetchFn ?? ((url, init) => globalThis.fetch(url, init));
@@ -51,6 +51,10 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing, va
     const twin = `${id}.${version}`;
     return files.has(twin) || overrides.has(twin) ? twin : id;
   }
+
+  const silent = () => {
+    try { return muted?.() === true; } catch { return false; }
+  };
 
   const urlFor = (file) => prefix + file.split('/').map(encodeURIComponent).join('/');
 
@@ -220,11 +224,13 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing, va
     },
 
     play(id) {
-      return playOne(chosen(id), interrupt());
+      const gen = interrupt();
+      return silent() ? Promise.resolve(false) : playOne(chosen(id), gen);
     },
 
     async playSeq(asked, gapMs = CLIP_GAP_MS, lead = 0) {
       const gen = interrupt();
+      if (silent()) return false;
       const ids = asked.map(chosen);
       for (const id of new Set(ids)) bufferFor(id, false).catch(() => {});
       let whole = true;
@@ -236,7 +242,7 @@ export function createAudio({ manifest, base, store, ctx, fetchFn, onMissing, va
           await Promise.race([delay(pause), interrupted.ended]);
           interrupted.forget();
         }
-        if (gen !== generation) return false;
+        if (gen !== generation || silent()) return false;
         if (!await playOne(ids[i], gen)) whole = false;
       }
       return whole;

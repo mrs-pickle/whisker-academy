@@ -15,6 +15,7 @@ import { mountStage, applyComfort } from './core/stage.js';
 import { h } from './core/dom.js';
 import { speakerButton, fullscreenButton } from './ui/components.js';
 import { createHome, homeParams } from './ui/home.js';
+import { createMute } from './ui/mute.js';
 import { cachedParts } from './ui/page-parts.js';
 
 const AUDIO_BASE = 'assets/audio/';
@@ -98,6 +99,7 @@ async function boot() {
     store,
     onMissing: (id) => console.debug(`No audio for ${id}`),
     variant: () => heroVariant(ctx?.profile),
+    muted: () => ctx?.settings?.muted === true,
   });
   const playing = await starting;
   if (playing) await migrateToStudents(store.base, { day: () => todayFrom(launch.dayOffset) });
@@ -107,7 +109,7 @@ async function boot() {
 
   let replay = null;
   let replayGap;
-  const speaker = speakerButton({ onReplay: () => { if (replay) audio.playSeq(replay, replayGap); } });
+  const speaker = speakerButton({ onReplay: () => { if (replay) mute.replay(() => { if (replay) audio.playSeq(replay, replayGap); }); } });
   const setReplay = (ids, gap) => {
     replay = ids && ids.length ? [...ids] : null;
     replayGap = gap;
@@ -116,7 +118,8 @@ async function boot() {
   setReplay(null);
   applyComfort(stage.el, settings);
   const home = createHome({ audio, open: async () => { if (!away) await game.router.goNow('hub', homeParams(game.router.current())); } });
-  stage.el.append(sceneLayer, h('div', { class: 'chrome' }, speaker, home.button, fullscreenButton()));
+  const mute = createMute({ audio, game: () => ctx });
+  stage.el.append(sceneLayer, h('div', { class: 'chrome' }, speaker, mute.button, home.button, fullscreenButton()));
 
   const game = ({
     store,
@@ -176,7 +179,7 @@ async function boot() {
   };
   game.save = flagFailedSaves(game, game.save);
   const saveHidden = flagFailedSaves(game, () => windows.hide());
-  game.router = createRouter(sceneLayer, game, { onNavigate: (name) => { audio.stop(); setReplay(null); home.arrived(name); } });
+  game.router = createRouter(sceneLayer, game, { onNavigate: (name) => { audio.stop(); setReplay(null); home.arrived(name); mute.arrived(name); } });
 
   unlockOnGestures(window, audio);
   document.addEventListener('visibilitychange', () => {

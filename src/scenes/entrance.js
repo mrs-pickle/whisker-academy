@@ -75,7 +75,7 @@ export function questPlan(content, settings, profile) {
   const entrance = content.entrance ?? {};
   const known = new Set(Object.keys(profile.instant ?? {}).filter(w => profile.instant[w] === 'known'));
   const passage = entrance.passage && sentenceBlockers(entrance.passage.text,
-    { lookup: (w) => words.get(w)?.segs ?? null, knownInstant: known, names: new Set(), taughtUpTo: n }).length === 0
+    { lookup: (w) => words.get(w) ?? null, knownInstant: known, names: new Set(), taughtUpTo: n }).length === 0
     ? entrance.passage : null;
   return { lines, dictation, passage };
 }

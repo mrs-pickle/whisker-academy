@@ -2,6 +2,7 @@ import { h } from '../core/dom.js';
 import { createArrivalGuard, createLock } from '../core/lock.js';
 import { isExtraPractice } from '../profile/profile.js';
 import { artUrl, bigButton, kittenBubble, layeredArt } from '../ui/components.js';
+import { pagesWon } from '../engine/story-place.js';
 import { castArt } from '../ui/story-stage.js';
 import { dressUpButton } from './dressup.js';
 import { pendingGifts } from './reward.js';
@@ -83,6 +84,13 @@ export function mount(el, ctx, params = {}) {
   const chaptersButton = bigButton({ label: 'Chapters', icon: 'ui/book', onClick: opens('chapters') });
   chaptersButton.classList.add('hub-chapters');
 
+  const pages = pagesWon(ctx.content?.story ?? [], ctx.profile);
+  const spellBook = pages.length === 0 ? null : h('button', {
+    type: 'button', class: 'hub-spellbook', 'aria-label': 'Spell Book',
+    onClick: ( event) => { if (!spent(event) && !lock.locked()) ctx.audio.play('v.hub.spellbook'); },
+  }, h('img', { class: 'hub-spellbook-art', src: artUrl('tricks/book'), alt: '', draggable: 'false' }),
+  h('span', { class: 'hub-spellbook-pages' }, pages.map(({ page }) => h('img', { class: 'hub-spellbook-page', src: artUrl(page), alt: '', draggable: 'false' }))));
+
   const adventure = h('div', { class: ['hub-adventure', doneToday(ctx.profile, day) && 'done-today'] },
     bigButton({ label: 'Play', icon: 'ui/stone-on', onClick: play }));
   ctx.dayEnding?.then(() => { adventure.classList.toggle('done-today', doneToday(ctx.profile, day)); });
@@ -99,6 +107,7 @@ export function mount(el, ctx, params = {}) {
         bigButton({ label: 'Color', icon: 'ui/crayon-e63946', onClick: opens('colorin') }),
         dressUpButton(ctx.profile.look, opens('dressup')),
         chaptersButton)),
+    spellBook,
     h('button', { type: 'button', class: 'hub-frontdoor', onClick: frontDoor }, 'Front door'),
     h('button', { type: 'button', class: 'hub-grownup', onClick: opens('grownup/gate') }, 'Grown-ups')));
 

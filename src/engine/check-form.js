@@ -1,13 +1,17 @@
 import { hasNasalIE } from '../curriculum/ie-nasal.js';
+import { LAST_LESSON } from '../curriculum/lessons.js';
+import { UNITS } from '../curriculum/units.js';
+import { isRControlled } from '../curriculum/tiers.js';
+import { canDictate } from '../curriculum/dictation.js';
 import { needsSAndSh, R_WORD_TIER } from './session-builder.js';
 
 
-export const CHECK_SETS = Object.freeze([['42', 42], ['43', 43], ['44', 44], ['45', 45], ['th', 47], ['48', 48], ['50', 50]]);
+export const CHECK_SETS = Object.freeze([['42', 42], ['43', 43], ['44', 44], ['45', 45], ['th', 47], ['48', 48], ['50', 50],
+  ...UNITS.filter(u => u.from > 50 && u.to <= LAST_LESSON).map(u => ([u.id, u.to]))]);
 
 export const CHECK_LINE = 5;
 const NEW_LINES = Object.freeze({ real: 2, nonsense: 2 });
 const NEW_DICTATED = 4;
-const UNDICTATED = new Set(['wh', 'ph']);
 
 
 export function spentItems(past) {
@@ -27,8 +31,8 @@ export const formsLeft = (checks, past) => {
 export function mayDictate(rec, { sShContrast, rWords }) {
   if (!sShContrast && needsSAndSh(rec.segs)) return false;
   if (hasNasalIE(rec.segs)) return false;
-  if (rec.tier >= R_WORD_TIER && !rWords) return false;
-  return !rec.segs.some(([g]) => UNDICTATED.has(g));
+  if ((rec.tier >= R_WORD_TIER || isRControlled(rec.segs)) && !rWords) return false;
+  return canDictate(rec);
 }
 
 export function checkForm(checks, { taughtUpTo, past = [], sShContrast = false, rWords = false, baselineTaughtUpTo }) {
@@ -44,10 +48,11 @@ export function checkForm(checks, { taughtUpTo, past = [], sShContrast = false, 
   const fresh = taught.filter(id => CHECK_SETS.find(([s]) => s === id)?.[1] > since && live(id));
   const sets = fresh.length > 0 ? fresh : taught.filter(live);
 
+  const order = [...sets.filter(id => !(pools[id]?.nonsense ?? []).length), ...sets.filter(id => (pools[id]?.nonsense ?? []).length)];
   let turn = 0;
   const inTurn = (make) => {
     for (let tries = 0; tries < sets.length; tries++) {
-      const set = sets[turn++ % sets.length];
+      const set = order[turn++ % order.length];
       const got = make(set);
       if (got !== null) return [set, got];
     }

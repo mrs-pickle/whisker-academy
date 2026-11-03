@@ -1,0 +1,137 @@
+{
+  "id": "ch7",
+  "title": "The Ringing Shells",
+  "book": 2,
+  "page": "shell",
+  "lessons": [51, 52, 53],
+  "requiresKnown": ["a", "are", "book", "the", "to", "you"],
+  "scenes": [
+    {
+      "id": "ch7-1",
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "vex-jam", "gus-idle"],
+      "picture": "In a magic workshop, a silly queen still sticky with jam sniffs at a big old book, while loose pages fly up past a goofy crow.",
+      "intro": ["story.ch7-1.intro.1", "story.ch7-1.intro.2", "story.ch7-1.intro.3"],
+      "sentences": [
+        {"id": "ch7-1.1", "text": "Vex is at the big book.", "effect": "item-pop", "trick": "book"},
+        {"id": "ch7-1.2", "text": "Jam is still on Vex.", "effect": "item-pop", "trick": "jam"},
+        {"id": "ch7-1.3", "text": "Vex sniffs and sniffs.", "effect": "sparkle", "trick": null},
+        {"id": "ch7-1.4", "text": "Bang! The book rang!", "effect": "bounce", "trick": "book"},
+        {"id": "ch7-1.5", "text": "The wind flung it up, up, up!", "effect": "float", "trick": "page"}
+      ],
+      "outro": ["story.ch7-1.outro.1", "story.ch7-1.outro.2"]
+    },
+    {
+      "id": "ch7-2",
+      "bg": "toyroom",
+      "cast": ["princess", "kitten", "ted", "dot"],
+      "picture": "In a toy room, a teddy bear and a rag doll just back from a trip unpack a suitcase, and the rag doll holds up a long list.",
+      "intro": ["story.ch7-2.intro.1", "story.ch7-2.intro.2"],
+      "sentences": [
+        {"id": "ch7-2.1", "text": "Ted and Dot are back!", "effect": "sparkle", "trick": null},
+        {"id": "ch7-2.2", "text": "Ted sang to Dot.", "effect": "sparkle", "trick": null},
+        {"id": "ch7-2.3", "text": "Dot has a list.", "effect": "item-pop", "trick": "page"},
+        {"id": "ch7-2.4", "text": "A spell can ring and sing.", "effect": "sparkle", "trick": "shell"}
+      ],
+      "outro": ["story.ch7-2.outro.1", "story.ch7-2.outro.2"]
+    },
+    {
+      "id": "ch7-3",
+      "lesson": 52,
+      "bg": "seashore",
+      "cast": ["princess", "kitten", "bix", "tess", "nell"],
+      "picture": "On a sunny beach, a cheerful boy, a girl with two hair buns and a baby find a pink shell that sings, while a little kitten in a wizard hat listens.",
+      "intro": ["story.ch7-3.intro.1", "story.ch7-3.intro.2"],
+      "sentences": [
+        {"id": "ch7-3.1", "text": "The shells ring and ring!", "effect": "sparkle", "trick": "shell"},
+        {"id": "ch7-3.2", "text": "A pink shell sang to Nell.", "effect": "item-pop", "trick": "shell"},
+        {"id": "ch7-3.3", "text": "Nell can wink at it.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch7-3.4", "text": "Tess thinks a spell is in it.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch7-3.5", "text": "Bix lifts the pink shell.", "effect": "float", "trick": "shell"}
+      ],
+      "outro": ["story.ch7-3.outro.1"],
+      "question": {"line": "story.ch7-3.question", "choices": ["tricks/shell", "tricks/bell", "tricks/fish"], "answer": "tricks/shell"}
+    },
+    {
+      "id": "ch7-4",
+      "lesson": 52,
+      "bg": "seashore",
+      "cast": ["princess", "kitten", "vex-grab", "gus-flap"],
+      "picture": "On a beach, a silly queen tiptoes up with a big old trunk to grab a pink shell, while a goofy crow flaps and winks at a child.",
+      "intro": ["story.ch7-4.intro.1"],
+      "sentences": [
+        {"id": "ch7-4.1", "text": "Vex is on the bank.", "effect": "sparkle", "trick": null},
+        {"id": "ch7-4.2", "text": "Vex has a big trunk.", "effect": "item-pop", "trick": "trunk"},
+        {"id": "ch7-4.3", "text": "Vex will stash it in the trunk.", "effect": "item-pop", "trick": "trunk"},
+        {"id": "ch7-4.4", "text": "Gus will not help Vex.", "effect": "crow-flap", "trick": null},
+        {"id": "ch7-4.5", "text": "Gus winks at you.", "effect": "crow-flap", "trick": null}
+      ],
+      "outro": ["story.ch7-4.outro.1", "story.ch7-4.outro.2"],
+      "question": {"line": "story.ch7-4.question", "choices": ["cast/gus-flap", "cast/bix", "cast/tess"], "answer": "cast/gus-flap"}
+    },
+    {
+      "id": "ch7-5",
+      "lesson": 53,
+      "bg": "seashore",
+      "cast": ["princess", "kitten", "chip", "bix", "gus-flap"],
+      "picture": "At the edge of the sea, a pink shrimp springs out of the water with a loose page, while a bouncy boy and a cheerful boy tug on a long string.",
+      "intro": ["story.ch7-5.intro.1"],
+      "sentences": [
+        {"id": "ch7-5.1", "text": "Splash! A shrimp sprang up.", "effect": "bounce", "trick": "shrimp"},
+        {"id": "ch7-5.2", "text": "The shrimp has the spell!", "effect": "item-pop", "trick": "page"},
+        {"id": "ch7-5.3", "text": "Chip and Bix tug the string.", "effect": "bounce", "trick": null},
+        {"id": "ch7-5.4", "text": "The string is strong.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch7-5.outro.1"]
+    },
+    {
+      "id": "ch7-6",
+      "lesson": 53,
+      "bg": "seashore",
+      "cast": ["princess", "kitten", "vex-slip", "chip"],
+      "picture": "On a beach, a silly queen slips off a wet plank into the sand as her trunk sinks, and a child holds up a glowing page while a shrimp waves.",
+      "intro": ["story.ch7-6.intro.1"],
+      "sentences": [
+        {"id": "ch7-6.1", "text": "Vex slips on the wet plank.", "effect": "vex-slip", "trick": null},
+        {"id": "ch7-6.2", "text": "Splat! Vex is in the sand.", "effect": "vex-slip", "trick": null},
+        {"id": "ch7-6.3", "text": "The trunk sank.", "effect": "item-pop", "trick": "trunk"},
+        {"id": "ch7-6.4", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch7-6.5", "text": "Thank you, shrimp!", "effect": "kitten-cheer", "trick": "shrimp"}
+      ],
+      "outro": ["story.ch7-6.outro.1", "story.ch7-6.outro.2"],
+      "reward": {"wardrobe": "o-beach"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch7-side-1",
+      "lesson": 52,
+      "bg": "seashore",
+      "cast": ["princess", "kitten", "nell"],
+      "picture": "On a beach, a friendly skunk peeks out of a pile of junk and winks at a little kitten in a wizard hat, while a baby sings to it.",
+      "intro": ["story.ch7-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch7-side-1.1", "text": "A skunk is in the junk.", "effect": "item-pop", "trick": "skunk"},
+        {"id": "ch7-side-1.2", "text": "The cat thinks it is a cat.", "effect": "kitten-cheer", "trick": "skunk"},
+        {"id": "ch7-side-1.3", "text": "The skunk winks at the cat.", "effect": "sparkle", "trick": "skunk"},
+        {"id": "ch7-side-1.4", "text": "Nell sang to the skunk.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch7-side-1.outro.1"]
+    },
+    {
+      "id": "ch7-side-2",
+      "lesson": 53,
+      "bg": "seashore",
+      "cast": ["princess", "kitten", "dash"],
+      "picture": "On a beach, a spotted ship cat holds a dish with a shrimp in it, and the shrimp springs out and away as a little kitten laughs.",
+      "intro": ["story.ch7-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch7-side-2.1", "text": "Dash has a shrimp in a dish.", "effect": "item-pop", "trick": "dish"},
+        {"id": "ch7-side-2.2", "text": "Dash and the cat stroll.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch7-side-2.3", "text": "Splash! The shrimp sprang off.", "effect": "bounce", "trick": "shrimp"},
+        {"id": "ch7-side-2.4", "text": "Dash will not get it.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch7-side-2.outro.1"]
+    }
+  ]
+}

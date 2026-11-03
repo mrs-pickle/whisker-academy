@@ -1,0 +1,130 @@
+{
+  "id": "ch13",
+  "title": "Moon Pool",
+  "book": 2,
+  "page": "moon",
+  "lessons": [89, 90, 91, 92, 93, 94],
+  "requiresKnown": ["a", "are", "the", "to", "you"],
+  "scenes": [
+    {
+      "id": "ch13-1",
+      "bg": "cave",
+      "cast": ["princess", "kitten", "vex-grab", "gus-idle"],
+      "picture": "At the mouth of a sea cave, a silly queen holds a fishing hook with a glowing page caught on it, and points into the cave.",
+      "intro": ["story.ch13-1.intro.1", "story.ch13-1.intro.2"],
+      "sentences": [
+        {"id": "ch13-1.1", "text": "Vex has a hook.", "effect": "item-pop", "trick": null},
+        {"id": "ch13-1.2", "text": "Vex took the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-1.3", "text": "Look at the cave!", "effect": "sparkle", "trick": null},
+        {"id": "ch13-1.4", "text": "Put it back, Vex!", "effect": "bounce", "trick": "page"}
+      ],
+      "outro": ["story.ch13-1.outro.1"]
+    },
+    {
+      "id": "ch13-2",
+      "lesson": 90,
+      "bg": "cave",
+      "cast": ["princess", "kitten", "bix", "tess"],
+      "picture": "Inside a cool cave, a round pool glows like the moon, a cheerful boy taps the water with a big silver spoon, and a clever girl holds a broom.",
+      "intro": ["story.ch13-2.intro.1"],
+      "sentences": [
+        {"id": "ch13-2.1", "text": "The pool is a moon!", "effect": "sparkle", "trick": "moon"},
+        {"id": "ch13-2.2", "text": "It is cool in the cave.", "effect": "sparkle", "trick": null},
+        {"id": "ch13-2.3", "text": "Bix has a spoon.", "effect": "item-pop", "trick": "spoon"},
+        {"id": "ch13-2.4", "text": "Tess has a broom.", "effect": "item-pop", "trick": null}
+      ],
+      "outro": ["story.ch13-2.outro.1"],
+      "question": {"line": "story.ch13-2.question", "choices": ["tricks/spoon", "tricks/moon", "tricks/fruit"], "answer": "tricks/spoon"}
+    },
+    {
+      "id": "ch13-3",
+      "lesson": 91,
+      "bg": "cave",
+      "cast": ["princess", "kitten", "gus-flap", "nell"],
+      "picture": "In a glowing cave, a goofy crow flies in with a bowl of fruit, a baby drinks fruit juice, and the pool shines blue.",
+      "intro": ["story.ch13-3.intro.1"],
+      "sentences": [
+        {"id": "ch13-3.1", "text": "Gus flew in with fruit.", "effect": "crow-flap", "trick": "fruit"},
+        {"id": "ch13-3.2", "text": "Nell has fruit juice.", "effect": "item-pop", "trick": "fruit"},
+        {"id": "ch13-3.3", "text": "The pool is blue.", "effect": "sparkle", "trick": null},
+        {"id": "ch13-3.4", "text": "Gus has a clue!", "effect": "crow-flap", "trick": null}
+      ],
+      "outro": ["story.ch13-3.outro.1"]
+    },
+    {
+      "id": "ch13-4",
+      "lesson": 93,
+      "bg": "cave",
+      "cast": ["princess", "kitten", "vex-grab", "chip"],
+      "picture": "By a glowing pool in a cave, a silly queen fishes with a long pole and pulls up an old boot, and a little kitten dips one paw in the water.",
+      "intro": ["story.ch13-4.intro.1"],
+      "sentences": [
+        {"id": "ch13-4.1", "text": "Vex saw the spell.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-4.2", "text": "The cat put a paw in.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch13-4.3", "text": "Vex caught a boot!", "effect": "item-pop", "trick": null}
+      ],
+      "outro": ["story.ch13-4.outro.1"]
+    },
+    {
+      "id": "ch13-5",
+      "lesson": 94,
+      "bg": "cave",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "By a moon pool in a cave, a little kitten in a wizard hat waves a magic wand, and a heavy glowing page rises up out of the water.",
+      "intro": ["story.ch13-5.intro.1"],
+      "sentences": [
+        {"id": "ch13-5.1", "text": "The cat has a wand.", "effect": "item-pop", "trick": null},
+        {"id": "ch13-5.2", "text": "Are you ready?", "effect": "sparkle", "trick": null},
+        {"id": "ch13-5.3", "text": "The spell is heavy.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-5.4", "text": "Tess and Bix help you.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch13-5.outro.1"],
+      "question": {"line": "story.ch13-5.question", "choices": ["tricks/kitten", "cast/tess", "cast/bix"], "answer": "tricks/kitten"}
+    },
+    {
+      "id": "ch13-6",
+      "lesson": 94,
+      "bg": "cave",
+      "cast": ["princess", "kitten", "vex-slip", "gus-idle"],
+      "picture": "In a moonlit cave, a child holds up a glowing page, a silly queen slips into a muddy swamp, and a goofy crow puts a feather on her head.",
+      "intro": ["story.ch13-6.intro.1"],
+      "sentences": [
+        {"id": "ch13-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-6.2", "text": "Vex fell in the swamp.", "effect": "vex-slip", "trick": null},
+        {"id": "ch13-6.3", "text": "Gus put a feather on Vex.", "effect": "crow-flap", "trick": null},
+        {"id": "ch13-6.4", "text": "The moon is up.", "effect": "sparkle", "trick": "moon"}
+      ],
+      "outro": ["story.ch13-6.outro.1", "story.ch13-6.outro.2"],
+      "reward": {"wardrobe": "o-moon-swim"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch13-side-1",
+      "bg": "cave",
+      "cast": ["princess", "kitten", "chip", "dash"],
+      "picture": "At the mouth of a sea cave, a bouncy boy cooks a pudding over a little fire, and a small dog has stepped right into the pudding.",
+      "intro": ["story.ch13-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch13-side-1.1", "text": "Chip will cook a pudding.", "effect": "item-pop", "trick": null},
+        {"id": "ch13-side-1.2", "text": "Dash put a foot in it!", "effect": "bounce", "trick": null},
+        {"id": "ch13-side-1.3", "text": "It is a good pudding.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch13-side-1.outro.1"]
+    },
+    {
+      "id": "ch13-side-2",
+      "lesson": 93,
+      "bg": "cave",
+      "cast": ["princess", "kitten", "thud", "nell"],
+      "picture": "In a quiet cave, a very big sleepy cat gives an enormous yawn, and a baby crawls over to snuggle under his paw.",
+      "intro": ["story.ch13-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch13-side-2.1", "text": "Thud has a big yawn.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch13-side-2.2", "text": "Nell can crawl to Thud.", "effect": "bounce", "trick": null},
+        {"id": "ch13-side-2.3", "text": "Thud has a paw on Nell.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch13-side-2.outro.1"]
+    }
+  ]
+}

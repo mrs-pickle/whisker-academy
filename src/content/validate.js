@@ -1,7 +1,10 @@
+import { boxClips, wordSoundClips } from '../curriculum/chunks.js';
 import { PHONEMES, phonemeCodes } from '../curriculum/phonemes.js';
 import { sentenceBlockers, tokenize, wordLesson } from '../curriculum/decodable.js';
-import { LESSONS } from '../curriculum/lessons.js';
+import { LAST_LESSON, LESSONS } from '../curriculum/lessons.js';
+import { RULES, affixOf, baseSegs, chunkClip, morphParts, ruleFits, ruleStep, withoutAffix } from '../curriculum/affixes.js';
 import { tierOf } from '../curriculum/tiers.js';
+import { UNITS } from '../curriculum/units.js';
 import { artFile } from '../core/art-file.js';
 import { beforeNasal, hasNasalIE } from '../curriculum/ie-nasal.js';
 import { canDictate } from '../curriculum/dictation.js';
@@ -18,7 +21,9 @@ const LIST_FILES = Object.freeze({
   rewards: 'rewards.json', letters: 'letters.json', robot: 'robot.json', story: 'story',
 });
 
-export const ROBOT_WORDS = Object.freeze(['said', 'was', 'of', 'to', 'do', 'are', 'have', 'says', 'were', 'want', 'walk', 'talk', 'could', 'would', 'should']);
+export const ROBOT_WORDS = Object.freeze(['said', 'was', 'of', 'to', 'do', 'are', 'have', 'says', 'were', 'want', 'walk', 'talk', 'could', 'would', 'should',
+  'there', 'once',
+  'two', 'friend']);
 
 const FILE_OF = { ...LIST_FILES, pairs: 'pairs.json', checks: 'checks.json', entrance: 'entrance.json', blocklist: 'blocklist.json' };
 
@@ -35,7 +40,11 @@ const LAYERED_CAST = new Set(['princess', 'kitten']);
 const HIDDEN = '(spelling not shown)';
 
 const CHECK_LESSON = 41;
-const POOL_LESSON = new Map([['42', 42], ['43', 43], ['44', 44], ['45', 45], ['th', 47], ['48', 48], ['50', 50]]);
+const POOL_LESSON = new Map([
+  ...[['42', 42], ['43', 43], ['44', 44], ['45', 45], ['th', 47], ['48', 48], ['50', 50]].map(([set, n]) => ([String(set), [Number(n), Number(n)]])),
+  ...UNITS.filter(u => u.from > 50).map(u => ([u.id, [u.from, u.to]])),
+]);
+const fmtRange = ([from, to]) => (from === to ? String(from) : `${from} to ${to}`);
 const FORM_LINES = Object.freeze({ real: 2, nonsense: 1 });
 const FORM_SPELLED = 4;
 const LINE_WORDS = 5;
@@ -61,7 +70,7 @@ const PRINCESS = /\bprincess\b/i;
 const list = (v) => (Array.isArray(v) ? v : []);
 const obj = (v) => (v !== null && typeof v === 'object' && !Array.isArray(v) ? v : {});
 const lower = (s) => String(s).toLowerCase();
-const fmtLesson = (n) => (Number.isFinite(n) ? String(n) : 'Infinity: not decodable through lesson 68');
+const fmtLesson = (n) => (Number.isFinite(n) ? String(n) : `Infinity: not decodable through lesson ${LAST_LESSON}`);
 
 const repeated = (values) => [...new Set(values.filter((x, i) => x !== undefined && values.indexOf(x) !== i))];
 
@@ -117,8 +126,8 @@ function checkSegs(label, spelling, segs, r) {
 }
 
 function checkLessonTier(label, rec, r) {
-  const lesson = wordLesson(rec.segs);
-  const tier = tierOf(rec.segs);
+  const lesson = wordLesson(rec.segs, rec);
+  const tier = tierOf(rec.segs, rec);
   if (rec.lesson !== lesson) r.error(`${label}: lesson is ${rec.lesson}, but wordLesson gives ${fmtLesson(lesson)}`);
   if (rec.tier !== tier) r.error(`${label}: tier is ${rec.tier}, but tierOf gives ${tier}`);
 }
@@ -133,11 +142,83 @@ function checkPronunciation(label, w, segs, r, listed = false) {
   if (!dict.some(k => said.includes(k))) r.error(`${label}: segs say "${said[0]}", but CMUdict has ${dict.map(k => `"${k}"`).join(' or ')}`);
 }
 
+function checkParts(label, rec, bases, r) {
+  const { morph, base } = rec;
+  if (morph === undefined && base === undefined) return;
+  if (morph === undefined) { r.error(`${label}: has a base but no morph`); return; }
+  const parts = morphParts(rec.segs, (morph));
+  if (!parts) { r.error(`${label}: morph does not fit its boxes (parts in order: prefixes, one base "", suffixes, each [id, boxes], each affix spelled as affixes.js has it)`); return; }
+  if (base === undefined) return;
+  const b = (obj(base));
+  if (b !== base || typeof b.w !== 'string' || typeof b.rule !== 'string' || !Object.hasOwn(RULES, b.rule)) {
+    r.error(`${label}: base must be {w, rule} with rule one of ${Object.keys(RULES).join(', ')}`);
+    return;
+  }
+  const rule = (b.rule);
+  const undone = baseSegs(rec.segs, parts, { w: b.w, rule });
+  const next = parts.affixes.find((a) => a.from === parts.to);
+  if (!undone || !next) { r.error(`${label}: the ${rule} rule does not fit its boxes`); return; }
+  const spelled = undone.map(([g]) => g).join('');
+  if (lower(spelled) !== lower(b.w)) r.error(`${label}: its base with the ${rule} rule undone spells "${spelled}", not "${b.w}"`);
+  const suffix = rec.segs.slice(next.from, next.to).map(([g]) => g).join('');
+  if (!ruleFits(undone, rule, suffix)) r.error(`${label}: the ${rule} rule is not the one "${b.w}" + "${suffix}" calls for`);
+  if (!bases.has(lower(b.w))) r.error(`${label}: base "${b.w}" is not in ${LIST_FILES.words} or ${LIST_FILES.nonsense}`);
+}
+
+const AFFIX_WARMUP_LESSON = 99;
+
+function checkAffixWarmup(it, c, r) {
+  const label = `${LIST_FILES.warmup} ${it.id}`;
+  const affix = typeof it.affix === 'string' ? affixOf(it.affix) : null;
+  if (!affix) { r.error(`${label}: affix must be an affix id of affixes.js`); return; }
+  const rec = c.words.find((w) => lower(w?.w) === lower(it.word));
+  if (!rec || !isSegs(rec.segs)) { r.error(`${label}: "${it.word}" is not in ${LIST_FILES.words}`); return; }
+  const left = withoutAffix(rec, affix.id);
+  if (left === null) r.error(`${label}: ${affix.id} is not the first or last part of "${it.word}" (its morph)`);
+  else if (lower(left) !== lower(it.answer)) r.error(`${label}: "${it.word}" without ${affix.id} is "${left}", not "${it.answer}"`);
+  const known = new Set([...c.words, ...c.instant].map((w) => lower(w?.w)));
+  if (!known.has(lower(it.answer))) r.error(`${label}: answer "${it.answer}" is not in ${LIST_FILES.words} or ${LIST_FILES.instant}`);
+  const lesson = Math.max(AFFIX_WARMUP_LESSON, wordLesson(rec.segs, rec));
+  if (!(it.minLesson >= lesson)) r.error(`${label}: minLesson must be at least ${fmtLesson(lesson)}`);
+}
+
+export const needsStress = (segs) => segs.some(([g, p], i) => {
+  const codes = phonemeCodes(p).join(' ');
+  const letters = lower(g);
+  if (codes === '@' && letters.length === 1) return true;
+  return (letters === 'ar' || letters === 'or') && codes === 'er' && lower(segs[i - 1]?.[0] ?? '') !== 'w';
+});
+
+export const stressDigits = (syms) => {
+  const digits = syms.flatMap(s => (/\d$/.test(s) ? [Number(s.at(-1))] : []));
+  return digits.length > 0 ? digits : null;
+};
+
+function checkStress(label, rec, r) {
+  const { stress } = rec;
+  if (stress === undefined) {
+    if (needsStress(rec.segs)) r.warn(`${label}: has a box only a stress can read (/ə/, or ar or or saying /er/) but no stress; run npm run stress`);
+    return;
+  }
+  const vowels = codesOf(rec.segs).filter(c => PHONEMES[c]?.kind === 'vowel').length;
+  if (!Array.isArray(stress) || stress.length !== vowels || !stress.every(d => d === 0 || d === 1 || d === 2) || stress.filter(d => d === 1).length !== 1) {
+    r.error(`${label}: stress must be one digit (0, 1 or 2) per vowel sound (${vowels}), with one 1`);
+    return;
+  }
+  if (rec.real !== true || !r.cmu) return;
+  const patterns = (r.cmu.get(lower(rec.w)) ?? []).map(stressDigits).filter(d => d !== null);
+  if (patterns.length === 0) return;
+  if (!patterns.some(d => d.join('') === stress.join(''))) r.error(`${label}: stress ${stress.join('')} is none of CMUdict's (${[...new Set(patterns.map(d => d.join('')))].join(', ')})`);
+}
+
 function checkRecords(c, r) {
+  const bases = new Set([...c.words, ...c.nonsense].map((w) => lower(w?.w)));
   for (const key of (['words', 'nonsense'])) {
     c[key].forEach((rec, i) => {
       const label = recordLabel(LIST_FILES[key], rec?.w, i, r);
       if (!label || !checkSegs(label, rec.w, rec.segs, r)) return;
+      checkParts(label, rec, bases, r);
+      checkStress(label, rec, r);
       checkLessonTier(label, rec, r);
       if (key === 'words') checkPronunciation(label, rec.w, rec.segs, r);
     });
@@ -152,9 +233,16 @@ function checkRecords(c, r) {
     const lesson = wordLesson(n.segs);
     if (!(lesson <= n.lesson)) r.error(`${label}: not decodable at its lesson ${n.lesson} (wordLesson gives ${fmtLesson(lesson)})`);
   });
+  const known = new Set([...c.words, ...c.instant].map(w => lower(w?.w)));
   for (const it of c.warmup) {
     const unknown = [...new Set(list(it?.sounds).filter(s => typeof s !== 'string' || s === '' || !Object.hasOwn(PHONEMES, s)))];
     if (unknown.length > 0) r.error(`${LIST_FILES.warmup} ${it?.id}: unknown phoneme code(s): ${unknown.join(', ')}`);
+    if (it?.type === 'affix') { checkAffixWarmup(it, c, r); continue; }
+    if (it?.type !== 'syllables') continue;
+    const parts = list(it.parts);
+    if (parts.length === 0 || parts.join('') !== it.word) r.error(`${LIST_FILES.warmup} ${it.id}: parts must spell "${it.word}"`);
+    for (const part of parts) if (!known.has(lower(part))) r.error(`${LIST_FILES.warmup} ${it.id}: part "${part}" is not a word in words.json or instant-words.json`);
+    if (it.answer !== String(parts.length)) r.error(`${LIST_FILES.warmup} ${it.id}: answer must be the number of parts (${parts.length})`);
   }
 }
 
@@ -204,7 +292,7 @@ function checkNonsense(c, blocklist, madeUp, r) {
     if (isBlocked(w, blocklist)) r.error(`${LIST_FILES.nonsense} #${i + 1}: matches the blocklist (spelling not shown)`);
   }
   for (const it of c.warmup) {
-    if ((it?.type !== 'delete' && it?.type !== 'substitute') || typeof it.answer !== 'string') continue;
+    if ((it?.type !== 'delete' && it?.type !== 'substitute' && it?.type !== 'affix') || typeof it.answer !== 'string') continue;
     if (isBlocked(lower(it.answer), blocklist)) r.error(`${LIST_FILES.warmup} ${it.id}: answer matches the blocklist (spelling not shown)`);
   }
 }
@@ -228,6 +316,11 @@ function checkChains(c, r) {
       const a = recs[i - 1];
       const b = recs[i];
       if (!a || !b) continue;
+      const rule = ruleStep(a.segs, b.segs);
+      if (rule) {
+        if (b.base?.w !== a.w || b.base?.rule !== rule.rule) r.error(`${label}: ${a.w} → ${b.w} is a ${rule.rule} step, so ${b.w} needs base {w: "${a.w}", rule: "${rule.rule}"}`);
+        continue;
+      }
       const sounds = editDistance(codesOf(a.segs), codesOf(b.segs));
       const boxes = editDistance(a.segs.map(boxKey), b.segs.map(boxKey));
       if (sounds !== 1) r.error(`${label}: ${a.w} → ${b.w} changes ${sounds} sounds (each step changes exactly 1)`);
@@ -285,9 +378,14 @@ function checkPairs(c, r) {
 function checkStory(c, r) {
   const lexicon = indexWords(c.words, c.nonsense, c.instant);
   const instant = new Set(c.instant.map(rec => lower(rec?.w)));
-  const lookup = (w) => lexicon.get(w)?.segs ?? null;
+  const lookup = (w) => lexicon.get(w) ?? null;
+  let bookTwo = false;
   for (const ch of c.story) {
     const label = `story ${ch?.id}`;
+    const book = ch?.book;
+    if (book !== undefined && book !== 2) r.error(`${label}: book ${JSON.stringify(book)} must be 2 (Book Two) or left out (Book One)`);
+    else if (book === 2) bookTwo = true;
+    else if (bookTwo) r.error(`${label}: a Book One chapter after Book Two has begun`);
     const lessons = list(ch?.lessons).filter(n => Number.isFinite(n));
     if (lessons.length === 0) { r.error(`${label}: lessons must list at least one lesson number`); continue; }
     const first = Math.min(...lessons);
@@ -386,8 +484,8 @@ function checkVoice(c, content, r) {
   }
 }
 
-const WARMUP_SAYS_WORD = new Set(['blend', 'isolate', 'segment', 'delete', 'substitute']);
-const WARMUP_SAYS_ANSWER = new Set(['delete', 'substitute']);
+const WARMUP_SAYS_WORD = new Set(['blend', 'isolate', 'segment', 'syllables', 'delete', 'substitute', 'affix']);
+const WARMUP_SAYS_ANSWER = new Set(['delete', 'substitute', 'affix']);
 
 function clipRefs(c) {
   const refs = new Set();
@@ -396,6 +494,7 @@ function clipRefs(c) {
   for (const rec of indexWords(c.words, c.nonsense, c.instant, items).values()) {
     refs.add(`w.${rec.w}`);
     for (const code of codesOf(rec.segs)) refs.add(`p.${code}`);
+    if (Array.isArray(rec.segs)) for (const id of [...rec.segs.flatMap(boxClips), ...wordSoundClips(rec)]) refs.add(id);
   }
   for (const rec of items) tokenize(rec?.phrase ?? '').forEach(addWord);
   for (const rec of c.letters) for (const id of list(rec?.sounds)) if (typeof id === 'string') refs.add(id);
@@ -407,6 +506,8 @@ function clipRefs(c) {
   for (const it of c.warmup) {
     if (WARMUP_SAYS_WORD.has(it?.type)) addWord(it.word);
     if (WARMUP_SAYS_ANSWER.has(it?.type)) addWord(it.answer);
+    if (it?.type === 'affix' && typeof it.affix === 'string') refs.add(chunkClip(it.affix));
+    if (it?.type === 'syllables') list(it.parts).forEach(addWord);
   }
   for (const it of c.warmup) for (const s of list(it?.sounds)) refs.add(`p.${s}`);
   for (const ch of c.story) {
@@ -445,6 +546,7 @@ function artRefs(c) {
   for (const w of c.words) if (w?.pic === true) add(`${LIST_FILES.words} ${w?.w}`, w?.w, 'tricks');
   for (const it of c.warmup) if (it?.type === 'blend') for (const x of list(it.choices)) add(`${LIST_FILES.warmup} ${it.id}`, x, 'tricks');
   for (const ch of c.story) {
+    add(`story ${ch?.id}`, ch?.page, 'tricks');
     for (const scene of scenesOf(ch)) {
       const label = `story ${ch.id} ${scene?.id}`;
       add(label, scene?.bg, 'bg');
@@ -580,9 +682,10 @@ function checkHeldOut(c, blocklist, madeUp, r) {
     if (dictated || (set !== undefined && rec.real === true && canDictate(rec))) dictable.add(w);
     if (typeof rec.real === 'boolean' && rec.real !== real) r.error(`${word} is a ${rec.real ? 'real' : 'made-up'} word`);
     if (!isSegs(rec.segs)) continue;
-    const lesson = wordLesson(rec.segs);
+    const lesson = wordLesson(rec.segs, rec);
     if (set === undefined && !(lesson <= CHECK_LESSON)) r.error(`${word} is an anchor, but is not decodable at ${CHECK_LESSON} (wordLesson gives ${fmtLesson(lesson)})`);
-    if (POOL_LESSON.has(set) && lesson !== POOL_LESSON.get(set)) r.error(`${word} has lesson ${fmtLesson(lesson)}, not ${POOL_LESSON.get(set)}`);
+    const range = set === undefined ? undefined : POOL_LESSON.get(set);
+    if (range && !(lesson >= range[0] && lesson <= range[1])) r.error(`${word} has lesson ${fmtLesson(lesson)}, not ${fmtRange(range)}`);
     if (dictated && hasNasalIE(rec.segs)) r.error(`${word} has i or e before m, n or ng, so it cannot be dictated`);
   }
 
@@ -714,7 +817,7 @@ function checkLadder(c, r) {
       if (!rec) { r.error(`${label}: "${w}" is not in ${LIST_FILES.words}`); continue; }
       if (dictated.has(w)) r.error(`${label}: "${w}" is dictated in the quest`);
       if (!isSegs(rec.segs)) continue;
-      const at = wordLesson(rec.segs);
+      const at = wordLesson(rec.segs, rec);
       if (!(at <= lesson)) r.error(`${label}: "${w}" reads at ${fmtLesson(at)}, past lesson ${lesson}`);
       else if (!(at > below)) r.error(`${label}: "${w}" reads at ${fmtLesson(at)}, which the line before covers`);
     }

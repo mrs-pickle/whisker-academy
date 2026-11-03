@@ -1,10 +1,10 @@
 import { checkColumns } from './check-table.js';
+import { unitOf } from '../curriculum/units.js';
 import { isComplete } from '../profile/profile.js';
 
 const DAYS_AFTER_SUNDAY = 4;
 export const WEEKS_SHOWN = 8;
 export const SESSIONS_SHOWN = 20;
-export const SET_SIZE = 5;
 
 export const weekOf = (day) => day - ((((day + DAYS_AFTER_SUNDAY) % 7) + 7) % 7);
 
@@ -32,19 +32,20 @@ export function accuracyBySession(profile) {
     .map(({ s }) => ({ day: s.day, accuracy: isNumber(s.accuracy) ? s.accuracy : null }));
 }
 
-export function masteredBySet(states, content) {
+export function masteredByUnit(states, content) {
   const mastered = new Set();
   for (const [key, s] of states) if (s?.mastered === true) mastered.add(key.slice(0, key.lastIndexOf('#')));
-  const sets = new Map();
+  const units = new Map();
   for (const word of content?.words ?? []) {
     if (word.real === false || !isNumber(word.lesson)) continue;
-    const from = Math.floor((word.lesson - 1) / SET_SIZE) * SET_SIZE + 1;
-    const set = sets.get(from) ?? { from, to: from + SET_SIZE - 1, mastered: 0, words: 0 };
-    set.words += 1;
-    if (mastered.has(`w:${word.w}`)) set.mastered += 1;
-    sets.set(from, set);
+    const unit = unitOf(word.lesson);
+    if (!unit) continue;
+    const bar = units.get(unit.from) ?? { id: unit.id, name: unit.name, from: unit.from, to: unit.to, mastered: 0, words: 0 };
+    bar.words += 1;
+    if (mastered.has(`w:${word.w}`)) bar.mastered += 1;
+    units.set(unit.from, bar);
   }
-  return [...sets.values()].sort((a, b) => a.from - b.from);
+  return [...units.values()].sort((a, b) => a.from - b.from);
 }
 
 const share = (score) => (score.total > 0 ? score.correct / score.total : null);

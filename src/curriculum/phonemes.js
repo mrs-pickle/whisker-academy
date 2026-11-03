@@ -22,6 +22,8 @@ export const PHONEMES = Object.freeze({
   ar: vowel('ɑɹ', ['AA R'], '/ar/'),
   or: vowel('ɔɹ', ['AO R'], '/or/'),
   er: vowel('ɝ', ['ER'], '/er/'),
+  air: vowel('ɛɹ', ['EH R'], '/air/ (chair)'),
+  ear: vowel('ɪɹ', ['IH R'], '/ear/ (near)'),
   '@': vowel('ə', ['AH'], '/ə/ (schwa)'),
 
   b: consonant('b', ['B'], false, '/b/'),

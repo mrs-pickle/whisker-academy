@@ -1,3 +1,4 @@
+import { boxClips } from '../curriculum/chunks.js';
 import { h } from '../core/dom.js';
 import { phonemeCodes } from '../curriculum/phonemes.js';
 import { eligibleWords } from '../engine/session-builder.js';
@@ -15,7 +16,9 @@ const SLOW_PLACE_MS = 800;
 const TILE_SIZE = 110;
 
 
-export const segClips = ([, p]) => phonemeCodes(p).map(code => `p.${code}`);
+export const nameClips = (g) => [...g.toLowerCase()].filter(ch => ch >= 'a' && ch <= 'z').map(ch => `ln.${ch}`);
+
+export const segClips = (seg) => boxClips(seg);
 
 export function phraseClips(word) {
   const words = typeof word.phrase === 'string' ? word.phrase.toLowerCase().match(/[a-z']+/g) ?? [] : [];
@@ -113,7 +116,7 @@ export function buildWord({ view, c, word, board, bottom, answered }, slow) {
       const before = c.state();
       c.pick(g);
       const after = c.state();
-      if (after.cursor === before.cursor && after.misses === before.misses) return;
+      if (after.cursor === before.cursor && after.misses === before.misses && after.nears === before.nears) return;
       answered();
       c.setLocked(true);
       sync();
@@ -164,7 +167,7 @@ async function showPick({ view, c, word, board, tiles, picked, before, after, sl
   const box = before.cursor;
   const sound = segClips(word.segs[box]);
   if (after.cursor > box) {
-    const revealed = before.feedback?.kind === 'reveal';
+    const revealed = before.feedback?.kind === 'reveal' || before.feedback?.kind === 'near';
     if (revealed) for (const t of tiles.values()) t.classList.remove('glow', 'dim');
     drawBoxes(board, c).children[box].classList.add('placed');
     if (after.phase !== 'build') return revealed || slow ? sound : [];
@@ -174,6 +177,12 @@ async function showPick({ view, c, word, board, tiles, picked, before, after, sl
   }
   bounce(picked);
   drawBoxes(board, c, box);
+  if (after.feedback?.kind === 'near') {
+    const right = word.segs[box][0];
+    for (const [g, t] of tiles) t.classList.add(g === right ? 'glow' : 'dim');
+    await view.say(['v.error.near', ...nameClips(right)], 900);
+    return [];
+  }
   if (after.feedback?.kind === 'reveal') {
     const right = word.segs[box][0];
     for (const [g, t] of tiles) t.classList.add(g === right ? 'glow' : 'dim');

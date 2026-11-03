@@ -1,4 +1,5 @@
 import { hasShortIE } from '../curriculum/ie-nasal.js';
+import { heartWordsKnownByUnit, unitOf } from '../curriculum/units.js';
 import { checkColumns, practiceLine, practiceVsNew } from './check-table.js';
 import { reportLetterLines } from './letters.js';
 
@@ -83,6 +84,7 @@ export function tutorReport({ profile, states, content, settings, day }) {
     from, to: day,
     glance: {
       taughtUpTo,
+      unit: unitOf(taughtUpTo)?.name ?? null,
       spellTier: profile?.spellTier ?? 1,
       sessions: sessions.length,
       minutes: Math.round(sessions.reduce((n, s) => n + (Number.isFinite(s.minutes) ? s.minutes : 0), 0)),
@@ -97,6 +99,7 @@ export function tutorReport({ profile, states, content, settings, day }) {
     },
     heart: {
       known: Object.values(instant).filter((s) => s === 'known').length,
+      byUnit: heartWordsKnownByUnit(instant),
       mastered: iwMastered.size,
       learning: Object.keys(instant).filter((w) => instant[w] === 'learning').sort(),
     },
@@ -115,7 +118,7 @@ export function reportSections(r) {
   const g = r.glance;
   const sections = [
     { title: 'At a glance', lines: [
-      `Taught up to lesson ${g.taughtUpTo}. Spelling tier ${g.spellTier}.`,
+      `Taught up to lesson ${g.taughtUpTo}${g.unit ? ` (${g.unit})` : ''}. Spelling tier ${g.spellTier}.`,
       `Last 4 weeks: ${g.sessions} sessions, ${g.minutes} active minutes, ${g.withGrownUp} with a grown-up beside her, ${g.partPlayed} part-played.`,
     ] },
   ];
@@ -150,6 +153,7 @@ export function reportSections(r) {
   ] });
   sections.push({ title: 'Heart and instant words', lines: [
     `Known on her list: ${r.heart.known}. Mastered in play: ${r.heart.mastered}.`,
+    ...(r.heart.byUnit.length > 0 ? [`Known by unit: ${r.heart.byUnit.map((u) => `${u.name} ${u.known}`).join('; ')}.`] : []),
     `Still learning: ${r.heart.learning.length > 0 ? r.heart.learning.join(', ') : 'none'}.`,
   ] });
   sections.push({ title: 'Sound cards', lines: [

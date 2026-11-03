@@ -1,0 +1,127 @@
+{
+  "id": "ch18",
+  "title": "The Mended Book",
+  "book": 2,
+  "page": "potion",
+  "lessons": [119, 120, 121, 122, 123, 124, 125, 126, 127],
+  "requiresKnown": ["a", "the", "what"],
+  "scenes": [
+    {
+      "id": "ch18-1",
+      "bg": "library",
+      "cast": ["princess", "kitten", "gus-idle", "tess"],
+      "picture": "In the Academy library, a clever girl stirs a bubbling pink potion in a little bottle with a spoon, beside a big old spell book with loose pages.",
+      "intro": ["story.ch18-1.intro.1", "story.ch18-1.intro.2"],
+      "sentences": [
+        {"id": "ch18-1.1", "text": "Tess has a potion.", "effect": "item-pop", "trick": "potion"},
+        {"id": "ch18-1.2", "text": "Mix the potion with a spoon.", "effect": "sparkle", "trick": "spoon"},
+        {"id": "ch18-1.3", "text": "The potion can mend the book.", "effect": "sparkle", "trick": "book"}
+      ],
+      "outro": ["story.ch18-1.outro.1"]
+    },
+    {
+      "id": "ch18-2",
+      "lesson": 120,
+      "bg": "library",
+      "cast": ["princess", "kitten", "bix", "chip"],
+      "picture": "High on a library shelf, between the books, two big round eyes blink in the dark, and a cheerful boy and a bouncy boy peer up at them.",
+      "intro": ["story.ch18-2.intro.1"],
+      "sentences": [
+        {"id": "ch18-2.1", "text": "A creature is on the shelf.", "effect": "item-pop", "trick": "shelf"},
+        {"id": "ch18-2.2", "text": "The creature is an owl.", "effect": "crow-flap", "trick": "owl"},
+        {"id": "ch18-2.3", "text": "What an adventure!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch18-2.outro.1"]
+    },
+    {
+      "id": "ch18-3",
+      "lesson": 121,
+      "bg": "library",
+      "cast": ["princess", "kitten", "bix", "chip"],
+      "picture": "A wise old owl in little round glasses sits on a stack of books reading, and two boys help put books back on the shelf.",
+      "intro": ["story.ch18-3.intro.1"],
+      "sentences": [
+        {"id": "ch18-3.1", "text": "The owl is a reader.", "effect": "sparkle", "trick": "owl"},
+        {"id": "ch18-3.2", "text": "The owl is the book keeper.", "effect": "item-pop", "trick": "book"},
+        {"id": "ch18-3.3", "text": "Bix is a helper.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch18-3.outro.1"],
+      "question": {"line": "story.ch18-3.question", "choices": ["tricks/owl", "tricks/mouse", "tricks/bird"], "answer": "tricks/owl"}
+    },
+    {
+      "id": "ch18-4",
+      "lesson": 123,
+      "bg": "library",
+      "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
+      "picture": "A silly queen, dusty and yawning, shuffles into the library holding one last glowing page, and a friendly crow flaps in surprise.",
+      "intro": ["story.ch18-4.intro.1"],
+      "sentences": [
+        {"id": "ch18-4.1", "text": "Vex is dusty and sleepy.", "effect": "float", "trick": null},
+        {"id": "ch18-4.2", "text": "Vex has the last page.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch18-4.3", "text": "Vex will not run!", "effect": "bounce", "trick": null}
+      ],
+      "outro": ["story.ch18-4.outro.1"]
+    },
+    {
+      "id": "ch18-5",
+      "lesson": 124,
+      "bg": "library",
+      "cast": ["princess", "kitten", "vex-idle", "nell"],
+      "picture": "A silly queen kneels and hands a glowing page to a child, and a baby hugs the queen's knee.",
+      "intro": ["story.ch18-5.intro.1"],
+      "sentences": [
+        {"id": "ch18-5.1", "text": "Vex will give you the page.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch18-5.2", "text": "It is a kindness!", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch18-5.3", "text": "Nell hugs Vex.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch18-5.outro.1"],
+      "question": {"line": "story.ch18-5.question", "choices": ["cast/nell", "cast/tess", "cast/dash"], "answer": "cast/nell"}
+    },
+    {
+      "id": "ch18-6",
+      "lesson": 126,
+      "bg": "library",
+      "cast": ["princess", "kitten", "vex-idle", "tess", "bix"],
+      "picture": "The big spell book glows gold as every page flies home into it, a clever girl pours the last drop of potion on its spine, and everyone cheers.",
+      "intro": ["story.ch18-6.intro.1"],
+      "sentences": [
+        {"id": "ch18-6.1", "text": "The potion is dripping.", "effect": "sparkle", "trick": "potion"},
+        {"id": "ch18-6.2", "text": "The book is fixable!", "effect": "sparkle", "trick": "book"},
+        {"id": "ch18-6.3", "text": "Now it is unbreakable.", "effect": "sparkle", "trick": "book"},
+        {"id": "ch18-6.4", "text": "Vex is clapping too.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch18-6.outro.1", "story.ch18-6.outro.2", "story.ch18-6.outro.3"],
+      "reward": {"wardrobe": "o-librarian"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch18-side-1",
+      "lesson": 122,
+      "bg": "library",
+      "cast": ["princess", "kitten", "phil", "nell"],
+      "picture": "At a little library table, a baby sips from a pink cup and a small stuffed elephant holds a green cup, and they giggle.",
+      "intro": ["story.ch18-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch18-side-1.1", "text": "Nell has a pinkish cup.", "effect": "item-pop", "trick": "cup"},
+        {"id": "ch18-side-1.2", "text": "Phil has a greenish cup.", "effect": "item-pop", "trick": "cup"},
+        {"id": "ch18-side-1.3", "text": "Nell and Phil sip.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch18-side-1.outro.1"]
+    },
+    {
+      "id": "ch18-side-2",
+      "lesson": 125,
+      "bg": "library",
+      "cast": ["princess", "kitten", "thud", "dash"],
+      "picture": "Down the stairs in a cozy library basement, a very big sleepy cat snoozes on a pile of old cushions, and a small dog peeks in.",
+      "intro": ["story.ch18-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch18-side-2.1", "text": "Thud is in the basement.", "effect": "float", "trick": null},
+        {"id": "ch18-side-2.2", "text": "It is dim and dusty.", "effect": "shrink", "trick": null},
+        {"id": "ch18-side-2.3", "text": "Dash will not wake Thud.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch18-side-2.outro.1"]
+    }
+  ]
+}

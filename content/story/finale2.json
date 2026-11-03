@@ -1,0 +1,79 @@
+{
+  "id": "finale2",
+  "title": "The Book Fair",
+  "book": 2,
+  "lessons": [128],
+  "requiresKnown": ["a", "are", "of", "the"],
+  "scenes": [
+    {
+      "id": "finale2-1",
+      "bg": "academy",
+      "cast": ["princess", "kitten", "ted", "dot"],
+      "picture": "The Academy courtyard is full of bunting, book stalls and balloons for the Book Fair, and a happy couple wave from the gate.",
+      "intro": ["story.finale2-1.intro.1", "story.finale2-1.intro.2"],
+      "sentences": [
+        {"id": "finale2-1.1", "text": "It is the Book Fair!", "effect": "sparkle", "trick": "book"},
+        {"id": "finale2-1.2", "text": "Ted and Dot are here.", "effect": "kitten-cheer", "trick": null},
+        {"id": "finale2-1.3", "text": "It is a happy day.", "effect": "bounce", "trick": null}
+      ],
+      "outro": ["story.finale2-1.outro.1"]
+    },
+    {
+      "id": "finale2-2",
+      "bg": "academy",
+      "cast": ["princess", "kitten", "bix", "tess", "chip"],
+      "picture": "On a little stage at the Book Fair, three friends take turns reading aloud from the big golden spell book.",
+      "intro": ["story.finale2-2.intro.1"],
+      "sentences": [
+        {"id": "finale2-2.1", "text": "Tess will read the book.", "effect": "sparkle", "trick": "book"},
+        {"id": "finale2-2.2", "text": "Bix will read it next.", "effect": "sparkle", "trick": "book"},
+        {"id": "finale2-2.3", "text": "Chip will read it loudly!", "effect": "bounce", "trick": "book"}
+      ],
+      "outro": ["story.finale2-2.outro.1"]
+    },
+    {
+      "id": "finale2-3",
+      "bg": "academy",
+      "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
+      "picture": "A silly queen with a big crooked crown stands on the stage and reads from the golden book, and a friendly crow beams up at her.",
+      "intro": ["story.finale2-3.intro.1"],
+      "sentences": [
+        {"id": "finale2-3.1", "text": "Vex will read the book too.", "effect": "sparkle", "trick": "book"},
+        {"id": "finale2-3.2", "text": "Vex can read it softly.", "effect": "float", "trick": "book"},
+        {"id": "finale2-3.3", "text": "Gus is proud of Vex.", "effect": "crow-flap", "trick": null}
+      ],
+      "outro": ["story.finale2-3.outro.1"],
+      "question": {"line": "story.finale2-3.question", "choices": ["cast/vex-idle", "cast/tess", "cast/ted"], "answer": "cast/vex-idle"}
+    },
+    {
+      "id": "finale2-4",
+      "bg": "academy",
+      "cast": ["princess", "kitten", "nell", "phil"],
+      "picture": "A white unicorn with a rainbow mane trots around the Book Fair, a baby rides on its back, and a small stuffed elephant waves.",
+      "intro": ["story.finale2-4.intro.1"],
+      "sentences": [
+        {"id": "finale2-4.1", "text": "A unicorn is at the fair!", "effect": "item-pop", "trick": "unicorn"},
+        {"id": "finale2-4.2", "text": "Nell is riding the unicorn.", "effect": "bounce", "trick": "unicorn"},
+        {"id": "finale2-4.3", "text": "Phil is clapping.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.finale2-4.outro.1"],
+      "question": {"line": "story.finale2-4.question", "choices": ["tricks/unicorn", "tricks/goat", "tricks/dog"], "answer": "tricks/unicorn"}
+    },
+    {
+      "id": "finale2-5",
+      "bg": "academy",
+      "cast": ["princess", "kitten", "vex-idle", "ted-dot-hearts", "dash"],
+      "picture": "Everyone at the Book Fair gathers round a child wearing a new crown shaped like an open book, the kitten purrs, and even the silly queen smiles.",
+      "intro": ["story.finale2-5.intro.1"],
+      "sentences": [
+        {"id": "finale2-5.1", "text": "You get a book crown!", "effect": "sparkle", "trick": null},
+        {"id": "finale2-5.2", "text": "Vex is clapping gladly.", "effect": "kitten-cheer", "trick": null},
+        {"id": "finale2-5.3", "text": "The book is safe at last.", "effect": "sparkle", "trick": "book"},
+        {"id": "finale2-5.4", "text": "That is the end of the book!", "effect": "kitten-cheer", "trick": "book"}
+      ],
+      "outro": ["story.finale2-5.outro.1", "story.finale2-5.outro.2", "story.finale2-5.outro.3"],
+      "reward": {"wardrobe": "crown-book"}
+    }
+  ],
+  "side": []
+}

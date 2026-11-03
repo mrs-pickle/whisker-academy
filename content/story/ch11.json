@@ -1,0 +1,130 @@
+{
+  "id": "ch11",
+  "title": "The Star Fort",
+  "book": 2,
+  "page": "star",
+  "lessons": [77, 78, 79, 80, 81, 82, 83],
+  "requiresKnown": ["a", "of", "the", "to", "you"],
+  "scenes": [
+    {
+      "id": "ch11-1",
+      "bg": "fort",
+      "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
+      "picture": "On a dark hilltop, an old stone fort shaped like a star, and a silly queen marching up and down its yard holding a glass jar with a glowing page inside.",
+      "intro": ["story.ch11-1.intro.1", "story.ch11-1.intro.2"],
+      "sentences": [
+        {"id": "ch11-1.1", "text": "The sky is dark.", "effect": "sparkle", "trick": null},
+        {"id": "ch11-1.2", "text": "Vex is marching in the yard.", "effect": "bounce", "trick": null},
+        {"id": "ch11-1.3", "text": "The spell is in a jar.", "effect": "item-pop", "trick": "page"},
+        {"id": "ch11-1.4", "text": "Vex has the jar!", "effect": "item-pop", "trick": null}
+      ],
+      "outro": ["story.ch11-1.outro.1"]
+    },
+    {
+      "id": "ch11-2",
+      "lesson": 78,
+      "bg": "fort",
+      "cast": ["princess", "kitten", "chip", "bix"],
+      "picture": "At the gate of a star-shaped fort, a bouncy boy holds up a curly brass horn and a cheerful boy holds a torch, as storm clouds roll in from the north.",
+      "intro": ["story.ch11-2.intro.1"],
+      "sentences": [
+        {"id": "ch11-2.1", "text": "Chip got a horn at the fort.", "effect": "item-pop", "trick": "horn"},
+        {"id": "ch11-2.2", "text": "Bix has a torch.", "effect": "item-pop", "trick": null},
+        {"id": "ch11-2.3", "text": "A storm is in the north.", "effect": "sparkle", "trick": null},
+        {"id": "ch11-2.4", "text": "Vex ran to the porch.", "effect": "bounce", "trick": null}
+      ],
+      "outro": ["story.ch11-2.outro.1"],
+      "question": {"line": "story.ch11-2.question", "choices": ["tricks/horn", "tricks/star", "tricks/bird"], "answer": "tricks/horn"}
+    },
+    {
+      "id": "ch11-3",
+      "lesson": 80,
+      "bg": "fort",
+      "cast": ["princess", "kitten", "tess", "nell", "vex-idle"],
+      "picture": "Inside a dark stone fort during a thunderstorm, a clever girl and a baby find a ladder in a corner, a spider hangs from a thread, and a silly queen climbs up out of sight.",
+      "intro": ["story.ch11-3.intro.1"],
+      "sentences": [
+        {"id": "ch11-3.1", "text": "Thunder is not a monster.", "effect": "sparkle", "trick": null},
+        {"id": "ch11-3.2", "text": "Nell is under the ladder.", "effect": "item-pop", "trick": null},
+        {"id": "ch11-3.3", "text": "A spider is in the corner.", "effect": "item-pop", "trick": null},
+        {"id": "ch11-3.4", "text": "Vex hid the paper up the ladder.", "effect": "sparkle", "trick": "page"}
+      ],
+      "outro": ["story.ch11-3.outro.1"]
+    },
+    {
+      "id": "ch11-4",
+      "lesson": 81,
+      "bg": "fort",
+      "cast": ["princess", "kitten", "gus-flap", "vex-grab"],
+      "picture": "At the top of a fort tower, a little purple bird chirps from its nest, a goofy crow flaps, and a silly queen reaches into the nest for a glowing page.",
+      "intro": ["story.ch11-4.intro.1"],
+      "sentences": [
+        {"id": "ch11-4.1", "text": "A purple bird is in the nest.", "effect": "item-pop", "trick": "bird"},
+        {"id": "ch11-4.2", "text": "The bird can chirp and chirp.", "effect": "bounce", "trick": "bird"},
+        {"id": "ch11-4.3", "text": "The bird and Gus chirp at Vex.", "effect": "crow-flap", "trick": "bird"}
+      ],
+      "outro": ["story.ch11-4.outro.1"]
+    },
+    {
+      "id": "ch11-5",
+      "lesson": 82,
+      "bg": "fort",
+      "cast": ["princess", "kitten", "chip", "bix"],
+      "picture": "In the yard of a star fort, a slow old turtle carries a glowing page on its shell, and two boys kneel down to talk to it kindly.",
+      "intro": ["story.ch11-5.intro.1"],
+      "sentences": [
+        {"id": "ch11-5.1", "text": "A turtle has the spell.", "effect": "item-pop", "trick": "turtle"},
+        {"id": "ch11-5.2", "text": "It is hard work to catch it.", "effect": "bounce", "trick": "turtle"},
+        {"id": "ch11-5.3", "text": "Chip has a kind word.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch11-5.4", "text": "The turtle will stop for Chip.", "effect": "kitten-cheer", "trick": "turtle"}
+      ],
+      "outro": ["story.ch11-5.outro.1"],
+      "question": {"line": "story.ch11-5.question", "choices": ["tricks/turtle", "tricks/bird", "tricks/horn"], "answer": "tricks/turtle"}
+    },
+    {
+      "id": "ch11-6",
+      "lesson": 82,
+      "bg": "fort",
+      "cast": ["princess", "kitten", "vex-slip", "tess", "gus-flap"],
+      "picture": "Over a star-shaped fort, the night sky fills with stars, a child holds up a glowing page, and a silly queen slips over in the dark.",
+      "intro": ["story.ch11-6.intro.1"],
+      "sentences": [
+        {"id": "ch11-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch11-6.2", "text": "A star is in the sky.", "effect": "sparkle", "trick": "star"},
+        {"id": "ch11-6.3", "text": "Vex fell in the dark.", "effect": "vex-slip", "trick": null},
+        {"id": "ch11-6.4", "text": "The best fort in the world!", "effect": "kitten-cheer", "trick": "star"}
+      ],
+      "outro": ["story.ch11-6.outro.1", "story.ch11-6.outro.2"],
+      "reward": {"wardrobe": "o-star-cloak"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch11-side-1",
+      "bg": "fort",
+      "cast": ["princess", "kitten", "dash", "phil"],
+      "picture": "At the bottom of a hill, a small dog barks happily at a red barn, and a small stuffed elephant is wrapped up in balls of yarn like a present.",
+      "intro": ["story.ch11-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch11-side-1.1", "text": "Dash is barking at the barn.", "effect": "bounce", "trick": null},
+        {"id": "ch11-side-1.2", "text": "Phil is in the barn.", "effect": "item-pop", "trick": null},
+        {"id": "ch11-side-1.3", "text": "Phil has a lot of yarn.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch11-side-1.outro.1"]
+    },
+    {
+      "id": "ch11-side-2",
+      "lesson": 80,
+      "bg": "fort",
+      "cast": ["princess", "kitten", "thud", "chip"],
+      "picture": "At a dinner table in a stone fort, a very big sleepy cat eats bread and butter, then dozes off right on the table while a bouncy boy laughs.",
+      "intro": ["story.ch11-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch11-side-2.1", "text": "Thud had a big dinner.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch11-side-2.2", "text": "Thud has a lot of butter.", "effect": "item-pop", "trick": null},
+        {"id": "ch11-side-2.3", "text": "Thud is better after dinner.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch11-side-2.outro.1"]
+    }
+  ]
+}

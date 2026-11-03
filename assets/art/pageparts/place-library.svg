@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+<!-- The Academy library: a bookcase at each edge, a tall window, a round window, two little pictures, a hanging lamp over a stack of books, and a runner up the floor. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<path class="fill" fill="#ffffff" d="M0,0 L1280,0 L1280,440 L0,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,0 L1280,0 L1280,440 L0,440 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M0,40 L80,40 L80,440 L0,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,40 L80,40 L80,440 L0,440 Z" stroke-width="6"/><path d="M0,140 L80,140" stroke-width="4"/><path d="M0,240 L80,240" stroke-width="4"/><path d="M0,340 L80,340" stroke-width="4"/></g>
+<path class="fill" fill="#ffffff" d="M1200,40 L1280,40 L1280,440 L1200,440 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M1200,40 L1280,40 L1280,440 L1200,440 Z" stroke-width="6"/><path d="M1200,140 L1280,140" stroke-width="4"/><path d="M1200,240 L1280,240" stroke-width="4"/><path d="M1200,340 L1280,340" stroke-width="4"/></g>
+<path class="fill" fill="#ffffff" d="M392,380 L392,170 C392,110 480,110 480,170 L480,380 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M392,380 L392,170 C392,110 480,110 480,170 L480,380 Z" stroke-width="6"/><path d="M436,120 L436,380" stroke-width="4"/><path d="M392,250 L480,250" stroke-width="4"/><path d="M846,0 L846,120" stroke-width="5"/></g>
+<path class="fill" fill="#ffffff" d="M806,170 L826,120 L866,120 L886,170 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M806,170 L826,120 L866,120 L886,170 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M670,38 C670,54.6 656.6,68 640,68 C623.4,68 610,54.6 610,38 C610,21.4 623.4,8 640,8 C656.6,8 670,21.4 670,38 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M670,38 C670,54.6 656.6,68 640,68 C623.4,68 610,54.6 610,38 C610,21.4 623.4,8 640,8 C656.6,8 670,21.4 670,38 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M156,14 L214,14 Q220,14 220,20 L220,58 Q220,64 214,64 L156,64 Q150,64 150,58 L150,20 Q150,14 156,14 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M156,14 L214,14 Q220,14 220,20 L220,58 Q220,64 214,64 L156,64 Q150,64 150,58 L150,20 Q150,14 156,14 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M1066,14 L1124,14 Q1130,14 1130,20 L1130,58 Q1130,64 1124,64 L1066,64 Q1060,64 1060,58 L1060,20 Q1060,14 1066,14 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M1066,14 L1124,14 Q1130,14 1130,20 L1130,58 Q1130,64 1124,64 L1066,64 Q1060,64 1060,58 L1060,20 Q1060,14 1066,14 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M816,260 L876,260 Q880,260 880,264 L880,294 Q880,298 876,298 L816,298 Q812,298 812,294 L812,264 Q812,260 816,260 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M816,260 L876,260 Q880,260 880,264 L880,294 Q880,298 876,298 L816,298 Q812,298 812,294 L812,264 Q812,260 816,260 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M822,298 L872,298 Q876,298 876,302 L876,332 Q876,336 872,336 L822,336 Q818,336 818,332 L818,302 Q818,298 822,298 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M822,298 L872,298 Q876,298 876,302 L876,332 Q876,336 872,336 L822,336 Q818,336 818,332 L818,302 Q818,298 822,298 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M812,336 L880,336 Q884,336 884,340 L884,372 Q884,376 880,376 L812,376 Q808,376 808,372 L808,340 Q808,336 812,336 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M812,336 L880,336 Q884,336 884,340 L884,372 Q884,376 880,376 L812,376 Q808,376 808,372 L808,340 Q808,336 812,336 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M0,430 L1280,430 L1280,800 L0,800 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M0,430 L1280,430 L1280,800 L0,800 Z" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M590,440 L690,440 L760,800 L520,800 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M590,440 L690,440 L760,800 L520,800 Z" stroke-width="6"/><path d="M548,740 L732,740" stroke-width="4"/><path d="M572,640 L708,640" stroke-width="4"/><path d="M22,4 L1258,4 Q1276,4 1276,22 L1276,778 Q1276,796 1258,796 L22,796 Q4,796 4,778 L4,22 Q4,4 22,4 Z" stroke-width="8"/></g>
+</svg>

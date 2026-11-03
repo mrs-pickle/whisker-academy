@@ -13,5 +13,9 @@
   {"w": "talk", "wrong": "tˈælk"},
   {"w": "could", "wrong": "kˈaʊld"},
   {"w": "would", "wrong": "wˈaʊld"},
-  {"w": "should", "wrong": "ʃˈaʊld"}
+  {"w": "should", "wrong": "ʃˈaʊld"},
+  {"w": "there", "wrong": "ðˈiɹ"},
+  {"w": "once", "wrong": "ˈoʊns"},
+  {"w": "two", "wrong": "twˈoʊ"},
+  {"w": "friend", "wrong": "fɹˈaɪnd"}
 ]

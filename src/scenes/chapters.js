@@ -13,7 +13,7 @@ export function mount(el, ctx) {
   const story = ctx.content?.story ?? [];
   const here = nextStoryScene(ctx.content, ctx.profile, ctx.settings)?.scene.id;
   const read = scenesRead(story, ctx.profile, ctx.states);
-  const pages = visibleScenes(story, ctx.profile);
+  const pages = visibleScenes(story, ctx.profile, ctx.settings);
 
   const opens = (id) => (event) => {
     if (!arrival.allows(event)) return;
@@ -37,12 +37,22 @@ export function mount(el, ctx) {
       now ? h('span', { class: 'chapter-here' }, 'You are here') : null);
   };
 
+  const bookTwo = () => h('h2', { class: 'book-title' },
+    h('button', { type: 'button', class: 'chapter-title-sound', 'aria-label': 'Book Two', onClick: ( event) => {
+      if (arrival.allows(event) && !lock.locked()) ctx.audio.play('v.story.book2.title');
+    } }, badge('ui/speaker', 'chapter-title-speaker')), badge('tricks/book', 'book-title-art'));
+  let shelved = false;
+
   el.append(h('div', { class: 'chapters' },
     h('img', { class: 'scene-bg', src: artUrl('bg/hall'), alt: '' }),
     h('h1', { class: 'chapters-title' }, 'Chapters'),
-    h('div', { class: 'chapters-list' }, story.map((ch) => {
+    h('div', { class: 'chapters-list' }, story.flatMap((ch) => {
       const tiles = pages.filter((page) => page.chapterId === ch.id);
-      return tiles.length === 0 ? null : h('section', { class: 'chapter' }, heading(ch), h('div', { class: 'chapter-tiles' }, tiles.map(tile)));
+      if (tiles.length === 0) return [];
+      const section = h('section', { class: 'chapter' }, heading(ch), h('div', { class: 'chapter-tiles' }, tiles.map(tile)));
+      if ( (ch).book !== 2 || shelved) return [section];
+      shelved = true;
+      return [bookTwo(), section];
     }))));
 
   ctx.say('chapters.pick');

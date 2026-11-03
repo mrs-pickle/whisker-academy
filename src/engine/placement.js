@@ -1,4 +1,5 @@
 import { sentenceBlockers } from '../curriculum/decodable.js';
+import { LAST_LESSON } from '../curriculum/lessons.js';
 import { withTaughtLessons } from '../profile/profile.js';
 import { clampTaughtUpTo } from '../profile/settings.js';
 import { LINE_MISSES, questSelection, scoreLine } from './quest-results.js';
@@ -15,7 +16,7 @@ export function ladderLines(content) {
   const bank = new Map((content.words ?? []).map((w) => [w.w, w]));
   return (Array.isArray(content.entrance?.ladder) ? content.entrance.ladder : []).flatMap(( line) => {
     const words = (Array.isArray(line?.words) ? line.words : []).map(( w) => bank.get(w));
-    return Number.isInteger(line?.lesson) && words.length > 0 && words.every(Boolean)
+    return Number.isInteger(line?.lesson) && line.lesson <= LAST_LESSON && words.length > 0 && words.every(Boolean)
       ? [{ id: String(line.id), kind: ('real'), lesson: line.lesson, words: (words) }] : [];
   });
 }
@@ -29,10 +30,28 @@ export function suggestLesson(ladder, log) {
   for (const line of log) {
     const band = ladder.find((l) => l.words.map((w) => w.w).join(' ') === line.words.join(' '));
     if (!band) continue;
-    const read = line.marks.length === line.words.length && !scoreLine(line.marks).stopped && misses(line.marks) <= READ_MISSES;
-    if (read && (best === null || band.lesson > best)) best = band.lesson;
+    if (lineRead(line) && (best === null || band.lesson > best)) best = band.lesson;
   }
   return best;
+}
+
+export const lineRead = (line) => line.marks.length === line.words.length && !scoreLine(line.marks).stopped && misses(line.marks) <= READ_MISSES;
+
+export function ladderStart(ladder, guess) {
+  if (typeof guess !== 'number' || !Number.isFinite(guess)) return 0;
+  let start = 0;
+  ladder.forEach((l, i) => { if (l.lesson < guess) start = i; });
+  return start;
+}
+
+export function nextLadderLine(start, count, tried) {
+  if (count === 0) return null;
+  if (tried.length === 0) return Math.min(Math.max(0, start), count - 1);
+  const last = (tried.at(-1));
+  if (tried[0].at === 0 || lineRead(tried[0].line)) {
+    return ladderOpen(tried.map((t) => t.line)) && last.at + 1 < count ? last.at + 1 : null;
+  }
+  return !lineRead(last.line) && last.at > 0 ? last.at - 1 : null;
 }
 
 export function spread(list, n) {
@@ -48,7 +67,7 @@ export function assessmentPlan(content, level, profile) {
   const instant = withTaughtLessons( ({ ...profile, instant: { ...(profile.instant ?? {}) } }), level).instant;
   const known = new Set(Object.keys(instant).filter((w) => instant[w] === 'known'));
   const passage = content.entrance?.passage;
-  const fits = passage && sentenceBlockers(passage.text, { lookup: (w) => bank.get(w)?.segs ?? null, knownInstant: known, names: new Set(), taughtUpTo: level }).length === 0;
+  const fits = passage && sentenceBlockers(passage.text, { lookup: (w) => bank.get(w) ?? null, knownInstant: known, names: new Set(), taughtUpTo: level }).length === 0;
   return {
     lines: (lines.filter((l) => l.kind === 'nonsense')),
     dictation: spread(dictation, DICTATION_WORDS),
@@ -63,7 +82,7 @@ export { isPlacement } from './quest-results.js';
 
 export function confirmNew(profile, settings, lesson) {
   const n = clampTaughtUpTo(lesson);
-  const { assessFirst, ...rest } = (profile);
+  const { assessFirst, assessFrom, ...rest } = (profile);
   return { profile: (withTaughtLessons({ ...rest, startLesson: n }, n)), settings: { ...settings, taughtUpTo: n } };
 }
 

@@ -1,0 +1,128 @@
+{
+  "id": "ch14",
+  "title": "The Loud Cloud",
+  "book": 2,
+  "page": "cloud",
+  "lessons": [95, 96, 97],
+  "requiresKnown": ["a", "of", "the", "you"],
+  "scenes": [
+    {
+      "id": "ch14-1",
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
+      "picture": "High above the clouds, a silly queen floats up on a bunch of balloons, holding a gold coin and pointing at a glowing page drifting in the sky.",
+      "intro": ["story.ch14-1.intro.1", "story.ch14-1.intro.2"],
+      "sentences": [
+        {"id": "ch14-1.1", "text": "Vex has a gold coin.", "effect": "item-pop", "trick": "coin"},
+        {"id": "ch14-1.2", "text": "Vex will toss the coin.", "effect": "bounce", "trick": "coin"},
+        {"id": "ch14-1.3", "text": "Point at the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch14-1.4", "text": "Vex is up in the sky.", "effect": "float", "trick": null}
+      ],
+      "outro": ["story.ch14-1.outro.1"]
+    },
+    {
+      "id": "ch14-2",
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "chip", "gus-flap"],
+      "picture": "At the top of a cliff, a bouncy boy waves from a little wooden sky boat with a big round balloon tied above it, and the boat begins to rise into the sky.",
+      "intro": ["story.ch14-2.intro.1"],
+      "sentences": [
+        {"id": "ch14-2.1", "text": "Chip is a happy boy.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch14-2.2", "text": "Join us in the boat!", "effect": "item-pop", "trick": "boat"},
+        {"id": "ch14-2.3", "text": "The boat is up in the sky.", "effect": "float", "trick": "boat"}
+      ],
+      "outro": ["story.ch14-2.outro.1"],
+      "question": {"line": "story.ch14-2.question", "choices": ["tricks/boat", "tricks/train", "tricks/coin"], "answer": "tricks/boat"}
+    },
+    {
+      "id": "ch14-3",
+      "lesson": 96,
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "Above the clouds, a big round gray cloud booms loudly and cries big raindrops, and a clever girl and a cheerful boy cover their ears and shout.",
+      "intro": ["story.ch14-3.intro.1"],
+      "sentences": [
+        {"id": "ch14-3.1", "text": "It is a loud cloud!", "effect": "sparkle", "trick": "cloud"},
+        {"id": "ch14-3.2", "text": "The cloud is round and gray.", "effect": "sparkle", "trick": "cloud"},
+        {"id": "ch14-3.3", "text": "Bix and Tess shout.", "effect": "bounce", "trick": null},
+        {"id": "ch14-3.4", "text": "How loud it is!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch14-3.outro.1"]
+    },
+    {
+      "id": "ch14-4",
+      "lesson": 96,
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "gus-flap", "nell"],
+      "picture": "On a fluffy cloud stands a little cloud house, where a round brown owl lives with a little gray mouse, and the mouse holds up a glowing page.",
+      "intro": ["story.ch14-4.intro.1"],
+      "sentences": [
+        {"id": "ch14-4.1", "text": "An owl is in a house.", "effect": "item-pop", "trick": "owl"},
+        {"id": "ch14-4.2", "text": "A mouse is with the owl.", "effect": "item-pop", "trick": "mouse"},
+        {"id": "ch14-4.3", "text": "The mouse found the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch14-4.4", "text": "Nell is proud of the mouse.", "effect": "kitten-cheer", "trick": "mouse"}
+      ],
+      "outro": ["story.ch14-4.outro.1"],
+      "question": {"line": "story.ch14-4.question", "choices": ["tricks/mouse", "tricks/owl", "cast/nell"], "answer": "tricks/mouse"}
+    },
+    {
+      "id": "ch14-5",
+      "lesson": 96,
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "vex-grab", "bix"],
+      "picture": "On a fluffy cloud, a silly queen reaches for a little mouse, a cross owl flaps its wings at her, and her balloons pop one by one.",
+      "intro": ["story.ch14-5.intro.1"],
+      "sentences": [
+        {"id": "ch14-5.1", "text": "Vex will grab the mouse!", "effect": "bounce", "trick": "mouse"},
+        {"id": "ch14-5.2", "text": "The owl is cross with Vex.", "effect": "crow-flap", "trick": "owl"},
+        {"id": "ch14-5.3", "text": "Vex fell down!", "effect": "vex-slip", "trick": null}
+      ],
+      "outro": ["story.ch14-5.outro.1"]
+    },
+    {
+      "id": "ch14-6",
+      "lesson": 96,
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "vex-slip", "tess", "chip"],
+      "picture": "Above the clouds, a child holds up a glowing page, the big cloud smiles and snores gently, and a silly queen sits in a puff of cloud.",
+      "intro": ["story.ch14-6.intro.1"],
+      "sentences": [
+        {"id": "ch14-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch14-6.2", "text": "The cloud is not loud now.", "effect": "sparkle", "trick": "cloud"},
+        {"id": "ch14-6.3", "text": "Vex is down on the cloud.", "effect": "vex-slip", "trick": "cloud"},
+        {"id": "ch14-6.4", "text": "Now we can go down.", "effect": "float", "trick": null}
+      ],
+      "outro": ["story.ch14-6.outro.1", "story.ch14-6.outro.2", "story.ch14-6.outro.3"],
+      "reward": {"wardrobe": "o-cloud-cape"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch14-side-1",
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "phil", "dash"],
+      "picture": "In a little wooden sky boat, a small stuffed elephant holds up a squeaky toy, and a small dog chases it round and round.",
+      "intro": ["story.ch14-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch14-side-1.1", "text": "Phil has a toy.", "effect": "item-pop", "trick": null},
+        {"id": "ch14-side-1.2", "text": "Dash will enjoy the toy.", "effect": "bounce", "trick": null},
+        {"id": "ch14-side-1.3", "text": "The toy has a voice!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch14-side-1.outro.1"]
+    },
+    {
+      "id": "ch14-side-2",
+      "lesson": 96,
+      "bg": "clouds",
+      "cast": ["princess", "kitten", "thud", "nell"],
+      "picture": "High in the sky, a very big sleepy cat floats on a fluffy cloud of his own, and a baby climbs up to hug him.",
+      "intro": ["story.ch14-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch14-side-2.1", "text": "Thud is on a cloud.", "effect": "float", "trick": "cloud"},
+        {"id": "ch14-side-2.2", "text": "Thud is a cloud now!", "effect": "kitten-cheer", "trick": "cloud"},
+        {"id": "ch14-side-2.3", "text": "Nell found Thud!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch14-side-2.outro.1"]
+    }
+  ]
+}

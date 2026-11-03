@@ -1,0 +1,131 @@
+{
+  "id": "ch12",
+  "title": "The Rainy Day Train",
+  "book": 2,
+  "page": "train",
+  "lessons": [84, 85, 86, 87, 88],
+  "requiresKnown": ["a", "of", "the", "what", "you"],
+  "scenes": [
+    {
+      "id": "ch12-1",
+      "bg": "train",
+      "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
+      "picture": "Inside a little red train on a rainy day, rain streams down the round windows, and a silly queen with a glowing page in her hat waves from her seat.",
+      "intro": ["story.ch12-1.intro.1", "story.ch12-1.intro.2"],
+      "sentences": [
+        {"id": "ch12-1.1", "text": "Rain is on the train.", "effect": "sparkle", "trick": "train"},
+        {"id": "ch12-1.2", "text": "Vex is on the train.", "effect": "item-pop", "trick": "train"},
+        {"id": "ch12-1.3", "text": "Wait, Vex, wait!", "effect": "bounce", "trick": null},
+        {"id": "ch12-1.4", "text": "The train is on its way.", "effect": "kitten-cheer", "trick": "train"}
+      ],
+      "outro": ["story.ch12-1.outro.1"]
+    },
+    {
+      "id": "ch12-2",
+      "lesson": 85,
+      "bg": "train",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "Inside a rainy train, a clever girl and a cheerful boy sit on red seats eating peaches, sheep pass by outside the window, and the girl holds a little key.",
+      "intro": ["story.ch12-2.intro.1"],
+      "sentences": [
+        {"id": "ch12-2.1", "text": "Tess and Bix have a seat.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch12-2.2", "text": "Bix can eat a sweet peach.", "effect": "item-pop", "trick": null},
+        {"id": "ch12-2.3", "text": "Sheep go past the train.", "effect": "sparkle", "trick": "train"},
+        {"id": "ch12-2.4", "text": "Tess has a key.", "effect": "item-pop", "trick": null}
+      ],
+      "outro": ["story.ch12-2.outro.1"]
+    },
+    {
+      "id": "ch12-3",
+      "lesson": 86,
+      "bg": "train",
+      "cast": ["princess", "kitten", "nell", "chip"],
+      "picture": "In a train car, a white goat nibbles a raincoat, a snail slides slowly along the floor, and a baby points out of the window at a rainbow.",
+      "intro": ["story.ch12-3.intro.1"],
+      "sentences": [
+        {"id": "ch12-3.1", "text": "A goat is on the train!", "effect": "bounce", "trick": "goat"},
+        {"id": "ch12-3.2", "text": "The goat has a coat.", "effect": "item-pop", "trick": "goat"},
+        {"id": "ch12-3.3", "text": "A snail is slow.", "effect": "item-pop", "trick": "snail"},
+        {"id": "ch12-3.4", "text": "Nell can see a rainbow.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch12-3.outro.1"],
+      "question": {"line": "story.ch12-3.question", "choices": ["tricks/goat", "tricks/snail", "cast/chip"], "answer": "tricks/goat"}
+    },
+    {
+      "id": "ch12-4",
+      "lesson": 87,
+      "bg": "train",
+      "cast": ["princess", "kitten", "gus-flap", "vex-grab"],
+      "picture": "In a dark train tunnel, a goofy crow holds up a bright lantern, and a silly queen hangs on tight to the top of the train, a page flapping in her hand.",
+      "intro": ["story.ch12-4.intro.1"],
+      "sentences": [
+        {"id": "ch12-4.1", "text": "Gus has a light.", "effect": "item-pop", "trick": null},
+        {"id": "ch12-4.2", "text": "Vex is right up high.", "effect": "sparkle", "trick": null},
+        {"id": "ch12-4.3", "text": "Hold on tight!", "effect": "bounce", "trick": null},
+        {"id": "ch12-4.4", "text": "The light is bright.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch12-4.outro.1"]
+    },
+    {
+      "id": "ch12-5",
+      "lesson": 87,
+      "bg": "train",
+      "cast": ["princess", "kitten", "vex-slip", "bix"],
+      "picture": "By a lake next to the train track, a silly queen jumps into a little sailboat that is still tied up, and tumbles into the water with a splash.",
+      "intro": ["story.ch12-5.intro.1"],
+      "sentences": [
+        {"id": "ch12-5.1", "text": "Vex is in a boat.", "effect": "item-pop", "trick": "boat"},
+        {"id": "ch12-5.2", "text": "The boat is tied up.", "effect": "item-pop", "trick": "boat"},
+        {"id": "ch12-5.3", "text": "Vex fell in the lake.", "effect": "vex-slip", "trick": null}
+      ],
+      "outro": ["story.ch12-5.outro.1"],
+      "question": {"line": "story.ch12-5.question", "choices": ["tricks/boat", "tricks/train", "tricks/goat"], "answer": "tricks/boat"}
+    },
+    {
+      "id": "ch12-6",
+      "lesson": 87,
+      "bg": "train",
+      "cast": ["princess", "kitten", "tess", "chip", "nell"],
+      "picture": "Beside a little red train, a child holds up a glowing page as the sun comes out, and a bouncy boy and a baby play on the train steps.",
+      "intro": ["story.ch12-6.intro.1"],
+      "sentences": [
+        {"id": "ch12-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch12-6.2", "text": "The train is right on time.", "effect": "kitten-cheer", "trick": "train"},
+        {"id": "ch12-6.3", "text": "Chip and Nell play on the train.", "effect": "bounce", "trick": "train"},
+        {"id": "ch12-6.4", "text": "What a day!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch12-6.outro.1", "story.ch12-6.outro.2"],
+      "reward": {"wardrobe": "o-conductor"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch12-side-1",
+      "lesson": 85,
+      "bg": "train",
+      "cast": ["princess", "kitten", "phil", "dot"],
+      "picture": "In the dining car of a train, a small stuffed elephant pours tea and spills it everywhere, and a rag doll laughs with a green bean in her hand.",
+      "intro": ["story.ch12-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch12-side-1.1", "text": "Phil has a cup of tea.", "effect": "item-pop", "trick": "cup"},
+        {"id": "ch12-side-1.2", "text": "Dot has a green bean.", "effect": "item-pop", "trick": null},
+        {"id": "ch12-side-1.3", "text": "Phil spilled the tea!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch12-side-1.outro.1"]
+    },
+    {
+      "id": "ch12-side-2",
+      "lesson": 86,
+      "bg": "train",
+      "cast": ["princess", "kitten", "thud", "nell"],
+      "picture": "Outside a train window it is snowing, a baby has made a little snowman, and a very big sleepy cat naps in the snow with snow on his head.",
+      "intro": ["story.ch12-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch12-side-2.1", "text": "Snow is on the window.", "effect": "sparkle", "trick": null},
+        {"id": "ch12-side-2.2", "text": "Nell made a snowman.", "effect": "item-pop", "trick": null},
+        {"id": "ch12-side-2.3", "text": "Thud had a nap in the snow.", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch12-side-2.outro.1"]
+    }
+  ]
+}

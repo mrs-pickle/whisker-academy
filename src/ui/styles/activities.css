@@ -691,3 +691,5 @@
 .pencil-writing .activity-work { top: 92px; height: 300px; justify-content: flex-start; }
 .pencil-writing .pencil-board { height: 290px; width: calc(290px * var(--w) / var(--h)); }
 .pencil-banner .copilot-choice.yes { flex: 1.7; }
+
+.word-card.split .syl + .syl { margin-left: 0.45em; }

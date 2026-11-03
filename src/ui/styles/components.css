@@ -13,6 +13,26 @@
 .speaker-button::after { content: ''; position: absolute; inset: -12px; border-radius: 50%; }
 .speaker-button:active img { transform: scale(0.92); }
 
+.mute-button {
+  position: absolute;
+  left: 124px;
+  top: 16px;
+  width: 96px;
+  height: 96px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+}
+.mute-button img { display: block; width: 96px; height: 96px; }
+.mute-button::after { content: ''; position: absolute; inset: -12px -12px -12px 0; border-radius: 50%; }
+.mute-button:active img { transform: scale(0.92); }
+.stage:has(.start) .mute-button,
+.stage:has(.colorin) .mute-button,
+.stage:has(.page-big) .mute-button,
+.stage[data-spacing="wide"]:has(.activity-entrance.activity-passage) .mute-button { left: 16px; top: 124px; }
+.stage:has(.hub) .mute-button { left: 16px; }
+
 .fullscreen-button {
   position: absolute;
   right: 16px;
@@ -534,6 +554,25 @@
   opacity: 0.9;
 }
 .hub-frontdoor:active { transform: translateY(3px); }
+.hub-spellbook {
+  position: absolute;
+  left: 20px;
+  top: 150px;
+  max-width: 270px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 96px;
+  padding: 6px 14px;
+  border: 4px solid var(--ink);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: 0 4px 0 var(--shadow);
+}
+.hub-spellbook:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--shadow); }
+.hub-spellbook-art { width: 80px; height: 80px; }
+.hub-spellbook-pages { display: flex; flex-wrap: wrap; gap: 4px; max-width: 168px; }
+.hub-spellbook-page { width: 52px; height: 52px; }
 
 .start { position: absolute; inset: 0; }
 .start-menu {
@@ -596,7 +635,7 @@
 .session-path { position: absolute; inset: 0 0 auto; z-index: 8; pointer-events: none; }
 .session-path .stone.fresh { animation: stone-lit 0.9s ease-out; }
 .lesson-bar {
-  position: absolute; left: 128px; right: 88px; top: 8px; z-index: 8; height: 26px;
+  position: absolute; left: 232px; right: 88px; top: 8px; z-index: 8; height: 26px;
   border: 3px solid var(--ink); border-radius: 13px; background: var(--paper);
   overflow: hidden; pointer-events: none;
 }
@@ -1027,6 +1066,8 @@
 }
 .chapter-title-sound:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--shadow); }
 .chapter-title-speaker { display: block; width: 46px; height: 46px; margin: auto; }
+.book-title { display: flex; align-items: center; gap: 14px; margin: 18px 0 0; padding: 0 8px; }
+.book-title-art { width: 84px; height: 84px; }
 .chapter-tiles {
   display: grid;
   grid-template-columns: repeat(8, 136px);
@@ -1190,7 +1231,7 @@
 }
 .colorin-family > canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .colorin-family-lines { mix-blend-mode: multiply; }
-.colorin-tools { position: absolute; left: 16px; top: 132px; display: flex; flex-direction: column; gap: 14px; width: 144px; }
+.colorin-tools { position: absolute; left: 16px; top: 236px; display: flex; flex-direction: column; gap: 14px; width: 144px; }
 .colorin-tool {
   display: flex;
   flex-direction: column;

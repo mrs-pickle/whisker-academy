@@ -1,0 +1,127 @@
+{
+  "id": "ch17",
+  "title": "The Weird Words Fair",
+  "book": 2,
+  "page": "doughnut",
+  "lessons": [111, 112, 113, 114, 115, 116, 117, 118],
+  "requiresKnown": ["a", "do", "the"],
+  "scenes": [
+    {
+      "id": "ch17-1",
+      "bg": "fair",
+      "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
+      "picture": "On a hill above an old fair, a silly queen bumps along on a puffing old tractor, holding up a jar with a glowing page inside, and a friendly crow flaps after her.",
+      "intro": ["story.ch17-1.intro.1", "story.ch17-1.intro.2"],
+      "sentences": [
+        {"id": "ch17-1.1", "text": "Vex is on a tractor.", "effect": "bounce", "trick": null},
+        {"id": "ch17-1.2", "text": "The motor is loud!", "effect": "bounce", "trick": null},
+        {"id": "ch17-1.3", "text": "Vex has a page in a jar.", "effect": "sparkle", "trick": "page"}
+      ],
+      "outro": ["story.ch17-1.outro.1"]
+    },
+    {
+      "id": "ch17-2",
+      "lesson": 112,
+      "bg": "fair",
+      "cast": ["princess", "kitten", "bix", "tess"],
+      "picture": "At the old fair, a big brown bear sits in a striped chair eating a pear, and a cheerful boy and a clever girl wave hello.",
+      "intro": ["story.ch17-2.intro.1"],
+      "sentences": [
+        {"id": "ch17-2.1", "text": "A bear is in a chair.", "effect": "item-pop", "trick": "bear"},
+        {"id": "ch17-2.2", "text": "The bear has a pear.", "effect": "item-pop", "trick": "pear"},
+        {"id": "ch17-2.3", "text": "Bix and Tess share the pear.", "effect": "kitten-cheer", "trick": "pear"}
+      ],
+      "outro": ["story.ch17-2.outro.1"],
+      "question": {"line": "story.ch17-2.question", "choices": ["tricks/bear", "tricks/owl", "tricks/goat"], "answer": "tricks/bear"}
+    },
+    {
+      "id": "ch17-3",
+      "lesson": 113,
+      "bg": "fair",
+      "cast": ["princess", "kitten", "chip", "nell"],
+      "picture": "A bouncy boy rides to the very top of a tall old fair wheel and waves, and a baby claps from below.",
+      "intro": ["story.ch17-3.intro.1"],
+      "sentences": [
+        {"id": "ch17-3.1", "text": "Chip is near the top.", "effect": "float", "trick": null},
+        {"id": "ch17-3.2", "text": "Chip has no fear!", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch17-3.3", "text": "Chip can see Vex clearly.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch17-3.outro.1"]
+    },
+    {
+      "id": "ch17-4",
+      "lesson": 114,
+      "bg": "fair",
+      "cast": ["princess", "kitten", "vex-grab", "gus-idle"],
+      "picture": "At a fair stall, a silly queen shuffles eight cups upside down on a table, and one of them glows a little.",
+      "intro": ["story.ch17-4.intro.1"],
+      "sentences": [
+        {"id": "ch17-4.1", "text": "Vex has eight cups.", "effect": "item-pop", "trick": "cup"},
+        {"id": "ch17-4.2", "text": "The page is in a cup.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch17-4.3", "text": "It is a great trick!", "effect": "bounce", "trick": "cup"}
+      ],
+      "outro": ["story.ch17-4.outro.1"]
+    },
+    {
+      "id": "ch17-5",
+      "lesson": 116,
+      "bg": "fair",
+      "cast": ["princess", "kitten", "vex-idle", "bix"],
+      "picture": "At a fair stall, a silly queen holds up a big pink doughnut with a glowing page poking out of the hole, and a cheerful boy points at it.",
+      "intro": ["story.ch17-5.intro.1"],
+      "sentences": [
+        {"id": "ch17-5.1", "text": "Vex bought a doughnut.", "effect": "item-pop", "trick": "doughnut"},
+        {"id": "ch17-5.2", "text": "Bix thought hard.", "effect": "sparkle", "trick": null},
+        {"id": "ch17-5.3", "text": "The page is in the doughnut!", "effect": "sparkle", "trick": "doughnut"}
+      ],
+      "outro": ["story.ch17-5.outro.1"],
+      "question": {"line": "story.ch17-5.question", "choices": ["tricks/doughnut", "tricks/cake", "tricks/cupcake"], "answer": "tricks/doughnut"}
+    },
+    {
+      "id": "ch17-6",
+      "lesson": 118,
+      "bg": "fair",
+      "cast": ["princess", "kitten", "vex-slip", "tess", "chip"],
+      "picture": "A little gnome in a tall chef's hat blows a shiny whistle, a silly queen jumps and drops a doughnut, and a child catches the glowing page.",
+      "intro": ["story.ch17-6.intro.1"],
+      "sentences": [
+        {"id": "ch17-6.1", "text": "A gnome is the chef.", "effect": "item-pop", "trick": "gnome"},
+        {"id": "ch17-6.2", "text": "The gnome has a whistle.", "effect": "bounce", "trick": "whistle"},
+        {"id": "ch17-6.3", "text": "Vex dropped the doughnut!", "effect": "vex-slip", "trick": "doughnut"},
+        {"id": "ch17-6.4", "text": "You got the page!", "effect": "sparkle", "trick": "page"}
+      ],
+      "outro": ["story.ch17-6.outro.1", "story.ch17-6.outro.2", "story.ch17-6.outro.3"],
+      "reward": {"wardrobe": "o-ringmaster"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch17-side-1",
+      "lesson": 112,
+      "bg": "fair",
+      "cast": ["princess", "kitten", "thud", "dash"],
+      "picture": "A very big sleepy cat curls up in a big striped fair chair, and a small dog squeezes in beside him.",
+      "intro": ["story.ch17-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch17-side-1.1", "text": "Thud sat in a chair.", "effect": "float", "trick": "chair"},
+        {"id": "ch17-side-1.2", "text": "Dash and Thud share the chair.", "effect": "kitten-cheer", "trick": "chair"},
+        {"id": "ch17-side-1.3", "text": "It is a fair chair!", "effect": "bounce", "trick": "chair"}
+      ],
+      "outro": ["story.ch17-side-1.outro.1"]
+    },
+    {
+      "id": "ch17-side-2",
+      "lesson": 117,
+      "bg": "fair",
+      "cast": ["princess", "kitten", "phil", "dash"],
+      "picture": "Under a little circus tent at the fair, a small dog in a fancy ruffled collar does a magic trick, and a small stuffed elephant watches.",
+      "intro": ["story.ch17-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch17-side-2.1", "text": "Phil is at the circus.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch17-side-2.2", "text": "Dash has a fancy collar.", "effect": "item-pop", "trick": null},
+        {"id": "ch17-side-2.3", "text": "Dash can do magic!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch17-side-2.outro.1"]
+    }
+  ]
+}

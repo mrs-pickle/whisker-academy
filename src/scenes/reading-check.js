@@ -21,7 +21,7 @@ const PHRASE_GAP_MS = 80;
 const TILE_SIZE = 110;
 
 
-export async function readLines(view, lines, { open, voice, helpText, tipsFor }) {
+export async function readLines(view, lines, { open, voice, helpText, tipsFor, pick }) {
   const log = [];
   const at = [];
   const results = [];
@@ -85,7 +85,10 @@ export async function readLines(view, lines, { open, voice, helpText, tipsFor })
   while (view.live()) {
     let line = log.at(-1);
     if (!line || line.stopped || line.marks.length === line.size) {
-      while (next < lines.length && !open(lines[next].kind, log)) next++;
+      if (pick) {
+        const chosen = pick([...at], [...log]);
+        next = chosen !== null && chosen >= 0 && chosen < lines.length && open(lines[chosen].kind, log) ? chosen : lines.length;
+      } else while (next < lines.length && !open(lines[next].kind, log)) next++;
       if (next >= lines.length) {
         if (results.length > 0 && await hold()) {
           waiting();
