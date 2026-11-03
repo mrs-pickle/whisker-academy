@@ -1,3 +1,5 @@
+import { CORRESPONDENCES } from '../curriculum/correspondences.js';
+import { canDictate } from '../curriculum/dictation.js';
 import { isDecodable } from '../curriculum/decodable.js';
 import { hasShortIE } from '../curriculum/ie-nasal.js';
 import { finishedSessions, isExtraPractice } from '../profile/profile.js';
@@ -25,6 +27,13 @@ const ROUND_SIZES = Object.freeze({
 });
 const DEFAULT_MINUTES = 15;
 
+const PENCIL_TRIM = Object.freeze({ 15: Object.freeze({ warmup: 4, cards: 8 }), 20: Object.freeze({ cards: 12 }) });
+const PENCIL_LETTERS = 2;
+const PENCIL_DICTATED = 2;
+export const LETTER_SECURE_BOX = 3;
+const LETTER_TWINS = Object.freeze({ b: 'd', d: 'b' });
+const DICTATED_TIER_MAX = 2;
+
 const OVERDUE_SHARE = 0.3;
 const PAIRS_PER_KIND = 2;
 const SSH_MIN_LESSON = 45;
@@ -34,6 +43,7 @@ const RECENT_LESSONS = 7;
 const TRICK_WEIGHT = 3;
 const WORD_CARD_PART = 3;
 const PASS_PART = 3;
+const BACKFILL_WORDS = 2;
 const R_WORD_SESSIONS = 10;
 export const R_WORD_TIER = 4;
 const NONSENSE_CARDS = Object.freeze({ 10: 1, 15: 1, 20: 2 });
@@ -45,9 +55,12 @@ const CARD_MODES = Object.freeze(['see', 'hear']);
 export const CONFUSION_PAIRS = Object.freeze([['from', 'for'], ['the', 'they'], ['his', 'this'], ['went', 'what']]);
 const PARTNER = new Map(CONFUSION_PAIRS.flatMap(([a, b]) => [[a, b], [b, a]]));
 
+export const needsSAndSh = (segs) => segs.some(([g]) => g === 'sh') && segs.some(([g]) => g === 's' || g === 'ss');
+
 export function eligibleWords(content, settings, profile, mode) {
   const n = settings.taughtUpTo;
-  return content.words.filter(w => w.lesson <= n && isDecodable(w.segs, n) && (mode !== 'spell' || w.tier <= profile.spellTier));
+  const spellable = (w) => w.tier <= profile.spellTier && (settings.sShContrast || !needsSAndSh(w.segs));
+  return content.words.filter(w => w.lesson <= n && isDecodable(w.segs, n) && (mode !== 'spell' || spellable(w)));
 }
 
 export function rWordsOpen(profile) {
@@ -166,6 +179,8 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const spellDue = new Set(p.spell.filter(due).map(c => c.id));
   const metLearning = p.instant.filter(c => c.status === 'learning' && c.state !== undefined).length;
   const newReading = new Map(p.read.filter(isNewWord).map(c => [c.id, c]));
+  const unmet = back ? [] : p.read.filter(c => isNewWord(c) && (c.lesson) < settings.taughtUpTo);
+  const held = heldPlaces(wordMax, unmet.length);
   const fresh = chooseNew([
     ...p.spell.filter(isNewWord).map(c => {
       const read = newReading.get(c.id);
@@ -175,7 +190,7 @@ export function buildSession({ content, states, settings, profile, day, rng, las
     ...p.instant.filter(c => c.status === 'learning' && c.state === undefined).map(c => ({ c, round: 'charm' })),
   ], newQuota(lastAccuracy), {
     spell: Math.max(Math.min(1, spellFree), spellFree - dueRoom(p.spell.filter(c => c !== first), sizes.spell)),
-    cards: Math.max(0, wordMax - dueRoom(p.read.filter(c => !spellDue.has(c.id)), sizes.cards)),
+    cards: Math.max(0, wordMax - held - dueRoom(p.read.filter(c => !spellDue.has(c.id)), sizes.cards)),
     charm: Math.max(0, sizes.charm - charmPassed.length),
   }, metLearning < sizes.charm ? 'charm' : null, rng);
   const freshFor = (round) => fresh.filter(f => f.round === round).map(f => f.c);
@@ -204,7 +219,11 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const cards = newRound(sizes.cards);
   const cardsHead = headWith(cards, passing.cards, c => !c.id.startsWith('n:') && isNewWord(c));
   let words = 0;
-  const addWord = (c, isNew = false) => { if (words < wordMax && cards.add(c, isNew)) words++; };
+  const addWord = (c, isNew = false, model = false) => {
+    if (words >= wordMax || !cards.add(c, isNew, model)) return false;
+    words++;
+    return true;
+  };
   for (const c of freshFor('cards')) addWord(c, true);
   let pairs = 0;
   for (const kind of [p.iePairs, p.sshPairs]) {
@@ -215,6 +234,13 @@ export function buildSession({ content, states, settings, profile, day, rng, las
     }
   }
   const toRead = p.read.filter(c => !spelled.has(c.id));
+  const toMeet = weightedOrder(unmet.filter(c => !spelled.has(c.id)), rng)
+    .sort((a, b) => (a.lesson) - (b.lesson) || (a.tier) - (b.tier));
+  let meeting = 0;
+  for (const c of toMeet) {
+    if (meeting >= held) break;
+    if (addWord(c, false, true)) meeting++;
+  }
   for (const c of dueFirst(toRead)) addWord(c);
   const review = toRead.filter(c => (c.state === undefined ? (c.lesson) <= start : back && knows(c)));
   const reviewOrder = [...fillers(review.filter(c => !spellSet.has(c.id))), ...fillers(review.filter(c => spellSet.has(c.id)))];
@@ -253,7 +279,86 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   if (waiting.length > 0) for (const b of built) if (b.activity !== 'story') holdPassesToRoom(b, waitingKeys);
   const rounds = built.filter(b => b.items.length > 0)
     .map(b => ({ activity: b.activity, items: arrange(b.items, b.head, rng) }));
-  return { day, rounds };
+  const pencil = pencilPlanned(profile, settings, day) ? pencilItems(content, settings, profile, states, day, rng) : [];
+  if (pencil.length === 0) return { day, rounds };
+  const trim = (PENCIL_TRIM[ (settings.sessionMinutes)]);
+  const heads = new Map(built.map(b => [b.activity, b.head]));
+  const trimmed = rounds.map(r => (r.activity === 'warmup' || r.activity === 'cards')
+    ? { ...r, items: trimRound(r.items, trim[r.activity] ?? r.items.length, heads.get(r.activity) ?? 0) } : r);
+  const at = trimmed.findIndex(r => r.activity !== 'warmup' && r.activity !== 'cards');
+  trimmed.splice(at < 0 ? trimmed.length : at, 0, { activity: 'pencil', items: pencil });
+  return { day, rounds: trimmed };
+}
+
+export const isPencilDay = (plan) => plan.rounds.some(r => r.activity === 'pencil' && r.items.length > 0);
+
+export const pencilPlanned = (profile, settings, day) => Object.hasOwn(PENCIL_TRIM, settings.sessionMinutes)
+  && settings.copilot !== false && !isExtraPractice(profile, day) && finishedSessions(profile) % 2 === 0;
+
+export function pencilLetters(content, profile, states, day) {
+  const marks = ( (profile).letters ?? {});
+  const letters = (content.letters ?? []).map(l => l.id).filter(id => marks[id] !== 'fine');
+  const state = (id) => states.get(`lf:${id}#paper`);
+  const secure = (id) => (state(id)?.box ?? 0) >= LETTER_SECURE_BOX;
+  const due = letters.filter(id => { const s = state(id); return s !== undefined && isDue(s, day); });
+  const fresh = letters.filter(id => state(id) === undefined);
+  const picked = [];
+  for (const id of [...due, ...fresh]) {
+    if (picked.length >= PENCIL_LETTERS) break;
+    const twin = LETTER_TWINS[ (id)];
+    if (twin && picked.includes(twin) && !(secure(id) && secure(twin))) continue;
+    picked.push(id);
+  }
+  return picked;
+}
+
+export function dictatedItems(content, settings, profile, rng) {
+  const n = settings.taughtUpTo;
+  const item = (id) => ({ id, mode: 'write', isNew: false, isReview: false });
+  const digraphs = CORRESPONDENCES.filter(c => c.g.length === 2 && c.g[0] !== c.g[1] && c.before === undefined && c.lesson <= n && canDictate({ segs: [[c.g, c.p]] }));
+  let newest;
+  for (const c of digraphs) if (!newest || c.lesson > newest.lesson) newest = c;
+  const words = eligibleWords(content, settings, profile, 'read')
+    .filter(w => w.tier <= DICTATED_TIER_MAX && rWordAllowed(profile, w.tier) && canDictate(w) && (settings.sShContrast || !needsSAndSh(w.segs)));
+  const current = words.filter(w => w.lesson === n);
+  const pool = rng.shuffle([...(current.length > 0 ? current : words)]);
+  const out = newest ? [item(`g:${newest.g}`)] : [];
+  for (const w of pool) {
+    if (out.length >= PENCIL_DICTATED) break;
+    out.push(item(`w:${w.w}`));
+  }
+  return out;
+}
+
+function pencilItems(content, settings, profile, states, day, rng) {
+  const letters = pencilLetters(content, profile, states, day);
+  if (letters.length === 0) return [];
+  return [
+    ...letters.map(id => {
+      const s = states.get(`lf:${id}#paper`);
+      return { id: `lf:${id}`, mode: 'paper', isNew: s === undefined, isReview: s !== undefined && isDue(s, day) };
+    }),
+    ...dictatedItems(content, settings, profile, rng),
+  ];
+}
+
+export function trimRound(items, size, head) {
+  const out = [...items];
+  const sound = (i) => i.id.startsWith('g:');
+  const cut = (may) => {
+    for (let at = out.length - 1; at >= head && out.length > size; at--) {
+      const i = out[at];
+      if (i.isNew || i.model || !may(i)) continue;
+      if (sound(i) && out.filter(sound).length <= MIN_SOUND_CARDS) continue;
+      out.splice(at, 1);
+    }
+  };
+  const madeUp = (i) => i.id.startsWith('n:');
+  cut(i => !i.isReview && !sound(i) && !madeUp(i));
+  cut(i => !i.isReview && !madeUp(i));
+  cut(i => !i.isReview);
+  cut(() => true);
+  return out;
 }
 
 function capSessionReviews(built, avoid) {
@@ -312,6 +417,8 @@ function newQuota(lastAccuracy) {
 }
 
 const reviewCap = (size) => Math.max(1, Math.floor(size * OVERDUE_SHARE));
+
+export const heldPlaces = (wordMax, unmet) => Math.min(BACKFILL_WORDS, wordMax - 1, unmet);
 
 function gatherPools(content, settings, profile, { again }) {
   const { taughtUpTo, sShContrast, ieEmphasis } = settings;
@@ -401,7 +508,7 @@ function createRound(size, due, late) {
   return {
     size,
     filled: () => items.length,
-    add(c, isNew = false) {
+    add(c, isNew = false, model = false) {
       if (items.some(i => i.id === c.id)) return false;
       const isReview = !isNew && due(c);
       if (items.length >= size) {
@@ -411,7 +518,7 @@ function createRound(size, due, late) {
       const capped = isReview && late(c);
       if (capped && lateStates.size >= cap) return false;
       if (capped) lateStates.set(c.id, (c.state));
-      items.push({ id: c.id, mode: c.mode, isNew, isReview });
+      items.push({ id: c.id, mode: c.mode, isNew, isReview, ...(model ? { model: (true) } : {}) });
       return true;
     },
     finish(head = 0) {
@@ -442,7 +549,7 @@ function worst(options) {
 export function arrange(items, head, rng) {
   const rest = items.slice(head);
   const fresh = rest.filter(i => i.isNew);
-  const fillersLast = rest.filter(i => !i.isNew && !i.isReview).reverse();
+  const fillersLast = rest.filter(i => !i.isNew && !i.isReview && !i.model).reverse();
   const length = rest.length;
   let budget = fillersLast.length;
   const placed = new Map();

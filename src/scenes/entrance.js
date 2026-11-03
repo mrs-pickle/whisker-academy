@@ -2,20 +2,18 @@ import { h } from '../core/dom.js';
 import { sentenceBlockers } from '../curriculum/decodable.js';
 import { soundKind } from '../curriculum/phonemes.js';
 import { applyResult, newItemState } from '../engine/itemstate.js';
-import { itemKey, LINE_MISSES, questDetail, questSelection } from '../engine/quest-results.js';
-import { createActivityView, holdForUndo, listenDisc, now, showNext, typeToPick, wait } from '../activities/cards.js';
-import { phraseClips } from '../activities/spell.js';
-import { buildTray } from '../activities/spell-controller.js';
-import { COPILOT_HELP, copilotBanner, layeredArt, setUndo, soundBoxes, takeBackButton, tile } from '../ui/components.js';
+import { itemKey, partScore, questDetail, questSelection } from '../engine/quest-results.js';
+import { createActivityView, wait } from '../activities/cards.js';
+import { COPILOT_HELP, layeredArt } from '../ui/components.js';
 import { castArt } from '../ui/story-stage.js';
-import { HELP_TIPS, offerTips, TIMING_TIPS, TURN_TIPS } from '../ui/tips.js';
-import { passageLines, passageTimer, wordsCorrectPerMinute } from './passage-timer.js';
 import { earnPage } from '../profile/pages.js';
-import { heroOf, heroWords } from '../profile/hero.js';
+import { dictateWords, readLines, readPassage, sectionOpen } from './reading-check.js';
 import { wordsForStrip } from '../ui/print-pages.js';
 import { createActiveClock, libraryForTheDay } from './session.js';
 
 export { isTooFast, MAX_PLAUSIBLE_WCPM, passageLines, wordsCorrectPerMinute } from './passage-timer.js';
+export { QUEST_DEADLINES, sectionOpen } from './reading-check.js';
+export { scoreLine, undoMark } from '../engine/quest-results.js';
 
 
 
@@ -23,24 +21,6 @@ export { isTooFast, MAX_PLAUSIBLE_WCPM, passageLines, wordsCorrectPerMinute } fr
 const SECURE = 0.8;
 const MAX_START_TIER = 3;
 
-export const QUEST_DEADLINES = Object.freeze({ real: 3.5 * 60000, nonsense: 6 * 60000, dictation: 9 * 60000 });
-
-
-export function scoreLine(marks) {
-  let correct = 0;
-  let misses = 0;
-  for (const mark of marks) {
-    if (mark) correct++;
-    else if (++misses >= LINE_MISSES) return { correct, stopped: true };
-  }
-  return { correct, stopped: false };
-}
-
-
-export function undoMark(line) {
-  const marks = line.marks.slice(0, -1);
-  return { ...line, marks, stopped: scoreLine(marks).stopped };
-}
 
 export function spellTierFromDictation(results) {
   const byTier = new Map();
@@ -79,18 +59,14 @@ export function seedWeakItems(results, states, day) {
 }
 
 export function buildBaseline({ day, lines, dictation, passage }) {
-  const part = (kind) => lines.filter(l => l.kind === kind)
-    .reduce((sum, l) => ({ correct: sum.correct + scoreLine(l.marks).correct, total: sum.total + l.size }), { correct: 0, total: 0 });
   return {
     day,
-    real: part('real'),
-    nonsense: part('nonsense'),
+    real: partScore(lines, 'real'),
+    nonsense: partScore(lines, 'nonsense'),
     dictation: { correct: dictation.filter(r => r.correct).length, total: dictation.length, tier: spellTierFromDictation(dictation) },
     passage: passage ? { wcpm: passage.wcpm, errors: passage.errors } : { wcpm: null, errors: null },
   };
 }
-
-export const sectionOpen = (part, activeMs) => activeMs < QUEST_DEADLINES[part];
 
 export function questPlan(content, settings, profile) {
   const n = settings.taughtUpTo;
@@ -105,10 +81,6 @@ export function questPlan(content, settings, profile) {
 }
 
 
-const ADVANCE_MS = 300;
-const PLACE_MS = 250;
-const PHRASE_GAP_MS = 80;
-const TILE_SIZE = 110;
 export const questEndLines = (audio) => ['v.entrance.done', ...(audio.has('name.kitten') ? ['name.kitten'] : [])];
 
 const JOIN_MS = 1800;
@@ -117,201 +89,6 @@ const CLOSE_PAUSE_MS = 800;
 const LEAVE_QUESTION = 'Leave the Entrance Quest? It starts again next time.';
 
 const ENTRANCE_HELP = `${COPILOT_HELP} Today: one mark per word (Try again means not yet). A line stops after 3 misses; Help counts as a miss.`;
-
-
-async function readLines(view, lines, { open }) {
-  const log = [];
-  const at = [];
-  const results = [];
-  if (lines.length === 0 || !view.live()) return { lines: log, results };
-  let current = null;
-  let answer = null;
-  let helpTips = false;
-  const waiting = () => {
-    answer = null;
-    banner.classList.add('waiting');
-    view.choosing(false);
-  };
-  const mark = (correct, helped) => view.lock.run(async () => {
-    const give = answer;
-    if (!give || !current) return;
-    waiting();
-    if (!correct && !helpTips) {
-      helpTips = true;
-      offerTips(view.ctx, banner, HELP_TIPS);
-    }
-    if (helped) await view.say([`w.${current.w}`], 600);
-    give({ correct, helped });
-  });
-  const undo = () => view.lock.run(async () => {
-    const give = answer;
-    if (!give || results.length === 0) return;
-    waiting();
-    give({ undo: true });
-  });
-  const pause = async (on) => {
-    for (const word of on?.children ?? []) word.classList.remove('current');
-    await wait(ADVANCE_MS);
-  };
-  const hx = heroWords(view.ctx);
-  const banner = copilotBanner({ onYes: () => mark(true, false), onAgain: () => mark(false, false), onHelp: () => mark(false, true), onUndo: undo, helpText: hx(ENTRANCE_HELP), hero: heroOf(view.ctx?.profile) });
-  banner.classList.add('waiting');
-  const showLine = (n) => {
-    const row = h('div', { class: 'entrance-line', lang: 'en' }, lines[n].words.map(w => h('span', { class: 'entrance-word' }, w.w)));
-    view.show(row);
-    return row;
-  };
-
-  let row = null;
-  let next = 0;
-  const takeBackLast = () => {
-    if ( (log.at(-1)).marks.length === 0) {
-      log.pop();
-      next = (at.pop());
-      row = showLine( (at.at(-1)));
-    }
-    log[log.length - 1] = undoMark( (log.at(-1)));
-    results.pop();
-    setUndo(banner, results.length > 0);
-  };
-  const hold = async () => {
-    banner.hidden = true;
-    const again = await holdForUndo(view);
-    banner.hidden = false;
-    return again;
-  };
-  while (view.live()) {
-    let line = log.at(-1);
-    if (!line || line.stopped || line.marks.length === line.size) {
-      while (next < lines.length && !open(lines[next].kind)) next++;
-      if (next >= lines.length) {
-        if (results.length > 0 && await hold()) {
-          waiting();
-          takeBackLast();
-          await pause(row);
-          continue;
-        }
-        break;
-      }
-      const { kind, words } = lines[next];
-      const first = log.length === 0;
-      row = showLine(next);
-      if (first) {
-        view.root.append(banner);
-        offerTips(view.ctx, banner, TURN_TIPS.read);
-      }
-      if (first || kind !== log.at(-1)?.kind) await view.prompt([kind === 'real' ? 'v.entrance.real' : 'v.entrance.nonsense']);
-      else await view.say(['v.entrance.next']);
-      line = { kind, size: words.length, words: words.map(w => w.w), marks: [], stopped: false };
-      log.push(line);
-      at.push(next++);
-      if (!view.live()) break;
-    }
-    const j = line.marks.length;
-    for (const [k, word] of [... (row).children].entries()) word.classList.toggle('current', k === j);
-    current = lines[ (at.at(-1))].words[j];
-    const start = now();
-    const got = await new Promise((resolve) => { answer = resolve; banner.classList.remove('waiting'); view.choosing(true); });
-    if ('undo' in got) {
-      takeBackLast();
-      await pause(row);
-      continue;
-    }
-    const marks = [...line.marks, got.correct];
-    log[log.length - 1] = { ...line, marks, stopped: scoreLine(marks).stopped };
-    results.push({ word: current, mode: 'read', correct: got.correct, helped: got.helped, ms: Math.round(now() - start) });
-    setUndo(banner, true);
-    await pause(row);
-  }
-  banner.remove();
-  return { lines: log, results };
-}
-
-async function dictateWord(view, word) {
-  const { ctx } = view;
-  const clip = `w.${word.w}`;
-  const phrase = phraseClips(word);
-  const built = [];
-  const board = h('div', { class: 'spell-board' });
-  const bottom = h('div', { class: 'spell-bottom' });
-  let takeBack = () => {};
-  const back = takeBackButton({ onBack: () => takeBack() });
-  back.disabled = true;
-  const draw = (placed) => {
-    const boxes = soundBoxes({ count: word.segs.length, filled: word.segs.map((_, i) => built[i] ?? null) });
-    boxes.children[built.length]?.classList.add('current');
-    if (placed !== undefined) boxes.children[placed].classList.add('placed');
-    board.replaceChildren(boxes, back);
-  };
-  draw();
-  view.show(h('div', { class: 'spell-top' }, listenDisc(view, [clip, ...phrase]), board), bottom);
-  await view.prompt([clip, ...phrase], { play: [clip] });
-  await wait(250);
-  await view.play(phrase, PHRASE_GAP_MS);
-
-  const start = now();
-  let ms = null;
-  const tray = buildTray(word, ctx.settings, ctx.rng);
-  await new Promise((resolve) => {
-    let stopKeys = () => {};
-    let done = false;
-    let next = null;
-    const finish = () => {
-      done = true;
-      stopKeys();
-      back.remove();
-      resolve(undefined);
-    };
-    const pick = (g) => view.lock.run(async () => {
-      if (done || built.length >= word.segs.length) return;
-      ms ??= Math.round(now() - start);
-      built.push(g);
-      draw(built.length - 1);
-      if (built.length === word.segs.length) {
-        back.disabled = false;
-        next = showNext(view);
-        next.pressed.then(finish);
-        return;
-      }
-      view.choosing(false);
-      back.disabled = true;
-      await wait(PLACE_MS);
-      back.disabled = false;
-      view.choosing(true);
-    });
-    takeBack = () => view.lock.run(async () => {
-      if (done || built.length === 0) return;
-      next?.hide();
-      next = null;
-      built.pop();
-      draw();
-      back.disabled = built.length === 0;
-    });
-    bottom.replaceChildren(h('div', { class: 'spell-tray' }, tray.map(g => tile({ label: g, onPick: pick, size: TILE_SIZE }))));
-    stopKeys = typeToPick(tray, pick, view.root, view.lock.locked, takeBack);
-    view.choosing(true);
-  });
-  return { word, mode: 'spell', correct: built.join('') === word.w, helped: false, ms: ms ?? 0, built: [...built] };
-}
-
-async function readPassage(view, passage) {
-  view.root.classList.add('activity-passage');
-  view.show(h('div', { class: 'story-page entrance-passage passage-page', lang: 'en' }, passageLines(passage.text).map(line => h('p', { class: 'story-line' }, line))));
-  const { wcpm, errors } = await new Promise((resolve) => {
-    const timer = passageTimer({ wordCount: passage.wordCount, hero: heroOf(view.ctx?.profile), onFinish: ({ wcpm: score, errors: missed }) => view.lock.run(async () => {
-      banner.remove();
-      resolve({ wcpm: score, errors: missed });
-    }) });
-    const banner = h('div', { class: 'copilot-banner entrance-timing', role: 'group', 'aria-label': "Grown-up's turn" }, timer);
-    view.root.append(banner);
-    offerTips(view.ctx, banner, TIMING_TIPS);
-    view.prompt(['v.entrance.passage']);
-    view.choosing(true);
-  });
-  view.choosing(false);
-  await view.say(['v.entrance.thanks'], 700);
-  return { wcpm, errors };
-}
 
 export function questPage(profile, { pages, content, day, dictation }) {
   const none = { profile, pages: null, page: null };
@@ -362,22 +139,13 @@ export function mount(el, ctx) {
     await view.prompt(['v.entrance.welcome']);
 
     const read = await readLines(view, [...plan.lines.filter(l => l.kind === 'real'), ...plan.lines.filter(l => l.kind === 'nonsense')],
-      { open: (kind) => sectionOpen(kind, clock.ms()) });
+      { open: (kind) => sectionOpen(kind, clock.ms()), helpText: ENTRANCE_HELP,
+        voice: { real: 'v.entrance.real', nonsense: 'v.entrance.nonsense', next: 'v.entrance.next' } });
 
-    const dictation = [];
-    if (plan.dictation.length > 0 && view.live()) {
-      view.root.classList.add('activity-spell');
-      view.show();
-      await view.prompt(['v.entrance.dictation']);
-      for (const word of plan.dictation) {
-        if (!view.live() || !sectionOpen('dictation', clock.ms())) break;
-        dictation.push(await dictateWord(view, word));
-      }
-      if (dictation.length > 0) await view.say(['v.entrance.thanks'], 700);
-      view.root.classList.remove('activity-spell');
-    }
+    const dictation = await dictateWords(view, plan.dictation,
+      { open: () => sectionOpen('dictation', clock.ms()), voice: { intro: 'v.entrance.dictation', thanks: 'v.entrance.thanks' } });
 
-    const passage = plan.passage && view.live() ? await readPassage(view, plan.passage) : null;
+    const passage = plan.passage && view.live() ? await readPassage(view, plan.passage, { prompt: 'v.entrance.passage', thanks: 'v.entrance.thanks' }) : null;
     if (!view.live()) return;
     stopClock();
 

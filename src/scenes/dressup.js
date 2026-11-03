@@ -1,7 +1,7 @@
 import { h } from '../core/dom.js';
 import { createLock } from '../core/lock.js';
 import { artUrl, bigButton, layeredArt } from '../ui/components.js';
-import { heroLine, heroOf, heroWords } from '../profile/hero.js';
+import { HEROES, heroLine, heroOf, heroWords, withHero } from '../profile/hero.js';
 import { castArt, LOOK_OPTIONS, outfitArt } from '../ui/story-stage.js';
 
 
@@ -10,6 +10,9 @@ export const DRESSUP_LINES = Object.freeze({ start: 'dressup.start', kitten: 'dr
 export const princessLayers = (look) => castArt('princess', look).map(artUrl);
 
 
+
+const HERO_NAMES = Object.freeze({ princess: 'Princess', prince: 'Prince' });
+export const HERO_CHOICES = Object.freeze(HEROES.map((hero) => Object.freeze({ field: ('hero'), value: hero, label: HERO_NAMES[hero] })));
 
 const FUR_LABELS = Object.freeze({ orange: 'Orange kitten', gray: 'Gray kitten', black: 'Black kitten', calico: 'Calico kitten' });
 
@@ -41,6 +44,7 @@ export function dressUpButton(look, onClick) {
 const SWATCH = 104;
 
 const CROPS = Object.freeze({
+  hero: { size: [400, 720], center: [190, 300], span: 380 },
   outfit: { size: [400, 720], center: [185, 540], span: 340 },
   crown: { size: [400, 720], center: [185, 215], span: 250 },
   kittenFur: { size: [300, 300], center: [166, 165], span: 270 },
@@ -48,6 +52,7 @@ const CROPS = Object.freeze({
 });
 
 function swatchArt(choice, look) {
+  if (choice.field === 'hero') return castArt('princess', { ...look, hero: choice.value });
   if (choice.field === 'outfit') return [outfitArt(choice.value, look)];
   if (choice.field === 'crown') return castArt('princess', { ...look, crown: choice.value });
   if (choice.field === 'kittenFur') return castArt('kitten', { kittenFur: choice.value, kittenAcc: '' });
@@ -75,6 +80,7 @@ export function mount(el, ctx, params = {}) {
   const lock = createLock();
   let live = true;
   const look = () => (ctx.profile?.look ?? {});
+  const chosen = (choice) => (choice.field === 'hero' ? heroOf(ctx.profile) === choice.value : look()[choice.field] === choice.value);
 
   const princess = h('div', { class: 'dressup-princess' });
   const kitten = h('div', { class: 'dressup-kitten' });
@@ -84,7 +90,7 @@ export function mount(el, ctx, params = {}) {
     princess.replaceChildren(layeredArt(castArt('princess', look())));
     kitten.replaceChildren(layeredArt(castArt('kitten', look(), 'sit')));
     for (const { choice, button, frame } of swatches) {
-      button.setAttribute('aria-pressed', String(look()[choice.field] === choice.value));
+      button.setAttribute('aria-pressed', String(chosen(choice)));
       const ids = swatchArt(choice, look());
       if (frame.dataset.ids === ids.join(' ')) continue;
       frame.dataset.ids = ids.join(' ');
@@ -103,10 +109,10 @@ export function mount(el, ctx, params = {}) {
     button.classList.remove('pop');
     void button.offsetWidth;
     button.classList.add('pop');
-    if (look()[choice.field] === choice.value) return;
-    ctx.profile = withLook(ctx.profile, choice.field, choice.value);
+    if (chosen(choice)) return;
+    ctx.profile = choice.field === 'hero' ? withHero(ctx.profile, choice.value) : withLook(ctx.profile, choice.field, choice.value);
     draw();
-    sparkle(choice.field === 'outfit' || choice.field === 'crown' ? princess : kitten);
+    sparkle(choice.field === 'kittenFur' || choice.field === 'kittenAcc' ? kitten : princess);
     ctx.save().catch(( err) => console.error('The new look could not be saved', err));
   };
 
@@ -131,6 +137,7 @@ export function mount(el, ctx, params = {}) {
     h('img', { class: 'scene-bg', src: artUrl('bg/dressup'), alt: '' }),
     h('div', { class: 'dressup-panel dressup-panel-princess', role: 'group', 'aria-label': hx('Princess clothes') },
       group(choices.outfit, 'outfits'), group(choices.crown, 'crowns')),
+    h('div', { class: 'dressup-panel dressup-panel-hero', role: 'group', 'aria-label': 'The hero' }, group(HERO_CHOICES, 'heroes')),
     princess,
     kitten,
     h('div', { class: 'dressup-panel dressup-panel-kitten', role: 'group', 'aria-label': 'Kitten things' },

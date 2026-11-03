@@ -5,12 +5,15 @@ const FILES = Object.freeze([
   ['chains', 'content/chains.json', () => []],
   ['pairs', 'content/pairs.json', () => ({ ie: [], ssh: [] })],
   ['warmup', 'content/warmup.json', () => []],
-  ['entrance', 'content/entrance.json', () => ({ lines: [], dictation: [], passage: null })],
+  ['entrance', 'content/entrance.json', () => ({ lines: [], dictation: [], passage: null, ladder: [] })],
   ['names', 'content/names.json', () => []],
   ['voice', 'content/voice.json', () => ({})],
   ['wardrobe', 'content/wardrobe.json', () => []],
   ['colorin', 'content/colorin.json', () => []],
   ['rewards', 'content/rewards.json', () => []],
+  ['checks', 'content/checks.json', () => ({ forms: [], pools: {}, items: [] })],
+  ['letters', 'content/letters.json', () => []],
+  ['robot', 'content/robot.json', () => []],
   ['blocklist', 'content/blocklist.json', () => ({ format: 'sha256-lower', entries: [] })],
 ]);
 

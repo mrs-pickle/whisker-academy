@@ -18,5 +18,18 @@
     "id": "pond",
     "text": "A pup and a cat sat in the sun. “Look!” said the cat. “A fox is in the pond!” The pup went to the pond. The fox did a big jump, and the pup got wet. “You are a wet pup!” said the cat. The pup and the cat had a nap in the sun.",
     "wordCount": 55
-  }
+  },
+  "ladder": [
+    { "id": "ladder-09", "lesson": 9, "words": ["sat", "tap", "pin", "sit", "tip"] },
+    { "id": "ladder-14", "lesson": 14, "words": ["man", "mop", "dad", "cat", "pot"] },
+    { "id": "ladder-18", "lesson": 18, "words": ["mud", "dig", "bug", "pen", "cub"] },
+    { "id": "ladder-22", "lesson": 22, "words": ["caps", "dogs", "pets", "kids", "bins"] },
+    { "id": "ladder-31", "lesson": 31, "words": ["hat", "rug", "log", "web", "fox"] },
+    { "id": "ladder-36", "lesson": 36, "words": ["zip", "hand", "clap", "swim", "gift"] },
+    { "id": "ladder-40", "lesson": 40, "words": ["frog", "drum", "plug", "belt", "tent"] },
+    { "id": "ladder-43", "lesson": 43, "words": ["bell", "kiss", "puff", "ball", "wall"] },
+    { "id": "ladder-45", "lesson": 45, "words": ["duck", "rock", "ship", "fish", "shop"] },
+    { "id": "ladder-48", "lesson": 48, "words": ["bath", "thin", "chin", "lunch", "chop"] },
+    { "id": "ladder-50", "lesson": 50, "words": ["when", "whip", "which", "whisk", "graph"] }
+  ]
 }

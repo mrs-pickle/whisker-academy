@@ -140,16 +140,23 @@ function pageShown(ctx, page, { onExit, live }) {
   return picture;
 }
 
-async function giveGift(ctx, table, gifts, say, live) {
+async function giveGift(ctx, table, gifts, sceneGift, say, live) {
   const rewards = ctx.content?.rewards ?? [];
   const grant = async (gift) => {
     ctx.profile = grantGift(ctx.profile, gift, rewards);
     await ctx.save().catch(( err) => console.error('The gift could not be saved', err));
   };
+  const besideIt = (card) => {
+    if (!sceneGift) return;
+    card.classList.add('two');
+    card.append(giftPicture(ctx, sceneGift));
+  };
   if (gifts.length === 0) return;
   if (gifts.length === 1) {
     await grant(gifts[0]);
-    table.append(h('div', { class: 'reward-card gift' }, giftPicture(ctx, gifts[0])));
+    const card = h('div', { class: 'reward-card gift' }, giftPicture(ctx, gifts[0]));
+    besideIt(card);
+    table.append(card);
     await say(['v.reward.gift'], 2200);
     return;
   }
@@ -169,7 +176,7 @@ async function giveGift(ctx, table, gifts, say, live) {
   if (!live()) return;
   ctx.audio.stop();
   await wait(900);
-  cards.forEach(c => { if (c.classList.contains('dim')) c.remove(); });
+  cards.forEach(c => { if (c.classList.contains('dim')) c.remove(); else besideIt(c); });
 }
 
 export function mount(el, ctx, params = {}) {
@@ -177,6 +184,7 @@ export function mount(el, ctx, params = {}) {
   const late = params.late === true;
   const offered = asList(params.gifts).filter(isGift).slice(0, 2).map(plain);
   const gifts = extra ? [] : offered.length > 0 ? offered : pickGiftChoices(ctx.profile, ctx.content?.rewards ?? [], ctx.rng);
+  const sceneGift = typeof params.sceneGift === 'string' && params.sceneGift !== '' ? { type: 'wardrobe', id: params.sceneGift } : null;
   const offer = !extra && (params.page)?.source === 'made' && params.maker ? params.maker : null;
   const page = offer || (!extra && isPage(params.page)) ? (params.page) : null;
   const tricks = strings(params.tricks);
@@ -231,7 +239,7 @@ export function mount(el, ctx, params = {}) {
   const play = async () => {
     if (stones > 0) await say(['v.session.done'], 1500);
     if (!live()) return;
-    await giveGift(ctx, table, gifts, say, live);
+    await giveGift(ctx, table, gifts, sceneGift, say, live);
     if (!live()) return;
     if (late) {
       showHome();

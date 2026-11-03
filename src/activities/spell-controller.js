@@ -87,7 +87,7 @@ export function sShTiles(a, b) {
   return a !== b && S_SH.has(a) && S_SH.has(b);
 }
 
-const SINGLE_OF = Object.freeze({ ff: 'f', ll: 'l', ss: 's', zz: 'z' });
+const SINGLE_OF = Object.freeze({ ff: 'f', ll: 'l', ss: 's', zz: 'z', ck: 'k' });
 const MAX_DISTRACTORS = 3;
 
 const TAUGHT = (() => {
@@ -118,13 +118,13 @@ export function buildTray(word, settings, rng, after) {
     const other = otherIE(g);
     return other !== null && p !== '' && beforeNasal(whole, i) ? [other] : [];
   }));
-  const sShOk = (x) => settings.sShContrast || !needed.some(n => sShTiles(x, n));
+  const sShOk = (x) => settings.sShContrast || !(needed.some(n => sShTiles(x, n)) || (x === 'sh' && sounds.has('s')));
   const ok = (x) => !needed.includes(x) && !nasalSwaps.has(x) && (TAUGHT.get(x)?.lesson ?? Infinity) <= settings.taughtUpTo && sShOk(x);
 
   const swap = voiced.map(otherIE).filter(x => x !== null && !needed.includes(x) && !nasalSwaps.has(x));
   const single = voiced.flatMap(g => {
     const x = (SINGLE_OF)[g];
-    return x !== undefined && ok(x) ? [x] : [];
+    return x !== undefined && ok(x) && !word.segs.some(([other, p]) => other !== g && TAUGHT.get(x)?.sounds.has(p)) ? [x] : [];
   });
   const alike = voiced.flatMap(partnersOf).filter(ok);
   const near = [...new Set([...swap, ...single, ...alike])];

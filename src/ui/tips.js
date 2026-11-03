@@ -1,7 +1,7 @@
 import { h } from '../core/dom.js';
 import { heroLine, heroOf } from '../profile/hero.js';
 
-export const GROWNUP_TIPS = Object.freeze(['copilot.turn', 'copilot.turn.said', 'copilot.wait', 'copilot.hint', 'copilot.rule', 'copilot.timing']);
+export const GROWNUP_TIPS = Object.freeze(['copilot.turn', 'copilot.turn.said', 'copilot.wait', 'copilot.hint', 'copilot.rule', 'copilot.timing', 'copilot.th', 'copilot.sh', 'copilot.pencil']);
 
 export const TURN_TIPS = Object.freeze({
   read: Object.freeze(['copilot.turn', 'copilot.rule']),
@@ -9,9 +9,13 @@ export const TURN_TIPS = Object.freeze({
 });
 export const HELP_TIPS = Object.freeze(['copilot.wait', 'copilot.hint']);
 export const TIMING_TIPS = Object.freeze(['copilot.timing']);
+export const TH_TIPS = Object.freeze(['copilot.th']);
+export const PENCIL_TIPS = Object.freeze(['copilot.pencil']);
+export const SH_TIPS = Object.freeze(['copilot.sh']);
+export const SH_FROM = 45;
 
 const POINTS_AT = Object.freeze({
-  'copilot.turn': 'yes', 'copilot.turn.said': 'yes', 'copilot.rule': 'yes', 'copilot.timing': 'yes',
+  'copilot.turn': 'yes', 'copilot.turn.said': 'yes', 'copilot.rule': 'yes', 'copilot.timing': 'yes', 'copilot.th': 'yes', 'copilot.sh': 'yes', 'copilot.pencil': 'yes',
   'copilot.wait': 'help', 'copilot.hint': 'help',
 });
 

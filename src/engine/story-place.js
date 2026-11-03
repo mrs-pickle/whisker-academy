@@ -66,6 +66,15 @@ export function nextStoryScene(content, profile, settings) {
   return nextSideQuest(content, profile, settings, ci);
 }
 
+export function visibleScenes(story, profile) {
+  const { ci, si } = mainPlace(story, profile);
+  return readingOrder(story).filter(({ chapterId, scene, kind, index }) => {
+    if (scene.surprise !== true) return true;
+    const c = story.findIndex((ch) => ch.id === chapterId);
+    return c < ci || (c === ci && (kind === 'side' || index <= si));
+  });
+}
+
 export function nextSideQuest(content, profile, settings, upTo) {
   const story = content.story ?? [];
   const reading = readingContext(content, profile, settings);

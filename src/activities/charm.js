@@ -3,6 +3,7 @@ import { heartIndexes } from '../curriculum/decodable.js';
 import { artUrl } from '../ui/components.js';
 import { addUnlocked, createActivityView, createOnce, isKnown, judgeAloud, knownInstant, listenDisc, runRound, showNext, wait } from './cards.js';
 import { protegeMoment } from './chain.js';
+import { robotMoment, robotToday, robotWord } from './robot.js';
 import { buildWord, segClips } from './spell.js';
 import { buildTray, createSpellController } from './spell-controller.js';
 
@@ -162,6 +163,10 @@ export async function run(el, ctx, round, hooks) {
       easy: (used) => easyCharm(ctx, used),
     });
     if (result === 'done' && hooks.protege && view.live()) await protegeMoment(view, played, once, passed);
+    if (result === 'done' && robotToday(hooks) && view.live()) {
+      const rec = robotWord(ctx.content, ctx.profile, ctx.states ?? new Map(), ctx.day);
+      if (rec) await robotMoment(view, rec, hooks);
+    }
     if (view.live()) hooks.answersIn?.();
   } finally {
     view.destroy();

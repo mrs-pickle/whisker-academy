@@ -1,0 +1,17 @@
+[
+  {"w": "said", "wrong": "sˈeɪd"},
+  {"w": "was", "wrong": "wˈæz"},
+  {"w": "of", "wrong": "ˈɑf"},
+  {"w": "to", "wrong": "tˈoʊ"},
+  {"w": "do", "wrong": "dˈoʊ"},
+  {"w": "are", "wrong": "ˈeɪɹ"},
+  {"w": "have", "wrong": "hˈeɪv"},
+  {"w": "says", "wrong": "sˈeɪz"},
+  {"w": "were", "wrong": "wˈiɹ"},
+  {"w": "want", "wrong": "wˈænt"},
+  {"w": "walk", "wrong": "wˈælk"},
+  {"w": "talk", "wrong": "tˈælk"},
+  {"w": "could", "wrong": "kˈaʊld"},
+  {"w": "would", "wrong": "wˈaʊld"},
+  {"w": "should", "wrong": "ʃˈaʊld"}
+]

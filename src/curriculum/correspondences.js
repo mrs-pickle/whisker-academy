@@ -45,6 +45,7 @@ export const CORRESPONDENCES = Object.freeze([
   cg('zz', 'z', 42),
   cg('a', 'aw', 43, 'll'),
   cg('o', 'O', 43, 'll'),
+  cg('u', 'uu', 43, 'll'),
   cg('ck', 'k', 44),
   cg('sh', 'sh', 45),
   cg('th', 'dh', 46),

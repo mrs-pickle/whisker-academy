@@ -519,6 +519,70 @@
   opacity: 0.9;
 }
 .hub-grownup:active { transform: translateY(3px); }
+.hub-frontdoor {
+  position: absolute;
+  right: 216px;
+  bottom: 20px;
+  min-width: 140px;
+  min-height: 60px;
+  padding: 4px 18px;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background: var(--paper);
+  font-size: 24px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+.hub-frontdoor:active { transform: translateY(3px); }
+
+.start { position: absolute; inset: 0; }
+.start-menu {
+  position: absolute;
+  left: 50%;
+  top: 236px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+}
+.start-menu .big-button { width: 290px; height: 200px; flex-direction: column; gap: 6px; padding: 12px 12px; font-size: 40px; white-space: nowrap; }
+.start-menu .big-button-icon { width: 104px; height: 104px; }
+.stage[data-spacing="wide"] .start-menu .big-button { font-size: 34px; }
+.start-new.glow .big-button { animation: invite 2.4s ease-in-out infinite; }
+.start-picker {
+  position: absolute;
+  left: 50%;
+  top: 220px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 48px;
+}
+.start-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 300px;
+  padding: 16px;
+  border: 5px solid var(--ink);
+  border-radius: 28px;
+  background: var(--paper);
+  box-shadow: 0 8px 0 var(--shadow);
+}
+.start-hero:active { transform: translateY(4px); box-shadow: 0 4px 0 var(--shadow); }
+.start-hero-art { width: 180px; height: 324px; }
+.start-hero-name { max-width: 260px; font-size: 40px; font-weight: 700; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.start-back {
+  align-self: center;
+  min-width: 140px;
+  min-height: 60px;
+  padding: 4px 18px;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background: var(--paper);
+  font-size: 24px;
+  font-weight: 700;
+}
 @keyframes breathe {
   0%, 100% { transform: translateY(0) scale(1, 1); }
   50% { transform: translateY(-6px) scale(1.01, 0.99); }
@@ -808,6 +872,10 @@
 }
 .gift-princess { width: 150px; height: 270px; }
 .gift-kitten { width: 176px; height: 176px; }
+.reward-card.gift.two { flex-direction: row; width: 244px; gap: 8px; }
+.reward-card.two .gift-princess { width: 100px; height: 180px; }
+.reward-card.two .gift-kitten { width: 100px; height: 100px; }
+.reward-card.two .gift-crayon { width: 60px; height: 180px; }
 .gift-page { width: 240px; height: 150px; border: 3px solid var(--line); border-radius: 10px; background: #fff; }
 .gift-crayon { position: relative; width: 84px; height: 252px; isolation: isolate; }
 .gift-crayon::before {
@@ -896,6 +964,13 @@
   box-shadow: 0 8px 0 var(--shadow);
 }
 .quest-leave-text { margin: 0 0 14px; font-size: 26px; line-height: 1.3; }
+.assess-result-cover { position: absolute; inset: 0; z-index: 14; display: flex; align-items: center; justify-content: center; background: rgba(255, 250, 240, 0.55); }
+.assess-result { width: 760px; max-height: 720px; overflow-y: auto; }
+.assess-result .gu-title { margin-top: 0; }
+.assess-suggestion { font-size: 24px; line-height: 1.35; }
+.assess-summary { margin: 0 0 12px; padding-left: 28px; font-size: 19px; line-height: 1.4; columns: 2; column-gap: 32px; }
+.assess-summary li { break-inside: avoid; }
+.assess-lesson { width: 120px; }
 .entrance-kitten { width: 210px; height: 210px; animation: kitten-join 1.4s ease-out both; }
 @keyframes kitten-join {
   0% { transform: translateX(460px); opacity: 0; }
@@ -939,7 +1014,19 @@
   background: var(--paper);
   box-shadow: 0 6px 0 var(--shadow);
 }
-.chapter-title { margin: 0 0 8px; font-size: 34px; font-weight: 700; line-height: 1.3; }
+.chapter-title { margin: 0 0 8px; }
+.chapter-title-sound {
+  display: block;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 4px 0 var(--shadow);
+}
+.chapter-title-sound:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--shadow); }
+.chapter-title-speaker { display: block; width: 46px; height: 46px; margin: auto; }
 .chapter-tiles {
   display: grid;
   grid-template-columns: repeat(8, 136px);
@@ -1051,6 +1138,8 @@
 }
 .dressup-panel-princess { left: 24px; }
 .dressup-panel-kitten { right: 24px; }
+.dressup-panel-hero { top: 12px; left: 488px; padding: 12px; }
+.dressup-panel-hero .dressup-group { grid-template-columns: repeat(2, 116px); }
 .dressup-group { display: grid; grid-template-columns: repeat(3, 116px); gap: 10px; }
 .dressup-panel-kitten .dressup-group { grid-template-columns: repeat(2, 116px); }
 .dressup-group:empty { display: none; }

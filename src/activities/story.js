@@ -1,9 +1,10 @@
 import { h } from '../core/dom.js';
 import { nextSideQuest, nextStoryScene, previousMainScene, rereadDay } from '../engine/story-place.js';
+import { blinkHooksOk, runBlink } from './blink.js';
 import { heroWords } from '../profile/hero.js';
 import { artUrl } from '../ui/components.js';
 import { createStoryStage, sceneArt } from '../ui/story-stage.js';
-import { offerTips, TIMING_TIPS } from '../ui/tips.js';
+import { offerTips, SH_FROM, SH_TIPS, TIMING_TIPS } from '../ui/tips.js';
 import { bounce, createActivityView, createOnce, herTurn, holdForUndo, judgeAloud, notYet, now, offerPass, sparkle, untilHerTurn } from './cards.js';
 
 
@@ -115,7 +116,8 @@ async function readLines(view, stage, page, scene, hooks, { copilot, once, toget
       await view.prompt([sentenceClip(s)]);
     } else {
       await view.prompt(['v.story.read'], { play: once('v.story.read') });
-      const judged = await judgeAloud(view, { copilot, kind: 'read', model: [sentenceClip(s)], target: line, canUndo: back });
+      const tips = (view.ctx?.settings?.taughtUpTo ?? 0) >= SH_FROM ? SH_TIPS : [];
+      const judged = await judgeAloud(view, { copilot, kind: 'read', model: [sentenceClip(s)], target: line, canUndo: back, tips });
       if ('undo' in judged) {
         hooks.undo?.();
         line.remove();
@@ -234,7 +236,7 @@ async function modelLines(view, stage, scene, lines) {
 
 const SHOW_SPEED = 'Show words per minute';
 
-export function timeReading(view, scene, onDone) {
+export function timeReading(view, scene, onDone, onTimed) {
   const hx = heroWords(view.ctx);
   return new Promise((resolve) => {
     let started = 0;
@@ -249,6 +251,7 @@ export function timeReading(view, scene, onDone) {
     const done = button('■ Done', 'yes', () => view.lock.run(async () => {
       const wpm = wordsPerMinute(scene.sentences, now() - started);
       readout = wpm === null ? 'That was too quick to time.' : `About ${wpm} words per minute.`;
+      onTimed?.(wpm);
       start.hidden = true;
       done.hidden = true;
       show.hidden = false;
@@ -306,7 +309,7 @@ async function rereadScene(view, stage, page, pick, hooks, { copilot, last, prog
   await view.prompt(['v.story.reread.solo']);
   if (copilot) {
     view.choosing(true);
-    await timeReading(view, scene, smoother);
+    await timeReading(view, scene, smoother, (wpm) => hooks.onReread?.({ scene: scene.id, wpm }));
   } else {
     const solo = await judgeAloud(view, { copilot: false, kind: 'read', model: scene.sentences.map(sentenceClip), target: page });
     if (!('pass' in solo)) await smoother();
@@ -348,6 +351,7 @@ export function readAloud(el, ctx, scene) {
 
 export async function run(el, ctx, round, hooks) {
   const extra = hooks.extra === true;
+  const blinkDay = rereadDay(ctx.profile);
   const passages = (round?.items ?? []).filter(i => i.id.startsWith('s:')).flatMap((item) => {
     const pick = sceneForRound(ctx.content, ctx.profile, ctx.settings, item, { extra });
     if (!pick && !extra) console.warn(`Story time cannot find the scene for ${item.id}; skipping it.`);
@@ -387,4 +391,5 @@ export async function run(el, ctx, round, hooks) {
     if (!done) return;
     earlier += scene.sentences.length;
   }
+  if (blinkDay && passages.length > 0 && blinkHooksOk({ ...hooks, copilot })) await runBlink(el, ctx, hooks);
 }

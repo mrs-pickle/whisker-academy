@@ -1,5 +1,5 @@
 import { h } from '../core/dom.js';
-import { MAX_CAST, MAX_THINGS, toggleCast, toggleThing, withPlace } from '../engine/page-recipe.js';
+import { MAX_CAST, MAX_THINGS, shownIn, toggleCast, toggleThing, withPlace } from '../engine/page-recipe.js';
 import { chooseDayPage, keepPages, pageBlobId, pagesNow } from '../profile/pages.js';
 import { artUrl, nextButton } from './components.js';
 import { pageUrl, partUrl } from './page-parts.js';
@@ -13,7 +13,7 @@ const PLACE_NAMES = Object.freeze({ door: 'The castle door', hall: 'The great ha
 export function tileName(kind, id) {
   const person = (name) => name.charAt(0).toUpperCase() + name.slice(1);
   if (kind === 'place') return PLACE_NAMES[ (id)] ?? id;
-  if (kind === 'cast') return id === 'ted-dot-hearts' ? 'Ted and Dot' : person(id.split('-')[0]);
+  if (kind === 'cast') return shownIn(id).map(person).join(' and ');
   return id;
 }
 

@@ -16,11 +16,11 @@ export function greetingLines(profile, audio, day) {
     'v.hub.hello',
     ...(audio.has(NAME_CLIP) ? [NAME_CLIP] : []),
     ...(audio.has(KITTEN_NAME_CLIP) ? [KITTEN_NAME_CLIP] : []),
-    doneToday(profile, day) ? 'v.hub.dressup' : adventureScene(profile) === 'entrance' ? 'v.hub.entrance' : 'v.hub.adventure',
+    doneToday(profile, day) ? 'v.hub.dressup' : adventureScene(profile) !== 'session' ? 'v.hub.entrance' : 'v.hub.adventure',
   ];
 }
 
-export const adventureScene = (profile) => (profile?.baseline == null ? 'entrance' : 'session');
+export const adventureScene = (profile) => (profile?.baseline != null ? 'session' : profile?.assessFirst === true ? 'assessment' : 'entrance');
 
 export function mount(el, ctx, params = {}) {
   const lock = createLock();
@@ -54,6 +54,15 @@ export function mount(el, ctx, params = {}) {
     return false;
   };
   const opens = (name) => (event) => { if (!spent(event)) go(name); };
+  const frontDoor = (event) => {
+    event?.stopPropagation();
+    if (!cold && !arrival.allows(event)) return;
+    if (cold) {
+      cold = false;
+      ctx.audio.unlock();
+    }
+    go('start');
+  };
   const play = (event) => {
     if (spent(event)) return;
     const onward = () => {
@@ -90,6 +99,7 @@ export function mount(el, ctx, params = {}) {
         bigButton({ label: 'Color', icon: 'ui/crayon-e63946', onClick: opens('colorin') }),
         dressUpButton(ctx.profile.look, opens('dressup')),
         chaptersButton)),
+    h('button', { type: 'button', class: 'hub-frontdoor', onClick: frontDoor }, 'Front door'),
     h('button', { type: 'button', class: 'hub-grownup', onClick: opens('grownup/gate') }, 'Grown-ups')));
 
   if (bubble) {

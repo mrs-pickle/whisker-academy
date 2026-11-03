@@ -2,7 +2,7 @@ import { h } from '../core/dom.js';
 import { newProfile } from '../profile/profile.js';
 import { artUrl } from './components.js';
 
-export const STAGE_EFFECTS = Object.freeze(['vex-slip', 'vex-bonk', 'crow-flap', 'item-pop', 'float', 'shrink', 'sparkle', 'ring-found', 'kitten-cheer']);
+export const STAGE_EFFECTS = Object.freeze(['vex-slip', 'vex-bonk', 'crow-flap', 'item-pop', 'float', 'shrink', 'sparkle', 'ring-found', 'kitten-cheer', 'bounce']);
 
 
 const DEFAULT_LOOK = Object.freeze(newProfile().look);
@@ -57,7 +57,7 @@ const CENTER = Object.freeze({ x: 640, y: 560 });
 
 const EFFECT_MS = Object.freeze({
   'vex-slip': 1500, 'vex-bonk': 1600, 'crow-flap': 1600, 'item-pop': 1000, float: 2400,
-  shrink: 1300, sparkle: 1000, 'ring-found': 1800, 'kitten-cheer': 1300,
+  shrink: 1300, sparkle: 1000, 'ring-found': 1800, 'kitten-cheer': 1300, bounce: 1600,
 });
 const POP_MS = 600;
 
@@ -177,7 +177,7 @@ export function createStoryStage(el, { bg, cast, look }) {
     async 'vex-slip'(trick) {
       const prop = await bring(trick);
       const vex = castMember(id => id.startsWith('vex'));
-      if (vex) act(vex, 'fx-vex-slip', EFFECT_MS['vex-slip'], { pose: 'cast/vex-slip', keep: true });
+      if (vex) act(vex, 'fx-vex-slip', EFFECT_MS['vex-slip'], { pose: vex.id === 'vex-wig' ? 'cast/vex-wig-slip' : 'cast/vex-slip', keep: true });
       else burst(centerOf(prop));
       await pause(EFFECT_MS['vex-slip']);
     },
@@ -244,6 +244,12 @@ export function createStoryStage(el, { bg, cast, look }) {
       if (kitten) act(kitten, 'fx-kitten-cheer', EFFECT_MS['kitten-cheer'], { pose: castArt('kitten', look, 'cheer')[0] });
       else burst(centerOf(prop));
       await pause(EFFECT_MS['kitten-cheer']);
+    },
+    async bounce(trick) {
+      const prop = await bring(trick);
+      if (prop) act(prop, 'fx-bounce', EFFECT_MS.bounce);
+      else burst(CENTER);
+      await pause(EFFECT_MS.bounce);
     },
   };
 

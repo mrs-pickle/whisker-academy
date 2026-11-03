@@ -5,13 +5,24 @@ import { HEROES, heroOf, heroWords, withHero } from '../../profile/hero.js';
 import { newProfile } from '../../profile/profile.js';
 import { clampTaughtUpTo, normalizeSettings } from '../../profile/settings.js';
 import { artUrl, layeredArt } from '../../ui/components.js';
-import { castArt, LOOK_OPTIONS } from '../../ui/story-stage.js';
+import { castArt, LOOK_OPTIONS, outfitArt } from '../../ui/story-stage.js';
+import { dressupChoices } from '../dressup.js';
 import { hashPin, isValidPin, unsavedBanner } from './gate.js';
 import { RESTORED_MESSAGE, restoreControls } from './restore.js';
 
 
 
-export const SETUP_STEPS = Object.freeze(['hero', 'pin', 'names', 'look', 'lesson', 'copilot', 'soundcheck']);
+export const SETUP_STEPS = Object.freeze(['pin', 'names', 'hero', 'look', 'outfit', 'kitten', 'start', 'lesson', 'copilot', 'soundcheck']);
+
+export const CHILD_STEPS = Object.freeze(['hero', 'look', 'outfit', 'kitten']);
+
+export const NEW_STUDENT_LINES = Object.freeze({
+  hero: 'newstudent.hero', look: 'newstudent.look', outfit: 'newstudent.outfit', kitten: 'newstudent.kitten', start: 'newstudent.done',
+});
+
+export const ASSESS_START = 1;
+
+export const setupSteps = (settings) => (typeof settings.pin === 'string' ? SETUP_STEPS.filter((step) => step !== 'pin') : SETUP_STEPS);
 
 export const NAME_MAX = 24;
 const FIRST_LESSON = 1;
@@ -53,8 +64,8 @@ export function checkSetupStep(step, answers) {
   if (step === 'names') {
     const princess = cleanName(answers.princessName);
     const kitten = cleanName(answers.kittenName);
-    if (!princess) return 'Type a name for her princess.';
-    if (!kitten) return 'Type a name for her kitten.';
+    if (!princess) return "Type the child's name.";
+    if (!kitten) return 'Type a name for the kitten.';
     if (princess.length > NAME_MAX || kitten.length > NAME_MAX) return `Keep each name to ${NAME_MAX} characters or fewer.`;
   }
   if (step === 'lesson') {
@@ -64,9 +75,17 @@ export function checkSetupStep(step, answers) {
   return null;
 }
 
-export async function finishSetup(settings, answers) {
+export function starterChoices(wardrobe, hero) {
+  const fresh = withHero(newProfile(), hero === 'prince' ? 'prince' : 'princess');
+  const starters = (Array.isArray(wardrobe) ? wardrobe : []).filter((w) => w?.starter === true);
+  const choices = dressupChoices(starters, { ...fresh, unlocked: { ...fresh.unlocked, wardrobe: [] } });
+  return { outfit: choices.outfit.map(({ value, label }) => ({ value, label })), crown: choices.crown.map(({ value, label }) => ({ value, label })) };
+}
+
+export async function finishSetup(settings, answers, wardrobe) {
   const taughtUpTo = clampTaughtUpTo(answers.taughtUpTo);
-  const next = normalizeSettings({ ...settings, taughtUpTo, copilot: answers.copilot !== false, pin: await hashPin(String(answers.pin)) });
+  const pin = typeof settings.pin === 'string' && !answers.pin ? settings.pin : await hashPin(String(answers.pin));
+  const next = normalizeSettings({ ...settings, taughtUpTo, copilot: answers.copilot !== false, pin });
   const profile = withHero(newProfile(taughtUpTo), heroOf({ look: answers.look }));
   profile.princessName = cleanName(answers.princessName).slice(0, NAME_MAX);
   profile.kittenName = cleanName(answers.kittenName).slice(0, NAME_MAX);
@@ -74,11 +93,17 @@ export async function finishSetup(settings, answers) {
     const value = answers.look?.[ (key)];
     if (choices.some((choice) => choice.id === value)) profile.look[ (key)] = (value);
   }
+  const starters = starterChoices(wardrobe, heroOf(profile));
+  for (const key of (['outfit', 'crown'])) {
+    const value = answers.look?.[key];
+    if (starters[key].some((choice) => choice.value === value)) profile.look[key] = (value);
+  }
   return { settings: next, profile };
 }
 
 export function mount(el, ctx) {
-  if (typeof ctx.settings.pin === 'string') {
+  const setUp = typeof ctx.store?.registered === 'function' ? ctx.store.registered() : typeof ctx.settings.pin === 'string';
+  if (setUp) {
     ctx.router.go('grownup/gate').catch(( err) => console.error('The grown-up gate could not open', err));
     return () => {};
   }
@@ -87,6 +112,7 @@ export function mount(el, ctx) {
     taughtUpTo: ctx.settings.taughtUpTo, copilot: ctx.settings.copilot } };
   ctx.setupDraft = draft;
   const { answers } = draft;
+  const steps = setupSteps(ctx.settings);
   const hx = heroWords({ profile: { look: answers.look } });
 
   const count = h('p', { class: 'gu-step-count' });
@@ -99,15 +125,21 @@ export function mount(el, ctx) {
     h('label', { class: 'gu-label', for: id }, label),
     h('input', { class: 'gu-input', id, value, autocomplete: 'off', onInput: ( e) => set( (e.target).value), ...attrs }));
 
-  const swatches = (key, title) => h('div', { class: 'gu-swatch-row', role: 'group', 'aria-label': title },
+  const swatchRow = (key, title, choices) => h('div', { class: 'gu-swatch-row', role: 'group', 'aria-label': title },
     h('p', { class: 'gu-label' }, title),
-    h('div', { class: 'gu-swatches' }, lookChoices(heroOf({ look: answers.look }))[key].map(({ id, label }) => {
+    h('div', { class: 'gu-swatches' }, choices.map(({ id, label }) => {
       const look = { ...answers.look, [key]: id };
-      const art = key === 'kittenFur' ? layeredArt(castArt('kitten', look), 'gu-swatch-kitten') : layeredArt(castArt('princess', look), 'gu-swatch-princess');
-      return h('button', { type: 'button', class: 'gu-swatch', 'data-choice': `${key}:${id}`, 'aria-pressed': String(answers.look[key] === id),
+      const art = key === 'kittenFur' ? layeredArt(castArt('kitten', look), 'gu-swatch-kitten')
+        : key === 'outfit' ? layeredArt([outfitArt(id, look)], 'gu-swatch-princess')
+          : layeredArt(castArt('princess', look), 'gu-swatch-princess');
+      return h('button', { type: 'button', class: 'gu-swatch', 'data-choice': `${key}:${id}`, 'aria-pressed': String(answers.look[key] === id), 'aria-label': label,
         onClick: () => { answers.look[key] = id; show(`${key}:${id}`); } },
-      h('span', { class: 'gu-swatch-art' }, art), h('span', {}, label));
+      h('span', { class: 'gu-swatch-art' }, art), h('span', { class: 'gu-swatch-label' }, label));
     })));
+  const swatches = (key, title) => swatchRow(key, title, lookChoices(heroOf({ look: answers.look }))[key]);
+  const starterRow = (key) => starterChoices(ctx.content?.wardrobe, heroOf({ look: answers.look }))[key].map(({ value, label }) => ({ id: value, label }));
+  const preview = () => h('div', { class: 'gu-look-preview', 'aria-hidden': 'true' },
+    layeredArt(castArt('princess', answers.look), 'gu-look-princess'), layeredArt(castArt('kitten', answers.look), 'gu-look-kitten'));
 
   const chooseHero = (hero) => {
     if (hero === 'prince') answers.look.hero = hero;
@@ -141,7 +173,7 @@ export function mount(el, ctx) {
   const views = {
     hero: () => [
       h('h1', { class: 'gu-title' }, 'Who is the hero of the story?'),
-      h('p', {}, 'You can change this later in Settings.'),
+      h('p', { class: 'gu-hint' }, 'The child picks, with you beside or on their own. You can change this later in Settings.'),
       h('div', { class: 'gu-hero-choices', role: 'group', 'aria-label': 'The hero' }, HEROES.map((hero) => h('button', {
         type: 'button', class: 'gu-choice gu-hero-choice', 'data-choice': `hero:${hero}`, 'aria-pressed': String(heroOf({ look: answers.look }) === hero),
         onClick: () => chooseHero(hero) },
@@ -150,27 +182,41 @@ export function mount(el, ctx) {
     ],
     pin: () => [
       h('h1', { class: 'gu-title' }, "Welcome! A few questions for the grown-up"),
-      h('p', {}, hx('First, choose a PIN for the grown-up corner, where the settings and her progress are. It keeps little fingers out; holding a button for 3 seconds opens the corner too.')),
+      h('p', {}, "First, choose a PIN for the grown-up corner, where the settings and your child's progress are. It keeps little fingers out; holding a button for 3 seconds opens the corner too."),
       field('PIN (4 to 8 digits)', 'gu-setup-pin', answers.pin, (v) => { answers.pin = v; }, { type: 'password', inputmode: 'numeric', maxlength: '8' }),
       field('The same PIN again', 'gu-setup-pin2', answers.pin2, (v) => { answers.pin2 = v; }, { type: 'password', inputmode: 'numeric', maxlength: '8' }),
       h('section', { class: 'gu-restore' },
         h('h2', { class: 'gu-subtitle' }, 'Restoring from a backup?'),
-        h('p', { class: 'gu-hint' }, hx('If she already plays on another computer, skip these questions: choose the backup file saved there. It brings back her progress, the settings, the recordings and the PIN.')),
+        h('p', { class: 'gu-hint' }, 'If your child already plays on another computer, skip these questions: choose the backup file saved there. It brings back their progress, the settings, the recordings and the PIN.'),
         ...restoring.nodes),
     ],
     names: () => [
-      h('h1', { class: 'gu-title' }, hx('Her princess and her kitten')),
-      h('p', {}, hx('She will see these names in the game. The narrator says "Princess" and "Kitty"; you can record the names in your own voice later, in Sound check.')),
-      field(hx("Her princess's name"), 'gu-setup-princess', answers.princessName, (v) => { answers.princessName = v; }, { maxlength: String(NAME_MAX) }),
-      field(hx("Her kitten's name"), 'gu-setup-kitten', answers.kittenName, (v) => { answers.kittenName = v; }, { maxlength: String(NAME_MAX) }),
+      h('h1', { class: 'gu-title' }, 'The names'),
+      h('p', {}, 'Your child will see these names in the game. The narrator says the title of the hero and "Kitty"; you can record the names in your own voice later, in Sound check.'),
+      field("Your child's name", 'gu-setup-princess', answers.princessName, (v) => { answers.princessName = v; }, { maxlength: String(NAME_MAX) }),
+      field("The kitten's name", 'gu-setup-kitten', answers.kittenName, (v) => { answers.kittenName = v; }, { maxlength: String(NAME_MAX) }),
+      h('p', { class: 'gu-hint' }, 'Next, the child picks a princess or a prince, and how they look: pass the screen over, or pick together.'),
     ],
     look: () => [
-      h('h1', { class: 'gu-title' }, 'How they look'),
-      h('div', { class: 'gu-look' },
-        h('div', { class: 'gu-look-preview', 'aria-hidden': 'true' }, layeredArt(castArt('princess', answers.look), 'gu-look-princess'), layeredArt(castArt('kitten', answers.look), 'gu-look-kitten')),
-        h('div', { class: 'gu-look-choices' },
-          swatches('skin', 'Skin'), swatches('hair', 'Hair'), swatches('hairColor', 'Hair color'), swatches('kittenFur', 'Kitten fur'))),
-      h('p', { class: 'gu-hint' }, hx('She can change outfits and crowns herself in the dress-up room.')),
+      h('h1', { class: 'gu-title' }, 'How you look'),
+      h('div', { class: 'gu-look' }, preview(),
+        h('div', { class: 'gu-look-choices' }, swatches('skin', 'Skin'), swatches('hair', 'Hair'), swatches('hairColor', 'Hair color'))),
+    ],
+    outfit: () => [
+      h('h1', { class: 'gu-title' }, 'Something to wear'),
+      h('div', { class: 'gu-look' }, preview(),
+        h('div', { class: 'gu-look-choices' }, swatchRow('outfit', 'Outfit', starterRow('outfit')), swatchRow('crown', 'Crown', starterRow('crown')))),
+    ],
+    kitten: () => [
+      h('h1', { class: 'gu-title' }, 'Your kitten'),
+      h('div', { class: 'gu-look' }, preview(), h('div', { class: 'gu-look-choices' }, swatches('kittenFur', 'Kitten fur'))),
+    ],
+    start: () => [
+      h('h1', { class: 'gu-title' }, hx('Last, for the grown-up: her lesson')),
+      h('p', {}, hx("The Assessment is 5 to 10 minutes of reading with you beside her, marking each word, as on her first day. She hears only that it is a day at the Academy, never a test. It suggests a UFLI lesson; you keep it or change it, and her tutor's number wins.")),
+      h('div', { class: 'gu-row gu-start-choices' },
+        h('button', { type: 'button', class: 'gu-button gu-primary', 'data-choice': 'start:assessment', onClick: () => finish('assessment', undefined, { assess: true }) }, 'Do the Assessment now (recommended)'),
+        h('button', { type: 'button', class: 'gu-button', 'data-choice': 'start:lesson', onClick: () => forward() }, 'I know the lesson')),
     ],
     lesson: () => [
       h('h1', { class: 'gu-title' }, hx('Which UFLI lesson has she been taught up to?')),
@@ -195,28 +241,37 @@ export function mount(el, ctx) {
     ],
   };
 
+  let said = '';
   function show(focusChoice) {
-    const step = SETUP_STEPS[draft.index];
-    count.textContent = `Step ${draft.index + 1} of ${SETUP_STEPS.length}`;
+    const step = steps[draft.index];
+    const child = CHILD_STEPS.includes(step);
+    card.classList.toggle('gu-setup-child', child);
+    count.textContent = child ? '' : `Step ${draft.index + 1} of ${steps.length}`;
     panel.replaceChildren(...views[step]().filter((node) => node !== null));
     back.hidden = draft.index === 0;
-    next.hidden = draft.index === SETUP_STEPS.length - 1;
+    next.hidden = draft.index === steps.length - 1 || step === 'start';
     message.textContent = '';
+    if (step !== said) {
+      said = step;
+      const line = NEW_STUDENT_LINES[ (step)];
+      if (line && typeof ctx.say === 'function') ctx.say(line).catch(( err) => console.warn('A New Student line could not play', err));
+      else ctx.setReplay?.(null);
+    }
     const focus = focusChoice ? panel.querySelector(`[data-choice="${focusChoice}"]`) : panel.querySelector('input, select');
     (focus)?.focus();
   }
 
   function forward() {
-    const problem = checkSetupStep(SETUP_STEPS[draft.index], answers);
+    const problem = checkSetupStep(steps[draft.index], answers);
     if (problem) { message.textContent = hx(problem); return; }
-    draft.index = Math.min(SETUP_STEPS.length - 1, draft.index + 1);
+    draft.index = Math.min(steps.length - 1, draft.index + 1);
     show();
   }
 
-  const finish = (scene, params) => lock.run(async () => {
-    const done = await finishSetup(ctx.settings, answers);
+  const finish = (scene, params, { assess = false } = {}) => lock.run(async () => {
+    const done = await finishSetup(ctx.settings, assess ? { ...answers, taughtUpTo: ASSESS_START } : answers, ctx.content?.wardrobe);
     ctx.settings = done.settings;
-    ctx.profile = done.profile;
+    ctx.profile = assess ? { ...done.profile, assessFirst: true } : done.profile;
     try {
       await ctx.save();
     } catch (err) {
@@ -228,14 +283,15 @@ export function mount(el, ctx) {
     await ctx.router.go(scene, params);
   }).catch((err) => console.error('Setup could not finish', err));
 
+  const card = h('form', { class: 'gu-card gu-setup', onSubmit: ( event) => { event.preventDefault(); forward(); } },
+    unsavedBanner(ctx),
+    count,
+    panel,
+    message,
+    h('div', { class: 'gu-row gu-setup-nav' }, back, next));
   el.append(h('div', { class: 'grownup' },
     h('img', { class: 'scene-bg', src: artUrl('bg/grownup'), alt: '' }),
-    h('form', { class: 'gu-card gu-setup', onSubmit: ( event) => { event.preventDefault(); forward(); } },
-      unsavedBanner(ctx),
-      count,
-      panel,
-      message,
-      h('div', { class: 'gu-row gu-setup-nav' }, back, next))));
+    card));
   show();
   return () => {};
 }

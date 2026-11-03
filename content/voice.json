@@ -57,6 +57,11 @@
 "charm.letters": {"text": "Say each letter with me as it lights up."},
 "charm.read": {"text": "Now listen to the whole word, and read it."},
 "charm.done": {"text": "Your new charm joins your charm bracelet!"},
+"robot.start": {"text": "Gus wants to read."},
+"robot.notright": {"text": "That is not right!"},
+"robot.pick": {"text": "Which one is the real word?"},
+"blink.start": {"text": "Kitty's blink game! A word will peek out, then hide. Can you read it?"},
+"blink.peek": {"text": "You can peek again any time you like."},
 
 "story.start": {"text": "Story time! Read each line out loud, and watch your words make magic."},
 "story.read": {"text": "Read this line out loud."},
@@ -77,6 +82,10 @@
 "entrance.passage": {"text": "Last one! Read this little story out loud."},
 "entrance.thanks": {"text": "Thank you!"},
 "entrance.done": {"text": "You finished the Entrance Quest! Hooray! Kitty is cheering for you."},
+"check.welcome": {"text": "Today is Read to Kitty day! Kitty loves to hear you read. Let's read to Kitty."},
+"check.passage": {"text": "Last one! Read Kitty this little story, in your best story voice."},
+"check.thanks": {"text": "Thank you! Kitty loved that."},
+"check.done": {"text": "Kitty had the best time. Thank you for reading to Kitty!"},
 
 "reward.gift": {"text": "You finished today's adventure! Here is a gift for you."},
 "reward.choose": {"text": "Pick one gift. The other one will still be here another day."},
@@ -138,6 +147,9 @@
 "copilot.hint": {"text": "Grown-up: instead of saying the word, try saying, check each sound."},
 "copilot.rule": {"text": "Grown-up: count it if she read the right word.", "prince": "Grown-up: count it when he reads the right word."},
 "copilot.timing": {"text": "Grown-up: click start when she begins reading, and done when she finishes.", "prince": "Grown-up: click start when he begins reading, and done when he finishes."},
+"copilot.th": {"text": "Grown-up: this is a made-up word, so either th sound is right."},
+"copilot.pencil": {"text": "Grown-up: judge only where the pencil starts and which way it goes, never neatness, size or speed. Watch the first stroke. Three good letters beat a page of them."},
+"copilot.sh": {"text": "Grown-up: she may say 'sip' for ship. Count it if she read the right word.", "prince": "Grown-up: he may say 'sip' for ship. Count it if he read the right word."},
 "selfcheck.read": {"text": "Did you read it? Click 'I read it!' or 'Let me hear it.'"},
 "selfcheck.said": {"text": "Did you say it? Click 'I said it!' or 'Let me try again.'"},
 
@@ -182,6 +194,15 @@
 "kitten.protege.gap": {"text": "Can you find my mix-up? I think I left out a sound. Click the space where it goes."},
 "kitten.protege.again": {"text": "Hmm, is that the part? Let's look again, sound by sound."},
 "kitten.protege.thanks": {"text": "Oh! Thank you! Now I know it. I'll remember."},
+
+"story.prologue.title": {"text": "The Prologue. First Day."},
+"story.ch1.title": {"text": "Chapter One. The Missing Rings."},
+"story.ch2.title": {"text": "Chapter Two. The Cake Caper."},
+"story.ch3.title": {"text": "Chapter Three. Into the Carriage."},
+"story.ch4.title": {"text": "Chapter Four. The Silent Bells."},
+"story.ch5.title": {"text": "Chapter Five. Chip's Chase."},
+"story.ch6.title": {"text": "Chapter Six. The Wedding Crash."},
+"story.finale.title": {"text": "The Finale. The Wedding."},
 
 "story.prologue-1.intro.1": {"text": "Welcome to Whisker Academy, Princess! This castle is a school for magic, and today is your very first day.", "prince": "Welcome to Whisker Academy, Prince! This castle is a school for magic, and today is your very first day."},
 "story.prologue-1.intro.2": {"text": "Here is the secret every student learns: at Whisker Academy, every spell is a word. When you read a word out loud, its magic comes alive."},
@@ -277,5 +298,223 @@
 
 "story.ch1-8.intro.1": {"text": "Back in the toy room, you hand both rings to Ted. Safe and sound!"},
 "story.ch1-8.outro.1": {"text": "The wedding is on! Ted and Dot thank you and your friends with the biggest toy-room hug ever."},
-"story.ch1-8.outro.2": {"text": "But far away in her tower, Queen Vex peeks into her hand mirror. 'Fine, keep your rings,' she mutters. 'But every wedding needs a cake…' Gus's tummy rumbles."}
+"story.ch1-8.outro.2": {"text": "But far away in her tower, Queen Vex peeks into her hand mirror. 'Fine, keep your rings,' she mutters. 'But every wedding needs a cake…' Gus's tummy rumbles."},
+
+"story.ch2-1.intro.1": {"text": "Chapter Two: The Cake Caper. In the castle kitchen, the cooks have just finished the wedding cake. It is even taller than Ted!"},
+"story.ch2-1.intro.2": {"text": "New pattern: c-k. At the end of a short word, c and k team up to make one sound, like in sock, lock and quack."},
+"story.ch2-1.intro.3": {"text": "One more thing. The word cake uses a spelling pattern you'll learn later on, so in your lines today, the cake is called it. When you read it, think cake!"},
+"story.ch2-1.outro.1": {"text": "'Every wedding needs a cake,' says Dot, 'and this one is perfect.'"},
+"story.ch2-1.outro.2": {"text": "But outside the window, a round blue-gray head pops up. Gus's tummy rumbles. Uh-oh."},
+
+"story.ch2-2.intro.1": {"text": "That night, Dot locks the cake in the pantry, safe and sound. Tick, tock. Everyone is asleep."},
+"story.ch2-2.intro.2": {"text": "Then, tiptoe, tiptoe. Who comes creeping in?"},
+"story.ch2-2.outro.1": {"text": "Bump, bump, bump. Gus drags the sack away, with Queen Vex pushing from behind. 'Caw! Caw! Oops!'"},
+"story.ch2-2.question": {"text": "What did Gus put the cake in? Click the picture."},
+
+"story.ch2-3.intro.1": {"text": "Morning. Ted opens the pantry, and the cake is gone! 'Oh, my stuffing!'"},
+"story.ch2-3.intro.2": {"text": "But last night, Gus walked right through the soot by the fireplace. Look closely at the floor."},
+"story.ch2-3.outro.1": {"text": "The black tracks climb all the way up to Queen Vex's tower. She plans to eat the whole cake herself, at midnight!"},
+
+"story.ch2-4.intro.1": {"text": "In the Spell Workshop, Tess has a sneaky idea. 'We'll make a pretend cake!'"},
+"story.ch2-4.intro.2": {"text": "A good trick has one rule: never let Queen Vex know what is coming."},
+"story.ch2-4.outro.1": {"text": "A coat of white icing, a cherry on top, and it looks just like the real cake. Nobody would ever guess it is socks."},
+
+"story.ch2-5.intro.1": {"text": "Socks make no sound at all. So everyone pulls socks on over their shoes and creeps up the tower stairs."},
+"story.ch2-5.intro.2": {"text": "Queen Vex is snoring on her throne, right next to the cake."},
+"story.ch2-5.outro.1": {"text": "'Teeny-tiny time!' The real cake, now as small as a button, rides home in Tess's pocket. The sock cake stays behind, looking very tasty."},
+
+"story.ch2-6.intro.1": {"text": "Midnight in the tower. Queen Vex tucks in her napkin and picks up her very biggest fork."},
+"story.ch2-6.intro.2": {"text": "'All mine,' she sings. 'Bow to the grandest queen in the land!'"},
+"story.ch2-6.outro.1": {"text": "'Oh, bother my buttons!' Queen Vex pulls a long striped sock out of her mouth. 'Caw! Caw! Oops!' says Gus, who rather likes his rock."},
+"story.ch2-6.outro.2": {"text": "Back in the kitchen, Tess taps the tiny cake, and it grows and grows until it is taller than Ted. Safe!"},
+"story.ch2-6.outro.3": {"text": "But Queen Vex is already peering down at the toy room. 'Fine. Keep your cake. That dress would look much better on me.'"},
+"story.ch2-6.question": {"text": "What did Queen Vex bite? Click the picture."},
+
+"story.ch2-side-1.intro.1": {"text": "Free-time high jinks! Baby Nell has found the pile of socks left over from the sock cake."},
+"story.ch2-side-1.outro.1": {"text": "Out pops Kitty, and Nell laughs until she gets the hiccups."},
+
+"story.ch2-side-2.intro.1": {"text": "Free-time high jinks! Bix floats a sock down the hall, just over Gus's head. 'Up you go!'"},
+"story.ch2-side-2.outro.1": {"text": "Gus flaps around in a circle. A sock on the head does funny things to a crow. 'Quack! I mean, caw!'"},
+
+"story.ch3-1.intro.1": {"text": "Chapter Three: Into the Carriage. Dot's wedding dress is finished at last, with a long silky sash. It is beautiful."},
+"story.ch3-1.intro.2": {"text": "New pattern: s-h. When s and h team up, they make one quiet sound, the one at the start of ship and at the end of fish."},
+"story.ch3-1.outro.1": {"text": "Down the stairs they run, out to the royal carriage. Queen Vex never says carriage. She calls it her cab."},
+"story.ch3-1.outro.2": {"text": "So when you read cab, think carriage!"},
+
+"story.ch3-2.intro.1": {"text": "Tess turns around. Where is her baby sister? One tiny bubble floats out of the carriage window."},
+"story.ch3-2.outro.1": {"text": "Not one grown-up looks up. It's up to you!"},
+"story.ch3-2.question": {"text": "Who is hiding in the carriage? Click the picture."},
+
+"story.ch3-3.intro.1": {"text": "'Up you go!' says Bix, and his magic floats you onto the back of the carriage. It rattles all the way down to the sea."},
+"story.ch3-3.outro.1": {"text": "A purple ship with golden sails, and a statue of Queen Vex at the front. Naturally."},
+
+"story.ch3-4.intro.1": {"text": "Down below the deck, it's warm and quiet and it smells of fish. On a coil of rope, somebody opens one green eye."},
+"story.ch3-4.intro.2": {"text": "It's a thin spotted cat in a sailor collar. Her name tag says Dash. Nobody on this ship ever says hello to her."},
+"story.ch3-4.outro.1": {"text": "Dash purrs for the first time all year. Kitty purrs right back."},
+"story.ch3-4.outro.2": {"text": "And Dash knows every corner of this ship, Princess. She knows just where Queen Vex hid the dress.", "prince": "And Dash knows every corner of this ship, Prince. She knows just where Queen Vex hid the dress."},
+"story.ch3-4.question": {"text": "Who is your new friend? Click the picture."},
+
+"story.ch3-5.intro.1": {"text": "Up on deck, Queen Vex is strutting about in Dot's dress. It does not fit her one bit."},
+"story.ch3-5.intro.2": {"text": "Dash leads you to the ship's kitchen, where there is a big pot of mashed potato. Time for a trick!"},
+"story.ch3-5.outro.1": {"text": "Down she goes, into a barrel of fish! 'Oh, bother my buttons!' The dress flies off, flutters over the rail and floats away."},
+
+"story.ch3-6.intro.1": {"text": "The dress drifts down, down, down. And who is sitting in a little rowboat, right where it lands? Baby Nell!"},
+"story.ch3-6.outro.1": {"text": "Home you swim, with Nell and the dress safe in a big bubble, and Dash riding on your back. Dot gives you the biggest hug."},
+"story.ch3-6.outro.2": {"text": "Far behind, Queen Vex picks a fish out of her curls. 'No wedding can start until the castle bells ring,' she mutters. 'And I still have all those socks.'"},
+
+"story.ch3-side-1.intro.1": {"text": "Free-time high jinks! Dash lives at the castle now. She and Kitty follow their noses all the way to the kitchen."},
+"story.ch3-side-1.outro.1": {"text": "Gus drops the dish, and the two cats share the fish. Nobody tells the cook."},
+
+"story.ch3-side-2.intro.1": {"text": "Free-time high jinks! Down on the shore by the ship, Tess sets up a little shop of seashells."},
+"story.ch3-side-2.outro.1": {"text": "The bug rides on her crown all the way down the beach. Bow to the grandest bug in the land."},
+
+"story.ch4-1.intro.1": {"text": "Chapter Four: The Silent Bells. No wedding can start until the castle bells ring. So up you go, to the very top of the bell tower."},
+"story.ch4-1.intro.2": {"text": "New pattern: t-h, the buzzing kind, as in this and that."},
+"story.ch4-1.outro.1": {"text": "Clunk. Clunk. Clunk. Not one single note. Something must be stuck inside those bells."},
+
+"story.ch4-2.intro.1": {"text": "You poke your head inside the biggest bell. Pee-yew! It smells like feet."},
+"story.ch4-2.outro.1": {"text": "All the socks from the sock cake, jammed in tight! Queen Vex saved every single one in a sack, just for this."},
+"story.ch4-2.question": {"text": "What is stuck in the bell? Click the picture."},
+
+"story.ch4-3.intro.1": {"text": "Back in the toy room, Ted and Dot hear the news. 'No bells? Oh, my stuffing.'"},
+"story.ch4-3.outro.1": {"text": "'Our friends will find a way,' says Dot, and she smiles right at you. Ted straightens his bow tie. He feels better already."},
+
+"story.ch4-4.intro.1": {"text": "Back to the Spell Workshop, for the big old book of little helpers. Bix flips the pages. Frogs? No. Bees? No."},
+"story.ch4-4.outro.1": {"text": "A whole page of fuzzy little moths! Moths love to nibble wool socks. Now, where can you find some moths?"},
+
+"story.ch4-5.intro.1": {"text": "Evening falls on the path to the bell tower. And moths love a bright light."},
+"story.ch4-5.intro.2": {"text": "New pattern: t-h, the whispery kind, as in thin and moth. The same two letters, with a softer sound."},
+"story.ch4-5.outro.1": {"text": "'Up you go!' Bix floats the lamp up the tower, and the moths follow it like a fuzzy little cloud."},
+"story.ch4-5.question": {"text": "What did the moths follow? Click the picture."},
+
+"story.ch4-6.intro.1": {"text": "Nibble, nibble, nibble. The moths get to work on Queen Vex's socks."},
+"story.ch4-6.intro.2": {"text": "And up on the top beam lives the biggest, sleepiest cat in the castle. The bell ringers named her Thud. You'll see why."},
+"story.ch4-6.outro.1": {"text": "Down comes the big bell with a cat on top, and out shoots the last sock. Pop!"},
+"story.ch4-6.outro.2": {"text": "Bong! The first note in days rolls out over the castle. Thud yawns, and goes back to sleep on the bell."},
+
+"story.ch4-7.intro.1": {"text": "Meanwhile, Queen Vex is having a victory bubble bath, right under the bell tower. 'No bells, no wedding,' she hums."},
+"story.ch4-7.outro.1": {"text": "'Oh, bother my buttons!' Soggy socks and sleepy moths everywhere. The bells ring out again, and Thud stays on as the castle's bell cat."},
+"story.ch4-7.outro.2": {"text": "The moths flutter down to say thank you, and they leave a gift for Kitty: a pair of moth wings, just her size!"},
+"story.ch4-7.outro.3": {"text": "Queen Vex wrings out a sock and thinks very hard. The wedding lunch, she thinks. Hmm."},
+"story.ch4-7.question": {"text": "What fell on Queen Vex? Click the picture."},
+
+"story.ch4-side-1.intro.1": {"text": "Free-time high jinks! It is Baby Nell's bath night, and Kitty came to watch. A little too closely."},
+"story.ch4-side-1.outro.1": {"text": "A small round ball of bubbles runs down the hall. Somewhere inside it is Kitty."},
+
+"story.ch4-side-2.intro.1": {"text": "Free-time high jinks! Thud has found the very last sock. And so has Gus."},
+"story.ch4-side-2.outro.1": {"text": "Thud curls up on the sock and goes straight to sleep. Gus decides he didn't want it anyway."},
+
+"story.ch5-1.intro.1": {"text": "Chapter Five: Chip's Chase. Remember Chip, your classmate whose magic makes things bounce? Here he comes now!"},
+"story.ch5-1.intro.2": {"text": "New pattern: c-h, as in chip and chin. And now you can read his name!"},
+"story.ch5-1.outro.1": {"text": "Boing! Chip bounces off down the hall, laughing. 'Count me in!' Chip is on the team."},
+
+"story.ch5-2.intro.1": {"text": "The wedding lunch, for a hundred hungry toys, is nearly ready. The cooks are so busy they never look up."},
+"story.ch5-2.outro.1": {"text": "But outside, a hand with a very big ring on it quietly opens the henhouse door. Uh-oh."},
+
+"story.ch5-3.intro.1": {"text": "In tiptoes Queen Vex, carrying a box. A box that goes peep."},
+"story.ch5-3.outro.1": {"text": "Peep, peep, peep! Fluffy yellow chicks in every pot and pan. 'Bow to the grandest queen in the land!' cackles Queen Vex, and off she runs."},
+"story.ch5-3.question": {"text": "What was in the box? Click the picture."},
+
+"story.ch5-4.intro.1": {"text": "After them! Over the pots, under the table, round and round the cook, who still thinks it is a nice quiet day."},
+"story.ch5-4.outro.1": {"text": "Back into the box they go, one fluffy chick at a time. All but one."},
+
+"story.ch5-5.intro.1": {"text": "One chick got away. It hopped across the floor, looking for somewhere warm."},
+"story.ch5-5.intro.2": {"text": "It found somewhere warm. It found Gus."},
+"story.ch5-5.outro.1": {"text": "Nobody has ever hugged Gus before. He goes very quiet. 'Caw,' he says softly. 'Oops.'"},
+"story.ch5-5.outro.2": {"text": "And when Queen Vex calls for him, he doesn't flap away. He has a chick to look after."},
+"story.ch5-5.question": {"text": "Who sat on Gus? Click the picture."},
+
+"story.ch5-6.intro.1": {"text": "Queen Vex comes sneaking back for one more go at the lunch. But Chip has left his ball on the step. On purpose."},
+"story.ch5-6.outro.1": {"text": "She peeks out of the flour chest, white from her crown to her toes. 'Gus!' she calls. But Gus does not come."},
+"story.ch5-6.outro.2": {"text": "'Fine,' says Queen Vex, very quietly. 'If I cannot stop the wedding, I will BE the bride.'"},
+
+"story.ch5-side-1.intro.1": {"text": "Free-time high jinks! Chip and Bix invent a bouncing game. Baby Nell invents a better one."},
+"story.ch5-side-1.outro.1": {"text": "Game over. Nell wins, and she is not giving it back."},
+
+"story.ch5-side-2.intro.1": {"text": "Free-time high jinks! Kitty left her wizard hat out on the garden path. Something inside it is wriggling."},
+"story.ch5-side-2.outro.1": {"text": "Purr. Peep. Purr. Peep. Nobody has the heart to wake them."},
+
+"story.ch6-1.intro.1": {"text": "Chapter Six: The Wedding Crash. The big day is very close now. And here comes Gus, with his chick riding on his back."},
+"story.ch6-1.intro.2": {"text": "Today's lines mix every two-letter team you know: c-k, s-h, t-h and c-h."},
+"story.ch6-1.intro.3": {"text": "And one new word: wed. To wed is to get married."},
+"story.ch6-1.outro.1": {"text": "Gus used to tell Queen Vex everything. Today, he tells you. Her plan: a mint-green yarn wig, a very big polka-dot dress, and Queen Vex will pretend to be Dot!"},
+
+"story.ch6-2.intro.1": {"text": "Into the great hall you go, with your trick bag. Every trick you have ever read is in there."},
+"story.ch6-2.outro.1": {"text": "A whole hall full of tricks, set from one end to the other. Whatever you do, don't step on that mop."},
+
+"story.ch6-3.intro.1": {"text": "Bix takes the fan. Gus takes the net. And the cats take the highest shelf, because cats always do."},
+"story.ch6-3.outro.1": {"text": "Tiptoe, tiptoe. Places, everyone. The wedding is about to begin."},
+"story.ch6-3.question": {"text": "Who has the net now? Click the picture."},
+
+"story.ch6-4.intro.1": {"text": "The wedding hall is full of toys in their very best clothes. Up at the front stands a small stuffed elephant with a big book. His name is Phil."},
+"story.ch6-4.intro.2": {"text": "New patterns: w-h, as in when, and p-h, as in Phil."},
+"story.ch6-4.outro.1": {"text": "The doors swing open. Someone in a very big dress comes slowly up the aisle."},
+
+"story.ch6-5.intro.1": {"text": "Up the aisle comes the bride, in a very big polka-dot dress. She is rather tall. And rather orange at the edges."},
+"story.ch6-5.intro.2": {"text": "Every toy in the hall goes 'Aww.' Every toy but one."},
+"story.ch6-5.outro.1": {"text": "'Oh, my stuffing!' says Ted. 'You're not my Dot!' He would know his Dot anywhere. A wig can't fool love."},
+"story.ch6-5.outro.2": {"text": "'Bow to the grandest bride in the land!' sings Queen Vex, and she runs for the door. Now, Princess! Your trick bag is ready.", "prince": "'Bow to the grandest bride in the land!' sings Queen Vex, and she runs for the door. Now, Prince! Your trick bag is ready."},
+"story.ch6-5.question": {"text": "Who is under the wig? Click the picture."},
+
+"story.ch6-6.intro.1": {"text": "Read the tricks, Princess. One line, one trick!", "prince": "Read the tricks, Prince. One line, one trick!"},
+"story.ch6-6.intro.2": {"text": "Queen Vex is running down the hall, straight toward the first one."},
+"story.ch6-6.outro.1": {"text": "Off flies the wig, and out spring the bright orange curls. Every toy gasps. It's Queen Vex!"},
+
+"story.ch6-7.intro.1": {"text": "Queen Vex scrambles for the door. Keep reading!"},
+"story.ch6-7.outro.1": {"text": "In the doorway stands the real Dot, in the very dress you saved. 'Caw! Caw! Oops!' says Gus, who is not sorry at all."},
+"story.ch6-7.outro.2": {"text": "Queen Vex sits in the net, sticky with jam, and for once she has nothing grand to say."},
+
+"story.ch6-side-1.intro.1": {"text": "Free-time high jinks! It's bell practice, and the bell cat will not come down. Chip has an idea."},
+"story.ch6-side-1.outro.1": {"text": "Nobody has ever seen Thud run before. Nobody will believe it."},
+
+"story.ch6-side-2.intro.1": {"text": "Free-time high jinks! Phil is helping in the kitchen. And so is Baby Nell."},
+"story.ch6-side-2.outro.1": {"text": "Phil looks very wise, and very sticky."},
+
+"story.finale-1.intro.1": {"text": "The Finale: The Wedding. At last, the big day! Pick the best thing in your wardrobe, Princess. Kitty is waiting.", "prince": "The Finale: The Wedding. At last, the big day! Pick the best thing in your wardrobe, Prince. Kitty is waiting."},
+"story.finale-1.outro.1": {"text": "And a gift from Ted and Dot, for their guest of honor: a wedding outfit, just for you. All set. Kitty purrs. Time to go!"},
+
+"story.finale-2.intro.1": {"text": "The toys all hush. Phil opens his big book. 'Oh, my stuffing,' whispers Ted, happily."},
+"story.finale-2.outro.1": {"text": "Two tiny gold rings. The very same rings you found."},
+
+"story.finale-3.intro.1": {"text": "Now for the castle bells, every one of them. Up in the tower, Thud takes a great big leap."},
+"story.finale-3.outro.1": {"text": "Bong, bong, bong! Bubbles and floating hearts fill the hall. And Baby Nell claps too, just one beat behind everyone else."},
+
+"story.finale-4.intro.1": {"text": "Out of the net rolls Queen Vex, sticky from her crown to her shoes. Nobody has saved her a plate."},
+"story.finale-4.intro.2": {"text": "The wedding cake goes by, and her nose twitches. She remembers the last cake she bit: the sock cake. Dot stops. Dot looks at her for a long moment. Dot is kind."},
+"story.finale-4.outro.1": {"text": "'Oh, bother my buttons,' says Queen Vex, with her mouth full. 'This is the best cake in the land.'"},
+"story.finale-4.outro.2": {"text": "And for once, she forgets to say she's the grandest. Love wins, Princess. Even against jam.", "prince": "And for once, she forgets to say she's the grandest. Love wins, Prince. Even against jam."},
+"story.finale-4.question": {"text": "What did Queen Vex get to eat? Click the picture."},
+
+"story.finale-5.intro.1": {"text": "The sun goes down over Whisker Academy. Ted and Dot have one more thing to say to you."},
+"story.finale-5.outro.1": {"text": "You read this whole story, Princess, sound by sound and word by word. Your words were the spells. Kitty is sleepy. Good night.", "prince": "You read this whole story, Prince, sound by sound and word by word. Your words were the spells. Kitty is sleepy. Good night."},
+"pencil.start": {"text": "Start at the top."},
+"pencil.start-middle": {"text": "Start in the middle."},
+"pencil.down": {"text": "Pull down."},
+"pencil.up": {"text": "Back up."},
+"pencil.slide-up": {"text": "Slide up."},
+"pencil.around": {"text": "Around."},
+"pencil.curve": {"text": "Curve back, then forward."},
+"pencil.over": {"text": "Over."},
+"pencil.across": {"text": "Across."},
+"pencil.slide": {"text": "Slide down."},
+"pencil.hook": {"text": "Hook."},
+"pencil.lift": {"text": "Lift your pencil."},
+"pencil.dot": {"text": "Dot."},
+"pencil.watch": {"text": "Watch it again."},
+"pencil.where": {"text": "Where does the pencil start?"},
+"pencil.your-turn": {"text": "Now your pencil."},
+"pencil.say": {"text": "Say the sound each time."},
+"pencil.write": {"text": "Write this one."},
+"pencil.memory": {"text": "Write it from memory."},
+"pencil.trace": {"text": "Click the dots, in order."},
+"newstudent.hero": {"text": "Who will you be in the story? Click the one you want to be."},
+"newstudent.look": {"text": "Now pick how you look: your skin, your hair, and your hair color."},
+"newstudent.outfit": {"text": "Pick something to wear."},
+"newstudent.kitten": {"text": "A kitten is coming to be your friend! Pick your kitten's fur."},
+"newstudent.done": {"text": "You look wonderful! Your grown-up will help with the last part."},
+"start.newstudent": {"text": "New student!"},
+"start.continue": {"text": "Continue!"},
+"start.assessment": {"text": "Reading check, with your grown-up."},
+"start.grownups": {"text": "For grown-ups."},
+"start.who": {"text": "Who is playing? Click your picture."}
 }

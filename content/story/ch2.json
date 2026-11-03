@@ -1,0 +1,131 @@
+{
+  "id": "ch2",
+  "title": "The Cake Caper",
+  "lessons": [44],
+  "requiresKnown": ["a", "are", "have", "look", "of", "said", "see", "the", "you"],
+  "scenes": [
+    {
+      "id": "ch2-1",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "ted", "dot"],
+      "picture": "In a castle kitchen, a teddy bear in a bow tie licks jam off his paw beside a wedding cake taller than he is, while a rag doll ticks off a long list.",
+      "intro": ["story.ch2-1.intro.1", "story.ch2-1.intro.2", "story.ch2-1.intro.3"],
+      "sentences": [
+        {"id": "ch2-1.1", "text": "Dot has a list.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-1.2", "text": "Dot ticks the list.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-1.3", "text": "It is big, big, big!", "effect": "item-pop", "trick": "cake"},
+        {"id": "ch2-1.4", "text": "Ted licks a bit of jam.", "effect": "item-pop", "trick": "jam"}
+      ],
+      "outro": ["story.ch2-1.outro.1", "story.ch2-1.outro.2"]
+    },
+    {
+      "id": "ch2-2",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "gus-idle", "vex-grab"],
+      "picture": "In a dark castle kitchen at night, a goofy crow tugs at a little lock on the pantry door, while a silly queen with a big crooked crown holds open a big sack.",
+      "intro": ["story.ch2-2.intro.1", "story.ch2-2.intro.2"],
+      "sentences": [
+        {"id": "ch2-2.1", "text": "Dot has a lock.", "effect": "item-pop", "trick": "lock"},
+        {"id": "ch2-2.2", "text": "Click! The lock is on.", "effect": "sparkle", "trick": "lock"},
+        {"id": "ch2-2.3", "text": "Gus tugs the lock.", "effect": "crow-flap", "trick": "lock"},
+        {"id": "ch2-2.4", "text": "Gus has a big sack.", "effect": "item-pop", "trick": "sack"},
+        {"id": "ch2-2.5", "text": "It is in the sack!", "effect": "crow-flap", "trick": "sack"}
+      ],
+      "outro": ["story.ch2-2.outro.1"],
+      "question": {"line": "story.ch2-2.question", "choices": ["tricks/sack", "tricks/box", "tricks/cup"], "answer": "tricks/sack"}
+    },
+    {
+      "id": "ch2-3",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "ted", "tess", "bix"],
+      "picture": "In a castle hall, a little kitten in a wizard hat sniffs a trail of black footprints up the steps, while a teddy bear, a girl with two hair buns and a cheerful boy follow.",
+      "intro": ["story.ch2-3.intro.1", "story.ch2-3.intro.2"],
+      "sentences": [
+        {"id": "ch2-3.1", "text": "It is not on the rack!", "effect": "sparkle", "trick": null},
+        {"id": "ch2-3.2", "text": "Ted is in a fuss.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-3.3", "text": "Look! Black tracks!", "effect": "item-pop", "trick": "tracks"},
+        {"id": "ch2-3.4", "text": "The cat sniffs the tracks.", "effect": "kitten-cheer", "trick": "tracks"},
+        {"id": "ch2-3.5", "text": "The tracks are on the steps.", "effect": "sparkle", "trick": "tracks"}
+      ],
+      "outro": ["story.ch2-3.outro.1"]
+    },
+    {
+      "id": "ch2-4",
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "In a magic workshop, a girl with two hair buns and a cheerful boy stack a tall tower of socks with a rock on top, and a little kitten in a wizard hat watches.",
+      "intro": ["story.ch2-4.intro.1", "story.ch2-4.intro.2"],
+      "sentences": [
+        {"id": "ch2-4.1", "text": "Tess has a plan.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-4.2", "text": "You stack the socks.", "effect": "item-pop", "trick": "sock"},
+        {"id": "ch2-4.3", "text": "You stack a rock on top.", "effect": "item-pop", "trick": "rock"},
+        {"id": "ch2-4.4", "text": "It is a big trick!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch2-4.outro.1"]
+    },
+    {
+      "id": "ch2-5",
+      "bg": "tower",
+      "cast": ["princess", "kitten", "tess", "bix", "vex-idle"],
+      "picture": "In a tower room, a silly queen with a big crooked crown snores on a giant throne, while a girl with two hair buns and a cheerful boy tiptoe past in their socks.",
+      "intro": ["story.ch2-5.intro.1", "story.ch2-5.intro.2"],
+      "sentences": [
+        {"id": "ch2-5.1", "text": "You have socks on.", "effect": "sparkle", "trick": "sock"},
+        {"id": "ch2-5.2", "text": "Tip, tip, tip! Vex naps.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-5.3", "text": "Tess taps it.", "effect": "shrink", "trick": "cake"},
+        {"id": "ch2-5.4", "text": "Tess has it in a sack.", "effect": "item-pop", "trick": "sack"},
+        {"id": "ch2-5.5", "text": "Bix sets the trick on the rack.", "effect": "float", "trick": null}
+      ],
+      "outro": ["story.ch2-5.outro.1"]
+    },
+    {
+      "id": "ch2-6",
+      "bg": "tower",
+      "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
+      "picture": "In a tower room, a silly queen with a big crooked crown bites into a tall white cake full of socks, while a goofy crow licks a rock and a kitten peeks around the door.",
+      "intro": ["story.ch2-6.intro.1", "story.ch2-6.intro.2"],
+      "sentences": [
+        {"id": "ch2-6.1", "text": "Vex will have a big bit.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-6.2", "text": "Vex bit it.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-6.3", "text": "Vex bit a sock!", "effect": "vex-bonk", "trick": "sock"},
+        {"id": "ch2-6.4", "text": "Spit, spit, spit!", "effect": "vex-slip", "trick": null},
+        {"id": "ch2-6.5", "text": "Gus licks the rock.", "effect": "crow-flap", "trick": "rock"}
+      ],
+      "outro": ["story.ch2-6.outro.1", "story.ch2-6.outro.2", "story.ch2-6.outro.3"],
+      "question": {"line": "story.ch2-6.question", "choices": ["tricks/sock", "tricks/jam", "tricks/bell"], "answer": "tricks/sock"},
+      "reward": {"wardrobe": "o-baker"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch2-side-1",
+      "bg": "toyroom",
+      "cast": ["princess", "kitten", "nell"],
+      "picture": "In a toy room, a baby giggles at a big striped sock that hops across the rug, with a little kitten tail poking out of the top.",
+      "intro": ["story.ch2-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch2-side-1.1", "text": "Nell has a big sock.", "effect": "item-pop", "trick": "sock"},
+        {"id": "ch2-side-1.2", "text": "The cat hid in the sock.", "effect": "kitten-cheer", "trick": "sock"},
+        {"id": "ch2-side-1.3", "text": "The sock hops!", "effect": "float", "trick": "sock"},
+        {"id": "ch2-side-1.4", "text": "Nell pats the sock.", "effect": "sparkle", "trick": null},
+        {"id": "ch2-side-1.5", "text": "It is the cat!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch2-side-1.outro.1"]
+    },
+    {
+      "id": "ch2-side-2",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "bix", "gus-idle"],
+      "picture": "In a castle hall, a cheerful boy floats a black sock through the air with his magic, and it lands right on the head of a goofy crow, who flaps in a circle.",
+      "intro": ["story.ch2-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch2-side-2.1", "text": "Bix taps a black sock.", "effect": "sparkle", "trick": "sock"},
+        {"id": "ch2-side-2.2", "text": "The sock is up!", "effect": "float", "trick": "sock"},
+        {"id": "ch2-side-2.3", "text": "The sock is on Gus!", "effect": "crow-flap", "trick": "sock"},
+        {"id": "ch2-side-2.4", "text": "Gus can not see.", "effect": "crow-flap", "trick": null},
+        {"id": "ch2-side-2.5", "text": "Gus said quack!", "effect": "crow-flap", "trick": null}
+      ],
+      "outro": ["story.ch2-side-2.outro.1"]
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { artFile } from '../core/art-file.js';
 import { h } from '../core/dom.js';
 import { heroText } from '../profile/hero.js';
 
@@ -8,7 +9,7 @@ export const COPILOT_TURN = Object.freeze({
 
 export const COPILOT_HELP = 'Count it if she read the right word. Wait 5 seconds before helping.';
 
-export const artUrl = (id) => `assets/art/${id}.png`;
+export const artUrl = (id) => `assets/art/${artFile(id)}`;
 
 const picture = (id, className) => h('img', { class: className, src: artUrl(id), alt: '', draggable: 'false' });
 
@@ -163,6 +164,42 @@ export function copilotBanner({ onYes, onAgain, onHelp, onUndo, onPass, helpText
 export function setUndo(banner, on) {
   const undo = (banner.querySelector('.copilot-undo'));
   if (undo) undo.hidden = !on;
+}
+
+export const PENCIL_TURN = Object.freeze({
+  letter: Object.freeze({ title: 'Grown-up: watch the first stroke.', yes: 'Started in the right place, went the right way', again: 'Watch it again' }),
+  write: Object.freeze({ title: 'Grown-up: is it on the paper?', yes: 'Done', again: 'Hear it again' }),
+});
+
+export function pencilBanner({ kind, onYes, onAgain, onSkip, hero = 'princess' }) {
+  const words = PENCIL_TURN[kind];
+  const keys = {};
+  const choice = (key, cls, mark, label, fn) => {
+    const button = h('button', { type: 'button', class: ['copilot-choice', cls], 'aria-keyshortcuts': key, onClick: ( event) => {
+      if ((event?.detail ?? 0) >= 2) return;
+      pop(button);
+      fn();
+    } }, h('span', { class: 'copilot-mark', 'aria-hidden': 'true' }, mark), h('span', {}, label));
+    keys[key] = button;
+    return button;
+  };
+  const banner = h('div', { class: 'copilot-banner pencil-banner', role: 'group', 'aria-label': "Grown-up's turn" },
+    h('p', { class: 'copilot-title' }, heroText(words.title, hero)),
+    h('div', { class: 'copilot-tips' }),
+    h('div', { class: 'copilot-choices' },
+      choice('1', 'yes', '✓', words.yes, onYes),
+      choice('2', 'again', '↻', words.again, onAgain),
+      choice('3', 'skip', '→', 'Skip today', onSkip)));
+  keysOnPage(banner, (event) => {
+    if (banner.hidden || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+    const target = (event.target);
+    if (target?.closest?.('input, textarea, select, [contenteditable]')) return;
+    const button = keys[event.key];
+    if (!button) return;
+    event.preventDefault();
+    button.click();
+  });
+  return banner;
 }
 
 export const COPILOT_HOLD = 'Grown-up: Continue, or Undo your last tap.';

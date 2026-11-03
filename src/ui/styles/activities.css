@@ -429,6 +429,33 @@
   100% { transform: translate(470px, 345px) scale(0.25); opacity: 0; }
 }
 
+.robot-top { display: flex; align-items: center; justify-content: center; gap: 40px; }
+.robot-gus { width: 220px; height: auto; transition: transform 0.2s; }
+.robot-gus.reading { transform: rotate(-6deg) scale(1.05); }
+.robot-word { padding: 4px 48px 14px; font-size: 96px; }
+.robot-part { border-radius: 16px; transition: box-shadow 0.2s, background 0.2s; }
+.robot-part.heart { background: #fde6ef; box-shadow: 0 0 0 6px #fbd3e2, 0 0 24px 8px #f4a6c4; }
+.robot-choices { gap: 96px; }
+.robot-choice { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.robot-pick {
+  width: 110px;
+  height: 110px;
+  padding: 0;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--tile-face);
+  box-shadow: 0 6px 0 var(--shadow);
+  cursor: pointer;
+}
+.robot-pick img { display: block; width: 76px; height: 76px; margin: auto; }
+.robot-pick:not(.not-yet):active { transform: translateY(4px); box-shadow: 0 2px 0 var(--shadow); }
+
+.activity-blink .activity-work { top: 60px; height: 440px; gap: 32px; }
+.blink-word { padding: 18px 72px 30px; font-size: 120px; transition: color 0.6s ease-in-out; }
+.blink-word.faded { color: transparent; }
+.blink-row { display: flex; justify-content: center; }
+@media (prefers-reduced-motion: reduce) { .blink-word { transition: none; } }
+
 .activity-story > .scene-bg, .activity-story > .activity-kitten { display: none; }
 .story-stage-host { position: absolute; inset: 0; }
 .activity-story .activity-work {
@@ -599,6 +626,16 @@
   82% { transform: translateY(0) scale(1.03, 0.96); }
   100% { transform: translateY(0); }
 }
+.fx-bounce { animation: bounce 1.6s linear; }
+@keyframes bounce {
+  0% { transform: translateY(0); animation-timing-function: ease-out; }
+  22% { transform: translateY(-150px); animation-timing-function: ease-in; }
+  45% { transform: translateY(0) scale(1.1, 0.86); animation-timing-function: ease-out; }
+  61% { transform: translateY(-80px); animation-timing-function: ease-in; }
+  78% { transform: translateY(0) scale(1.06, 0.92); animation-timing-function: ease-out; }
+  89% { transform: translateY(-36px); animation-timing-function: ease-in; }
+  100% { transform: translateY(0); }
+}
 
 .activity-debug {
   position: absolute;
@@ -616,3 +653,41 @@
 }
 .activity-debug h2 { margin: 0 0 12px; font-size: 32px; }
 .activity-debug ol { margin: 0 0 16px; padding-left: 36px; }
+
+.activity-pencil .activity-work { top: 100px; height: 460px; }
+.pencil-board {
+  position: relative;
+  height: 440px;
+  width: calc(440px * var(--w) / var(--h));
+  flex: none;
+}
+.pencil-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pencil-rule { stroke: #8fa7b3; stroke-width: 3; }
+.pencil-rule.middle { stroke-dasharray: 14 12; }
+.pencil-svg path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 22; }
+.pencil-ghost path { stroke: #ddd5c4; }
+.pencil-model path, .pencil-trace path { stroke: var(--ink); stroke-dasharray: 1 1; }
+.pencil-ghost, .pencil-model, .pencil-trace { display: none; }
+.pencil-board[data-show="ghost"] .pencil-ghost,
+.pencil-board[data-show="trace"] .pencil-ghost,
+.pencil-board[data-show="trace"] .pencil-trace,
+.pencil-board[data-show="model"] .pencil-model { display: inline; }
+.pencil-dots { position: absolute; inset: 0; }
+.pencil-dot {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  border: 5px solid var(--line);
+  border-radius: 50%;
+  background: var(--tile-face);
+  opacity: 0.4;
+  cursor: pointer;
+}
+.pencil-dot.start { background: #4caf50; }
+.pencil-dot.live { opacity: 1; box-shadow: 0 0 0 8px var(--glow); }
+.pencil-dot.choice { width: 72px; height: 72px; background: var(--gold); }
+.pencil-dictate { display: flex; align-items: center; gap: 40px; }
+.pencil-writing .activity-work { top: 92px; height: 300px; justify-content: flex-start; }
+.pencil-writing .pencil-board { height: 290px; width: calc(290px * var(--w) / var(--h)); }
+.pencil-banner .copilot-choice.yes { flex: 1.7; }

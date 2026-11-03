@@ -2,7 +2,11 @@ import { openStore } from './core/storage.js';
 import { createOneWindow, flagFailedSaves } from './core/one-window.js';
 import { loadContent } from './content/load.js';
 import { readSaved } from './profile/saved.js';
+import { createStudentStore } from './profile/students.js';
+import { migrateToStudents } from './profile/migrate.js';
+import { switchStudent } from './profile/switch-student.js';
 import { heroVariant } from './profile/hero.js';
+import { withPointerLog } from './profile/profile.js';
 import { todayFrom } from './core/dates.js';
 import { createRng } from './core/rng.js';
 import { createAudio, unlockOnGestures } from './core/audio.js';
@@ -63,7 +67,7 @@ async function boot() {
   const stage = mountStage(root);
   const sceneLayer = h('div', { class: 'scene-layer' });
 
-  const store = await openStore({ backend: launch.store });
+  const store = createStudentStore(await openStore({ backend: launch.store }), { day: () => todayFrom(launch.dayOffset) });
   let ctx;
   let catchUp = null;
   const catchUpNow = () => {
@@ -95,8 +99,10 @@ async function boot() {
     onMissing: (id) => console.debug(`No audio for ${id}`),
     variant: () => heroVariant(ctx?.profile),
   });
-  await audio.reloadOverrides();
   const playing = await starting;
+  if (playing) await migrateToStudents(store.base, { day: () => todayFrom(launch.dayOffset) });
+  await store.reload();
+  await audio.reloadOverrides();
   const { settings, profile, states, today } = await readSaved(store);
 
   let replay = null;
@@ -128,6 +134,7 @@ async function boot() {
     saveFailed: false,
     async save(extra) {
       applyComfort(stage.el, game.settings);
+      game.profile = withPointerLog(game.profile, game.settings.taughtUpTo, game.day);
       const pages = game.pages;
       const saved = await windows.save(extra);
       if (saved && game.pages === pages) game.pages = null;
@@ -140,11 +147,20 @@ async function boot() {
     onHome: home.ask,
     async playHere() {
       await windows.takeOver();
+      await migrateToStudents(store.base, { day: () => todayFrom(launch.dayOffset) });
+      await store.reload();
       Object.assign(game, await readSaved(store), { pages: null });
       await audio.reloadOverrides();
       applyComfort(stage.el, game.settings);
       away = false;
-      await game.router.go(launch.scene && launch.scene !== ELSEWHERE ? launch.scene : 'hub', launch.params);
+      await game.router.go(launch.scene && launch.scene !== ELSEWHERE ? launch.scene : 'start', launch.params);
+    },
+    async useStudent(id) {
+      await switchTo(() => store.use(id));
+      await game.save();
+    },
+    async newStudent() {
+      await switchTo(() => { store.startNew(); });
     },
     say(lineId) {
       const id = `v.${lineId}`;
@@ -154,6 +170,10 @@ async function boot() {
     setReplay,
   });
   ctx = game;
+  const switchTo = async (change) => {
+    await switchStudent(game, change);
+    applyComfort(stage.el, game.settings);
+  };
   game.save = flagFailedSaves(game, game.save);
   const saveHidden = flagFailedSaves(game, () => windows.hide());
   game.router = createRouter(sceneLayer, game, { onNavigate: (name) => { audio.stop(); setReplay(null); home.arrived(name); } });
@@ -172,7 +192,7 @@ async function boot() {
 
   if (playing && windows.playing()) {
     await finishCutOff(game);
-    if (!away) await game.router.go(launch.scene ?? 'hub', launch.params);
+    if (!away) await game.router.go(launch.scene ?? 'start', launch.params);
   } else {
     away = true;
     await game.router.go(ELSEWHERE);

@@ -1,7 +1,7 @@
 import { advanceStory } from '../activities/story.js';
 import { h } from '../core/dom.js';
 import { createArrivalGuard } from '../core/lock.js';
-import { buildSession, openToHer } from '../engine/session-builder.js';
+import { buildSession, isPencilDay, openToHer } from '../engine/session-builder.js';
 import { createMonitor } from '../engine/frustration.js';
 import { applyResult, newItemState } from '../engine/itemstate.js';
 import { dayOptions } from '../engine/page-recipe.js';
@@ -9,7 +9,7 @@ import { closedPass, howOf, markedBack, passesToReturn, reopenedPass, reviewRoun
 import { nextSpellTier } from '../engine/spell-tier.js';
 import { heroOf } from '../profile/hero.js';
 import { earnMadePage, earnPage, firstWaiting, pagesNow, princeTwin } from '../profile/pages.js';
-import { isExtraPractice, latestAccuracy } from '../profile/profile.js';
+import { isExtraPractice, latestAccuracy, owns, withFlash, withReread, withUnlocked } from '../profile/profile.js';
 import { artUrl, bigButton, layeredArt, lessonBar, pathStones, setLessonBar } from '../ui/components.js';
 import { wordsBuilt, wordsForStrip } from '../ui/print-pages.js';
 import { castArt } from '../ui/story-stage.js';
@@ -20,7 +20,7 @@ import { pickGiftChoices } from './reward.js';
 export { nextGift, pickGiftChoices } from './reward.js';
 
 
-const PATH = Object.freeze([['warmup', 'cards'], ['spell'], ['chain', 'charm'], ['story']]);
+const PATH = Object.freeze([['warmup', 'cards', 'pencil'], ['spell'], ['chain', 'charm'], ['story']]);
 const ACTIVE_MS = 60000;
 const NEXT_MS = 1600;
 const SAVE_EVERY_MS = 2000;
@@ -154,7 +154,7 @@ export function startToday(plan, day, profile, settings) {
     day, taughtUpTo: settings.taughtUpTo, sShContrast: settings.sShContrast, plan,
     done: 0, answered: 0, right: 0, ms: 0, applied: [],
     before: { tricks: strings(profile.unlocked?.tricks), charms: strings(profile.unlocked?.charms), sparkles: strings(profile.unlocked?.sparkles) },
-    colorin: null, scene: null, recorded: false, copilot: null, peak: 0, answersIn: null,
+    colorin: null, scene: null, sceneGift: null, recorded: false, copilot: null, peak: 0, answersIn: null,
   };
 }
 
@@ -172,7 +172,7 @@ function planFrom(raw) {
     const items = [];
     for (const i of r.items) {
       if (!isPlainObject(i) || typeof i.id !== 'string' || typeof i.mode !== 'string') return null;
-      items.push({ id: i.id, mode: i.mode, isNew: i.isNew === true, isReview: i.isReview === true });
+      items.push({ id: i.id, mode: i.mode, isNew: i.isNew === true, isReview: i.isReview === true, ...(i.model === true ? { model: (true) } : {}) });
     }
     rounds.push({ activity: (r.activity), items });
   }
@@ -209,6 +209,7 @@ export function resumeToday(stored, day, settings) {
     before: { tricks: strings(stored.before?.tricks), charms: strings(stored.before?.charms), sparkles: strings(stored.before?.sparkles) },
     colorin: typeof stored.colorin === 'string' && stored.colorin !== '' ? stored.colorin : null,
     scene: typeof stored.scene === 'string' && stored.scene !== '' ? stored.scene : null,
+    sceneGift: typeof stored.sceneGift === 'string' && stored.sceneGift !== '' ? stored.sceneGift : null,
     recorded: stored.recorded === true,
     copilot: typeof stored.copilot === 'boolean' ? stored.copilot : null,
     peak: Number.isInteger(stored.peak) && stored.peak >= 0 && stored.peak <= 100 ? stored.peak : 0,
@@ -229,6 +230,7 @@ export function restartToday(stored, plan, day, profile, settings) {
     ms: Number.isFinite(stored.ms) && stored.ms > 0 ? stored.ms : 0,
     before,
     scene: typeof stored.scene === 'string' && stored.scene !== '' ? stored.scene : null,
+    sceneGift: typeof stored.sceneGift === 'string' && stored.sceneGift !== '' ? stored.sceneGift : null,
     copilot: typeof stored.copilot === 'boolean' ? stored.copilot : null,
   };
 }
@@ -245,6 +247,22 @@ const sessionRecord = (today, copilot, complete) => ({
 export function afterRound(profile, today, { ms, answered, right, applied, copilot }) {
   const next = { ...today, done: today.done + 1, answered, right, ms, applied: [...applied], recorded: true };
   return { today: next, profile: recordSession(profile, sessionRecord(next, copilot, false), today.recorded) };
+}
+
+export function afterScene(profile, today, pick) {
+  const moved = pick?.kind === 'main' || pick?.kind === 'side';
+  const { colorin, wardrobe } = (moved && pick.scene?.reward) || {};
+  const scene = pick?.scene?.id;
+  const gift = typeof wardrobe === 'string' && wardrobe !== '' && !owns(profile, { type: 'wardrobe', id: wardrobe });
+  return {
+    profile: gift ? withUnlocked(profile, 'wardrobe', wardrobe) : profile,
+    today: {
+      ...today,
+      ...(typeof colorin === 'string' && colorin !== '' ? { colorin } : {}),
+      ...(typeof scene === 'string' && scene !== '' ? { scene } : {}),
+      ...(gift ? { sceneGift: wardrobe } : {}),
+    },
+  };
 }
 
 export function noteScene(today, pick) {
@@ -340,7 +358,7 @@ export async function finishCutOffDay(ctx) {
     score = { ...score, answered, right };
     if (story) {
       profile = advanceStory(profile, story);
-      today = noteScene(today, story);
+      ({ profile, today } = afterScene(profile, today, story));
     }
     ({ profile, today } = afterRound(profile, today, score));
   }
@@ -550,8 +568,13 @@ export function mount(el, ctx) {
     let cuddle = false;
 
     const onScene = (pick) => {
-      today = noteScene(today, pick);
+      ({ profile: ctx.profile, today } = afterScene(ctx.profile, today, pick));
       throttle.poke();
+    };
+    const onReread = ({ scene, wpm }) => {
+      const before = ctx.profile;
+      ctx.profile = withReread(ctx.profile, { day: today.day, scene, wpm });
+      if (ctx.profile !== before) throttle.poke();
     };
     const run = async (round, roundHooks) => {
       try {
@@ -566,7 +589,13 @@ export function mount(el, ctx) {
       today = { ...today, answersIn: { round: groups.length - 1, answered, right, story: storyMove(pick) } };
       saveNow();
     };
-    const play = (round, i, part) => run(round, { record, undo, pass, monitor: hooks.monitor, copilot, protege: round.activity === protegeIn, extra, onScene,
+    const onFlash = (round) => {
+      const before = ctx.profile;
+      ctx.profile = withFlash(ctx.profile, round);
+      if (ctx.profile !== before) throttle.poke();
+    };
+    const pencilDay = isPencilDay(plan);
+    const play = (round, i, part) => run(round, { record, undo, pass, monitor: hooks.monitor, copilot, protege: round.activity === protegeIn, extra, onScene, onReread, onFlash, pencilDay,
       progress: (fraction) => showBar(lessonPercent(groups, i, part, fraction)),
       answersIn: i === groups.length - 1 && part === groups[i].length - 1 ? answersIn : undefined });
 
@@ -642,7 +671,7 @@ export function mount(el, ctx) {
           ctx.profile = withPass(ctx.profile, id, mode, day);
           save();
         },
-        monitor: hooks.monitor, copilot, protege: false, extra, review: true,
+        monitor: hooks.monitor, copilot, protege: false, extra, review: true, pencilDay: isPencilDay(plan),
       };
       for (const round of reviewRounds(items)) {
         await run(round, backHooks);
@@ -651,7 +680,7 @@ export function mount(el, ctx) {
     };
     if (!cuddle) await passesBack();
     if (!live) return;
-    await ctx.router.go('reward', { gifts: end.gifts, extra, page: end.page, maker: end.maker, ...madeToday(ctx.profile, today), stones: total });
+    await ctx.router.go('reward', { gifts: end.gifts, sceneGift: today.sceneGift, extra, page: end.page, maker: end.maker, ...madeToday(ctx.profile, today), stones: total });
   };
   walk().catch((err) => console.error('The session stopped', err));
 

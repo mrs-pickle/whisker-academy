@@ -2,7 +2,7 @@ import { h } from '../core/dom.js';
 import { createLock } from '../core/lock.js';
 import { artUrl } from './components.js';
 
-const NO_HOME = Object.freeze(new Set(['hub', 'door', 'elsewhere']));
+const NO_HOME = Object.freeze(new Set(['hub', 'door', 'elsewhere', 'start']));
 
 export const showsHome = (scene) => !NO_HOME.has(scene);
 

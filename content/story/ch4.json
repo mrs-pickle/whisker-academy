@@ -1,0 +1,149 @@
+{
+  "id": "ch4",
+  "title": "The Silent Bells",
+  "lessons": [46, 47],
+  "requiresKnown": ["a", "are", "book", "goes", "look", "see", "the", "want", "we", "what", "you"],
+  "scenes": [
+    {
+      "id": "ch4-1",
+      "bg": "belfry",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "At the top of a bell tower, a girl with two hair buns and a cheerful boy tap big bells that make no sound, while a little kitten in a wizard hat covers her ears for nothing.",
+      "intro": ["story.ch4-1.intro.1", "story.ch4-1.intro.2"],
+      "sentences": [
+        {"id": "ch4-1.1", "text": "Tess taps this bell.", "effect": "sparkle", "trick": "bell"},
+        {"id": "ch4-1.2", "text": "Bix taps that bell.", "effect": "sparkle", "trick": "bell"},
+        {"id": "ch4-1.3", "text": "Then you tap the big bell.", "effect": "sparkle", "trick": "bell"},
+        {"id": "ch4-1.4", "text": "The bells are still!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch4-1.outro.1"]
+    },
+    {
+      "id": "ch4-2",
+      "bg": "belfry",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "In a bell tower, a cheerful boy pulls a long striped sock out of a huge bell, while a girl with two hair buns holds her nose and a little kitten peeks in.",
+      "intro": ["story.ch4-2.intro.1"],
+      "sentences": [
+        {"id": "ch4-2.1", "text": "Look in this bell!", "effect": "sparkle", "trick": null},
+        {"id": "ch4-2.2", "text": "It has a sock in it!", "effect": "item-pop", "trick": "sock"},
+        {"id": "ch4-2.3", "text": "Bix tugs and tugs.", "effect": "float", "trick": "sock"},
+        {"id": "ch4-2.4", "text": "That sock is stuck!", "effect": "sparkle", "trick": "sock"}
+      ],
+      "outro": ["story.ch4-2.outro.1"],
+      "question": {"line": "story.ch4-2.question", "choices": ["tricks/sock", "tricks/jam", "tricks/bug"], "answer": "tricks/sock"}
+    },
+    {
+      "id": "ch4-3",
+      "bg": "toyroom",
+      "cast": ["princess", "kitten", "ted", "dot"],
+      "picture": "In a toy room, a teddy bear in a bow tie and a rag doll get a big warm hug from a child and a little kitten in a wizard hat.",
+      "intro": ["story.ch4-3.intro.1"],
+      "sentences": [
+        {"id": "ch4-3.1", "text": "Ted and Dot are sad.", "effect": "sparkle", "trick": null},
+        {"id": "ch4-3.2", "text": "You hug them.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch4-3.3", "text": "The cat hugs them.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch4-3.4", "text": "We will fix that bell!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch4-3.outro.1"]
+    },
+    {
+      "id": "ch4-4",
+      "bg": "workshop",
+      "cast": ["princess", "kitten", "bix", "tess"],
+      "picture": "In a magic workshop, a cheerful boy opens a big old book with no words on its cover, and a girl with two hair buns points at a picture of fuzzy moths inside.",
+      "intro": ["story.ch4-4.intro.1"],
+      "sentences": [
+        {"id": "ch4-4.1", "text": "Bix has a big book.", "effect": "item-pop", "trick": "book"},
+        {"id": "ch4-4.2", "text": "We look in this book.", "effect": "sparkle", "trick": "book"},
+        {"id": "ch4-4.3", "text": "Then we see it!", "effect": "sparkle", "trick": null},
+        {"id": "ch4-4.4", "text": "That is what we want!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch4-4.outro.1"]
+    },
+    {
+      "id": "ch4-5",
+      "lesson": 47,
+      "bg": "hub",
+      "cast": ["princess", "kitten", "bix", "tess"],
+      "picture": "On a garden path in the evening, a cheerful boy floats a glowing lamp up toward a bell tower, and a cloud of fuzzy moths follows it while a girl with two hair buns waves.",
+      "intro": ["story.ch4-5.intro.1", "story.ch4-5.intro.2"],
+      "sentences": [
+        {"id": "ch4-5.1", "text": "We set a lamp on the path.", "effect": "item-pop", "trick": "lamp"},
+        {"id": "ch4-5.2", "text": "A moth is at the lamp.", "effect": "item-pop", "trick": "moth"},
+        {"id": "ch4-5.3", "text": "Then ten moths are at it!", "effect": "item-pop", "trick": "moth"},
+        {"id": "ch4-5.4", "text": "Bix taps the lamp.", "effect": "sparkle", "trick": "lamp"},
+        {"id": "ch4-5.5", "text": "The lamp goes up, up, up!", "effect": "float", "trick": "lamp"}
+      ],
+      "outro": ["story.ch4-5.outro.1"],
+      "question": {"line": "story.ch4-5.question", "choices": ["tricks/lamp", "tricks/fan", "tricks/mop"], "answer": "tricks/lamp"}
+    },
+    {
+      "id": "ch4-6",
+      "lesson": 47,
+      "bg": "belfry",
+      "cast": ["princess", "kitten", "bix", "thud"],
+      "picture": "At the top of a bell tower, a very big sleepy cat lands on a huge bell as fuzzy moths nibble thick socks and one sock pops out, while a kitten and a cheerful boy cheer.",
+      "intro": ["story.ch4-6.intro.1", "story.ch4-6.intro.2"],
+      "sentences": [
+        {"id": "ch4-6.1", "text": "The moths bit the thick socks.", "effect": "item-pop", "trick": "sock"},
+        {"id": "ch4-6.2", "text": "Thick socks get thin.", "effect": "sparkle", "trick": "sock"},
+        {"id": "ch4-6.3", "text": "Thud is a bell cat.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch4-6.4", "text": "Thud sat on the bell.", "effect": "sparkle", "trick": "bell"},
+        {"id": "ch4-6.5", "text": "Thud went thud!", "effect": "kitten-cheer", "trick": "bell"}
+      ],
+      "outro": ["story.ch4-6.outro.1", "story.ch4-6.outro.2"]
+    },
+    {
+      "id": "ch4-7",
+      "lesson": 47,
+      "bg": "tower",
+      "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
+      "picture": "In a tower room, a silly queen with a big crooked crown sits in a bubble bath as soggy socks rain down on her, while a goofy crow ducks and sleepy moths flutter about.",
+      "intro": ["story.ch4-7.intro.1"],
+      "sentences": [
+        {"id": "ch4-7.1", "text": "Vex is in the bath.", "effect": "item-pop", "trick": "bath"},
+        {"id": "ch4-7.2", "text": "The bells are back!", "effect": "sparkle", "trick": "bell"},
+        {"id": "ch4-7.3", "text": "The socks fell with a thud.", "effect": "vex-bonk", "trick": "sock"},
+        {"id": "ch4-7.4", "text": "Thick socks are on Vex!", "effect": "vex-slip", "trick": "sock"}
+      ],
+      "outro": ["story.ch4-7.outro.1", "story.ch4-7.outro.2", "story.ch4-7.outro.3"],
+      "question": {"line": "story.ch4-7.question", "choices": ["tricks/sock", "tricks/cake", "tricks/ball"], "answer": "tricks/sock"},
+      "reward": {"wardrobe": "k-moth-wings"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch4-side-1",
+      "lesson": 47,
+      "bg": "toyroom",
+      "cast": ["princess", "kitten", "nell"],
+      "picture": "In a toy room, a baby in a bubble bath blows a big puff of bubbles, and a little kitten in a wizard hat hops out covered from ears to tail in foam.",
+      "intro": ["story.ch4-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch4-side-1.1", "text": "Nell has a bath.", "effect": "item-pop", "trick": "bath"},
+        {"id": "ch4-side-1.2", "text": "The cat is in the bath!", "effect": "kitten-cheer", "trick": "bath"},
+        {"id": "ch4-side-1.3", "text": "Nell puffs and puffs.", "effect": "float", "trick": null},
+        {"id": "ch4-side-1.4", "text": "The cat is all fuzz!", "effect": "kitten-cheer", "trick": "fuzz"},
+        {"id": "ch4-side-1.5", "text": "The cat hops off!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch4-side-1.outro.1"]
+    },
+    {
+      "id": "ch4-side-2",
+      "lesson": 47,
+      "bg": "belfry",
+      "cast": ["princess", "kitten", "thud", "gus-idle"],
+      "picture": "In a bell tower, a very big sleepy cat and a goofy crow play tug of war with a thick striped sock, and the crow tumbles over backward.",
+      "intro": ["story.ch4-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch4-side-2.1", "text": "Thud has a thick sock.", "effect": "item-pop", "trick": "sock"},
+        {"id": "ch4-side-2.2", "text": "Gus will get that sock.", "effect": "crow-flap", "trick": "sock"},
+        {"id": "ch4-side-2.3", "text": "Thud and Gus tug and tug.", "effect": "crow-flap", "trick": "sock"},
+        {"id": "ch4-side-2.4", "text": "Gus fell back with a thud!", "effect": "crow-flap", "trick": null},
+        {"id": "ch4-side-2.5", "text": "Thud got the sock.", "effect": "kitten-cheer", "trick": "sock"}
+      ],
+      "outro": ["story.ch4-side-2.outro.1"]
+    }
+  ]
+}

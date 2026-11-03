@@ -14,6 +14,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   tint: 'paper',
   pin: null,
   printWords: true,
+  flash: false,
   tipsSeen: Object.freeze({}),
 });
 
@@ -47,7 +48,7 @@ function tipsSeen(value) {
 const SETTING_TYPES = Object.freeze({
   taughtUpTo: 'number', sessionMinutes: 'number', copilot: 'boolean', sShContrast: 'boolean', ieEmphasis: 'boolean',
   cardRoutine: 'string', breakStyle: 'string', mixOffered: 'boolean', textSpacing: 'string', tint: 'string', pin: 'string',
-  printWords: 'boolean', tipsSeen: 'object',
+  printWords: 'boolean', flash: 'boolean', tipsSeen: 'object',
 });
 
 export function isSettingsShape(raw) {
@@ -74,6 +75,7 @@ export function normalizeSettings(raw) {
     tint: name(r.tint, d.tint),
     pin: typeof r.pin === 'string' && r.pin.length > 0 && r.pin.length <= MAX_PIN_HASH_LENGTH ? r.pin : d.pin,
     printWords: bool(r.printWords, d.printWords),
+    flash: bool(r.flash, d.flash),
     tipsSeen: tipsSeen(r.tipsSeen),
   };
 }

@@ -2,9 +2,11 @@ import { REV_KEY } from '../core/one-window.js';
 import { isItemState } from '../engine/itemstate.js';
 import { isProfileShape } from './profile.js';
 import { isSettingsShape } from './settings.js';
+import { BACKUP_KEY_PREFIX, DEVICE_SETTINGS, MAX_STUDENTS, STUDENTS_KEY, normalizeStudents } from './students.js';
 
 
-const LOCAL_KEYS = new Set([REV_KEY]);
+const isLocalKey = (key) => key === REV_KEY || key.startsWith(BACKUP_KEY_PREFIX);
+const STUDENT_KEY = /^s:s[1-9][0-9]{0,3}:(.*)$/;
 const SHAPES = Object.freeze({
   settings: isSettingsShape,
   profile: isProfileShape,
@@ -56,7 +58,7 @@ function dataUrlToBlob(url) {
 export async function exportBackup(store) {
   const kv = Object.create(null);
   for (const key of await store.keys()) {
-    if (LOCAL_KEYS.has(key)) continue;
+    if (isLocalKey(key)) continue;
     const value = await store.get(key);
     if (value === undefined) continue;
     try {
@@ -91,28 +93,41 @@ function parseBackup(text) {
   }
   const damaged = { ok: false, reason: 'That backup file looks damaged, so nothing was changed.' };
   if (!isPlainObject(data.kv) || !isPlainObject(data.blobs)) return damaged;
-  for (const [key, ok] of Object.entries(SHAPES)) if (Object.hasOwn(data.kv, key) && !ok(data.kv[key])) return damaged;
+  for (const [key, value] of Object.entries(data.kv)) {
+    const own = STUDENT_KEY.exec(key)?.[1] ?? key;
+    const ok = Object.hasOwn(SHAPES, own) ? SHAPES[ (own)] : null;
+    if (ok && !ok(value)) return damaged;
+  }
+  if (Object.hasOwn(data.kv, STUDENTS_KEY)) {
+    const raw = data.kv[STUDENTS_KEY];
+    if (!Array.isArray(raw) || normalizeStudents(raw).length !== raw.length || raw.length === 0 || raw.length > MAX_STUDENTS) return damaged;
+  }
   const blobs = new Map();
   for (const [id, url] of Object.entries(data.blobs)) {
     const blob = dataUrlToBlob(url);
     if (!blob) return damaged;
     blobs.set(id, blob);
   }
-  return { ok: true, kv: new Map(Object.entries(data.kv).filter(([key]) => !LOCAL_KEYS.has(key))), blobs };
+  return { ok: true, kv: new Map(Object.entries(data.kv).filter(([key]) => !isLocalKey(key))), blobs };
 }
+
+const hasSessions = (profile) => profile !== null && typeof profile === 'object' && Array.isArray(profile.sessions) && profile.sessions.length > 0;
 
 export function checkBackup(text) {
   const parsed = parseBackup(text);
   if (!parsed.ok) return parsed;
-  const profile = parsed.kv.get('profile');
-  const hasProgress = profile !== null && typeof profile === 'object' && Array.isArray(profile.sessions) && profile.sessions.length > 0;
-  return { ok: true, hasPin: typeof parsed.kv.get('settings')?.pin === 'string', hasProgress };
+  const hasPin = typeof parsed.kv.get('settings')?.pin === 'string';
+  if (parsed.kv.has(STUDENTS_KEY)) {
+    const ids = normalizeStudents(parsed.kv.get(STUDENTS_KEY)).map((s) => s.id);
+    return { ok: true, kind: 'device', students: ids.length, hasPin, hasProgress: ids.some((id) => hasSessions(parsed.kv.get(`s:${id}:profile`))) };
+  }
+  return { ok: true, kind: 'student', students: 1, hasPin, hasProgress: hasSessions(parsed.kv.get('profile')) };
 }
 
 async function replaceAll(store, kv, blobs) {
   for (const [key, value] of kv) await store.set(key, value);
   for (const [id, blob] of blobs) await store.putBlob(id, blob);
-  for (const key of await store.keys()) if (!kv.has(key) && !LOCAL_KEYS.has(key)) await store.del(key);
+  for (const key of await store.keys()) if (!kv.has(key) && !isLocalKey(key)) await store.del(key);
   for (const id of await store.blobIds()) if (!blobs.has(id)) await store.delBlob(id);
 }
 
@@ -127,9 +142,22 @@ async function snapshot(store) {
   return { kv, blobs };
 }
 
-export async function importBackup(store, text) {
+export async function importBackup(store, text, { keepPin = false } = {}) {
   const parsed = parseBackup(text);
   if (!parsed.ok) return parsed;
+  const deviceFile = parsed.kv.has(STUDENTS_KEY);
+  const oneStudent = typeof ( (store).student) === 'string';
+  if (deviceFile && oneStudent) return { ok: false, reason: 'That backup holds everything on a device, so it restores only as everything on this device; nothing was changed.' };
+  if (!deviceFile && !oneStudent && await store.get(STUDENTS_KEY) !== undefined) return { ok: false, reason: "That backup holds one student's progress, so it restores only as one student; nothing was changed." };
+  if (keepPin) {
+    const here = ((await store.get('settings')) ?? {});
+    const file = parsed.kv.get('settings');
+    const device = DEVICE_SETTINGS;
+    parsed.kv.set('settings', {
+      ...Object.fromEntries(Object.entries(isPlainObject(file) ? file : {}).filter(([k]) => !device.includes(k))),
+      ...Object.fromEntries(device.filter((k) => Object.hasOwn(here, k)).map((k) => [k, here[k]])),
+    });
+  }
   let before;
   try {
     before = await snapshot(store);

@@ -1,0 +1,129 @@
+{
+  "id": "ch5",
+  "title": "Chip's Chase",
+  "lessons": [48],
+  "requiresKnown": ["a", "are", "go", "of", "she", "so", "the", "they"],
+  "scenes": [
+    {
+      "id": "ch5-1",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "chip"],
+      "picture": "In a castle hall, a bouncy boy rides a big red ball like a pogo stick, and it bops him gently on the chin while a little kitten in a wizard hat cheers.",
+      "intro": ["story.ch5-1.intro.1", "story.ch5-1.intro.2"],
+      "sentences": [
+        {"id": "ch5-1.1", "text": "This is Chip.", "effect": "sparkle", "trick": null},
+        {"id": "ch5-1.2", "text": "Chip has a red ball.", "effect": "bounce", "trick": "ball"},
+        {"id": "ch5-1.3", "text": "Chip hops on the ball.", "effect": "bounce", "trick": "ball"},
+        {"id": "ch5-1.4", "text": "The ball hits his chin!", "effect": "bounce", "trick": "ball"},
+        {"id": "ch5-1.5", "text": "Chip is a champ!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch5-1.outro.1"]
+    },
+    {
+      "id": "ch5-2",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "chip", "ted", "dot"],
+      "picture": "In a castle kitchen, a long bench is piled high with a wedding lunch, a rag doll checks a list, a teddy bear sniffs the food and a bouncy boy chops carrots.",
+      "intro": ["story.ch5-2.intro.1"],
+      "sentences": [
+        {"id": "ch5-2.1", "text": "It is lunch!", "effect": "item-pop", "trick": "lunch"},
+        {"id": "ch5-2.2", "text": "Chop, chop, chop!", "effect": "sparkle", "trick": null},
+        {"id": "ch5-2.3", "text": "So much lunch is on the bench!", "effect": "item-pop", "trick": "bench"},
+        {"id": "ch5-2.4", "text": "Dot checks the list.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch5-2.outro.1"]
+    },
+    {
+      "id": "ch5-3",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "chip", "vex-grab", "gus-idle"],
+      "picture": "In a castle kitchen, a silly queen with a big crooked crown lifts the lid of a box, and fluffy yellow chicks hop out onto the bench and into a pot of jam.",
+      "intro": ["story.ch5-3.intro.1"],
+      "sentences": [
+        {"id": "ch5-3.1", "text": "Vex has a big box.", "effect": "item-pop", "trick": "box"},
+        {"id": "ch5-3.2", "text": "Vex lifts the lid.", "effect": "sparkle", "trick": null},
+        {"id": "ch5-3.3", "text": "Chicks hop on the bench!", "effect": "item-pop", "trick": "chick"},
+        {"id": "ch5-3.4", "text": "A chick is in the jam!", "effect": "item-pop", "trick": "jam"},
+        {"id": "ch5-3.5", "text": "Ten chicks are in the lunch!", "effect": "item-pop", "trick": "lunch"}
+      ],
+      "outro": ["story.ch5-3.outro.1"],
+      "question": {"line": "story.ch5-3.question", "choices": ["tricks/chick", "tricks/fish", "tricks/mop"], "answer": "tricks/chick"}
+    },
+    {
+      "id": "ch5-4",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "chip", "bix", "tess"],
+      "picture": "In a castle kitchen, a cheerful boy swings a butterfly net, a bouncy boy hops on a ball and a girl with two hair buns chases chicks along a shelf.",
+      "intro": ["story.ch5-4.intro.1"],
+      "sentences": [
+        {"id": "ch5-4.1", "text": "Chicks run on the shelf!", "effect": "item-pop", "trick": "chick"},
+        {"id": "ch5-4.2", "text": "Chip hops on the ball.", "effect": "bounce", "trick": "ball"},
+        {"id": "ch5-4.3", "text": "Bix has the net.", "effect": "item-pop", "trick": "net"},
+        {"id": "ch5-4.4", "text": "They got a lot of chicks!", "effect": "kitten-cheer", "trick": "net"}
+      ],
+      "outro": ["story.ch5-4.outro.1"]
+    },
+    {
+      "id": "ch5-5",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "gus-idle"],
+      "picture": "In a castle kitchen, a goofy crow sits very still with a fluffy chick hugging his neck, looking surprised and shy, while a child and a little kitten watch and smile.",
+      "intro": ["story.ch5-5.intro.1", "story.ch5-5.intro.2"],
+      "sentences": [
+        {"id": "ch5-5.1", "text": "A chick sat on Gus.", "effect": "crow-flap", "trick": "chick"},
+        {"id": "ch5-5.2", "text": "Gus can not get it off.", "effect": "crow-flap", "trick": "chick"},
+        {"id": "ch5-5.3", "text": "The chick hugs Gus.", "effect": "sparkle", "trick": "chick"},
+        {"id": "ch5-5.4", "text": "They chat and chat.", "effect": "sparkle", "trick": null},
+        {"id": "ch5-5.5", "text": "Gus has a pal!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch5-5.outro.1", "story.ch5-5.outro.2"],
+      "question": {"line": "story.ch5-5.question", "choices": ["tricks/chick", "tricks/bug", "tricks/fish"], "answer": "tricks/chick"}
+    },
+    {
+      "id": "ch5-6",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "chip", "vex-grab"],
+      "picture": "In a castle kitchen, a silly queen with a big crooked crown bounces off a red ball and lands in a flour chest, and a bouncy boy peeks out from behind the door.",
+      "intro": ["story.ch5-6.intro.1"],
+      "sentences": [
+        {"id": "ch5-6.1", "text": "The ball is on the step.", "effect": "item-pop", "trick": "ball"},
+        {"id": "ch5-6.2", "text": "Vex is in a rush.", "effect": "sparkle", "trick": null},
+        {"id": "ch5-6.3", "text": "Vex slips on the ball!", "effect": "vex-slip", "trick": "ball"},
+        {"id": "ch5-6.4", "text": "Up she went, up and up!", "effect": "bounce", "trick": null},
+        {"id": "ch5-6.5", "text": "Plop! She is in the chest!", "effect": "vex-bonk", "trick": "chest"}
+      ],
+      "outro": ["story.ch5-6.outro.1", "story.ch5-6.outro.2"]
+    }
+  ],
+  "side": [
+    {
+      "id": "ch5-side-1",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "chip", "bix", "nell"],
+      "picture": "In a castle hall, a bouncy boy and a cheerful boy bop a red ball back and forth, and a baby sits on the ball, hugging it tight with a big grin.",
+      "intro": ["story.ch5-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch5-side-1.1", "text": "Chip and Bix bop the ball.", "effect": "bounce", "trick": "ball"},
+        {"id": "ch5-side-1.2", "text": "The ball hits the bench.", "effect": "bounce", "trick": "ball"},
+        {"id": "ch5-side-1.3", "text": "Nell got the ball.", "effect": "sparkle", "trick": "ball"},
+        {"id": "ch5-side-1.4", "text": "Nell will not let go!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch5-side-1.outro.1"]
+    },
+    {
+      "id": "ch5-side-2",
+      "bg": "hub",
+      "cast": ["princess", "kitten"],
+      "picture": "On a garden path, a little kitten in a wizard hat naps curled up inside a big hat next to a fluffy yellow chick, while a child tiptoes past.",
+      "intro": ["story.ch5-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch5-side-2.1", "text": "A chick hid in the hat.", "effect": "item-pop", "trick": "hat"},
+        {"id": "ch5-side-2.2", "text": "The hat hops on the path.", "effect": "float", "trick": "hat"},
+        {"id": "ch5-side-2.3", "text": "The cat checks the hat.", "effect": "kitten-cheer", "trick": "hat"},
+        {"id": "ch5-side-2.4", "text": "The chick hops on the cat!", "effect": "kitten-cheer", "trick": "chick"},
+        {"id": "ch5-side-2.5", "text": "They nap in a big hat.", "effect": "kitten-cheer", "trick": "hat"}
+      ],
+      "outro": ["story.ch5-side-2.outro.1"]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { h } from '../core/dom.js';
 import { createArrivalGuard, createLock } from '../core/lock.js';
-import { nextStoryScene, readingOrder, scenesRead } from '../engine/story-place.js';
+import { nextStoryScene, scenesRead, visibleScenes } from '../engine/story-place.js';
 import { artUrl } from '../ui/components.js';
 import { sceneArt } from '../ui/story-stage.js';
 
@@ -13,17 +13,23 @@ export function mount(el, ctx) {
   const story = ctx.content?.story ?? [];
   const here = nextStoryScene(ctx.content, ctx.profile, ctx.settings)?.scene.id;
   const read = scenesRead(story, ctx.profile, ctx.states);
+  const pages = visibleScenes(story, ctx.profile);
 
   const opens = (id) => (event) => {
     if (!arrival.allows(event)) return;
     lock.run(() => ctx.router.go('visit', { scene: id })).catch((err) => console.error(`The scene "${id}" could not open`, err));
   };
-  const tile = ({ scene, kind, index }, i) => {
+  const heading = (ch) => h('h2', { class: 'chapter-title' },
+    h('button', { type: 'button', class: 'chapter-title-sound', 'aria-label': ch.title, onClick: ( event) => {
+      if (arrival.allows(event) && !lock.locked()) ctx.audio.play(`v.story.${ch.id}.title`);
+    } }, badge('ui/speaker', 'chapter-title-speaker')));
+  const tile = ({ scene, kind }, i, tiles) => {
     const side = kind === 'side';
     const seen = read.has(scene.id);
     const now = scene.id === here;
     const label = [`Page ${i + 1}`, side && 'a side quest', seen && 'read', now && 'you are here'].filter(Boolean).join(', ');
-    return h('button', { type: 'button', class: ['chapter-tile', side && index === 0 && 'first-side', seen && 'read', now && 'here'], 'data-scene-id': scene.id, 'aria-label': label, onClick: opens(scene.id) },
+    const firstSide = side && tiles[i - 1]?.kind !== 'side';
+    return h('button', { type: 'button', class: ['chapter-tile', firstSide && 'first-side', seen && 'read', now && 'here'], 'data-scene-id': scene.id, 'aria-label': label, onClick: opens(scene.id) },
       h('img', { class: 'chapter-tile-art', src: artUrl(sceneArt(scene.bg)), alt: '', draggable: 'false' }),
       h('span', { class: 'chapter-tile-number' }, String(i + 1)),
       side ? badge('ui/sparkle', 'chapter-tile-star') : null,
@@ -34,9 +40,10 @@ export function mount(el, ctx) {
   el.append(h('div', { class: 'chapters' },
     h('img', { class: 'scene-bg', src: artUrl('bg/hall'), alt: '' }),
     h('h1', { class: 'chapters-title' }, 'Chapters'),
-    h('div', { class: 'chapters-list' }, story.map((ch) => h('section', { class: 'chapter' },
-      h('h2', { class: 'chapter-title' }, ch.title),
-      h('div', { class: 'chapter-tiles' }, readingOrder([ch]).map(tile)))))));
+    h('div', { class: 'chapters-list' }, story.map((ch) => {
+      const tiles = pages.filter((page) => page.chapterId === ch.id);
+      return tiles.length === 0 ? null : h('section', { class: 'chapter' }, heading(ch), h('div', { class: 'chapter-tiles' }, tiles.map(tile)));
+    }))));
 
   ctx.say('chapters.pick');
   return () => {};

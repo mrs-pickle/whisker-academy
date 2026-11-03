@@ -4,6 +4,25 @@ import { HIST_LENGTH } from './itemstate.js';
 
 export const LINE_MISSES = 3;
 
+export function scoreLine(marks) {
+  let correct = 0;
+  let misses = 0;
+  for (const mark of marks) {
+    if (mark) correct++;
+    else if (++misses >= LINE_MISSES) return { correct, stopped: true };
+  }
+  return { correct, stopped: false };
+}
+
+
+export function undoMark(line) {
+  const marks = line.marks.slice(0, -1);
+  return { ...line, marks, stopped: scoreLine(marks).stopped };
+}
+
+export const partScore = (lines, kind) => lines.filter(l => l.kind === kind)
+  .reduce((sum, l) => ({ correct: sum.correct + scoreLine(l.marks).correct, total: sum.total + l.size }), { correct: 0, total: 0 });
+
 
 
 
@@ -128,3 +147,13 @@ export function isQuestDetail(value) {
   const checkedOk = value.checked === undefined || REBUILD_CHECKS.includes(value.checked);
   return linesOk && dictationOk && passageOk && uncertainOk && checkedOk;
 }
+
+
+export const isCheckRecord = (value) => isQuestDetail(value) && typeof value.form === 'string' && value.form !== ''
+  && isStrings(value.sets) && Number.isInteger(value.taughtUpTo)
+  && (value.passage === null || value.passage.stopped === undefined || typeof value.passage.stopped === 'boolean');
+
+export const isPlacement = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
+  && Number.isFinite(value.day) && Number.isInteger(value.before)
+  && (value.suggested === null || Number.isInteger(value.suggested)) && (value.lesson === null || Number.isInteger(value.lesson))
+  && typeof value.first === 'boolean' && isQuestDetail(value.detail);

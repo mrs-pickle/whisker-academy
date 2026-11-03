@@ -4,11 +4,14 @@ import { heroWords } from '../../profile/hero.js';
 import { artUrl, bigButton, holdToActivate } from '../../ui/components.js';
 
 export const SCREENS = Object.freeze([
+  ['dashboard', 'Dashboard'],
   ['settings', 'Settings'],
   ['deck', 'Sound cards'],
+  ['letters', 'Letter writing'],
   ['instant', 'Instant words'],
   ['progress', 'Progress'],
   ['quest-results', 'Quest results'],
+  ['report', 'Tutor report'],
   ['passes', 'Passes'],
   ['pages', 'Coloring pages'],
   ['soundcheck', 'Sound check'],
@@ -33,7 +36,7 @@ export const isValidPin = (pin) => typeof pin === 'string' && PIN.test(pin);
 
 export const isUnlocked = (params) => params?.unlocked === true;
 
-export const nextScreen = (next) => (SCREENS.some(([name]) => name === next) ? (next) : 'settings');
+export const nextScreen = (next) => (SCREENS.some(([name]) => name === next) ? (next) : 'dashboard');
 
 export function unsavedBanner(ctx) {
   if (ctx.store?.persistent === false) {
@@ -79,7 +82,7 @@ export function mount(el, ctx, params = {}) {
     return () => {};
   }
   const lock = createLock();
-  const target = `grownup/${nextScreen(params.next)}`;
+  const target = params.next === 'assessment' ? 'assessment' : `grownup/${nextScreen(params.next)}`;
   const enter = (how) => {
     ctx.cornerEntry = how;
     lock.run(() => ctx.router.go(target, { unlocked: true })).catch((err) => console.warn('The grown-up corner could not open', err));

@@ -11,6 +11,7 @@ export const PROFILE_FATES = Object.freeze({
   instant: 'keep',
   customInstant: 'keep',
   startLesson: 'keep',
+  heartSeededTo: 'keep',
   spellTier: 'reset',
   baseline: 'reset',
   baselineDetail: 'reset',
@@ -21,6 +22,14 @@ export const PROFILE_FATES = Object.freeze({
   pendingGifts: 'reset',
   passes: 'reset',
   breaks: 'reset',
+  checks: 'reset',
+  rereads: 'reset',
+  letters: 'keep',
+  flash: 'reset',
+  flashMs: 'reset',
+  assessFirst: 'reset',
+  placements: 'reset',
+  pointerLog: 'keep',
 });
 
 export const LOOK_FATES = Object.freeze({

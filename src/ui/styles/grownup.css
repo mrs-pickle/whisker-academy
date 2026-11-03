@@ -31,11 +31,11 @@
   width: 244px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 .gu-tab {
-  min-height: 54px;
-  padding: 6px 14px;
+  min-height: 50px;
+  padding: 4px 14px;
   border: 3px solid var(--ink);
   border-radius: 14px;
   background: var(--paper);
@@ -193,6 +193,19 @@
 .gu-swatch-princess { position: absolute; left: 0; top: -12px; width: 64px; height: 115px; }
 .gu-swatch-kitten { position: absolute; inset: 0; }
 
+.gu-setup-child .gu-title { font-size: 34px; }
+.gu-setup-child .gu-swatch-row { grid-template-columns: 90px 1fr; margin: 0 0 10px; }
+.gu-setup-child .gu-swatches { gap: 10px; }
+.gu-setup-child .gu-swatch { min-width: 96px; padding: 4px 6px; }
+.gu-setup-child .gu-swatch-art { width: 80px; height: 72px; }
+.gu-setup-child .gu-swatch-princess { top: -15px; width: 80px; height: 144px; }
+.gu-setup-child [data-choice^="outfit:"] .gu-swatch-princess { left: -13px; top: -125px; width: 120px; height: 216px; }
+.gu-setup-child .gu-hero-choice .gu-look-preview, .gu-setup-child .gu-hero-choice .gu-look-princess { width: 170px; height: 306px; }
+.gu-setup-child .gu-setup-nav .gu-button { min-width: 160px; min-height: 72px; font-size: 28px; border-radius: 22px; }
+.gu-setup-child .gu-setup-nav .gu-primary::after { content: ' →'; }
+.gu-setup-child .gu-setup-nav .gu-button:not(.gu-primary)::before { content: '← '; }
+.gu-start-choices { gap: 16px; margin-top: 24px; }
+
 .gu-deck { display: flex; flex-direction: column; }
 .gu-card-row {
   display: grid;
@@ -335,3 +348,25 @@
 
 .gu-tips, .gu-notices { margin: 0 0 12px; padding-left: 28px; }
 .gu-tips li, .gu-notices li { margin: 0 0 10px; }
+
+.gu-letters { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px 16px; }
+.gu-letter { display: flex; align-items: center; gap: 12px; }
+
+.gu-switch { align-items: center; margin-bottom: 8px; }
+.gu-switch-label { font-size: 22px; color: #4a423b; }
+.gu-graph .graph { display: block; width: 100%; max-width: 760px; height: auto; margin-top: 8px; background: #fffdf8; border-radius: 8px; }
+.graph-grid { stroke: #e8dfd0; stroke-width: 1; }
+.graph-axis { stroke: #8a7f72; stroke-width: 1.5; }
+.graph-tick, .graph-label { fill: #4a423b; font-family: var(--font); font-size: 15px; }
+.graph-a { fill: #3a6ea5; }
+.graph-a-light { fill: #b3c8e0; }
+.graph-b { fill: #b8741a; }
+.graph-line { fill: none; stroke: #3a6ea5; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.graph-dot { fill: #3a6ea5; stroke: #fffdf8; stroke-width: 2; }
+.gu-legend { display: flex; flex-wrap: wrap; gap: 18px; margin: 4px 0 0; font-size: 20px; color: #4a423b; }
+.gu-legend-item { display: inline-flex; align-items: center; gap: 8px; }
+.gu-legend-swatch { display: inline-block; flex: 0 0 auto; box-sizing: border-box; width: 18px; min-width: 0; height: 18px; padding: 0; border: 0; border-radius: 4px; }
+.gu-legend-swatch.graph-a { background: #3a6ea5; }
+.gu-legend-swatch.graph-a-light { background: #b3c8e0; }
+.gu-legend-swatch.graph-b { background: #b8741a; }
+.gu-links { flex-wrap: wrap; }

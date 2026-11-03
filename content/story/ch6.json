@@ -1,0 +1,152 @@
+{
+  "id": "ch6",
+  "title": "The Wedding Crash",
+  "lessons": [49, 50],
+  "requiresKnown": ["a", "are", "book", "could", "do", "have", "of", "see", "the", "walk", "we", "you"],
+  "scenes": [
+    {
+      "id": "ch6-1",
+      "bg": "hub",
+      "cast": ["princess", "kitten", "gus-idle"],
+      "picture": "On a castle lawn, a goofy crow with a fluffy chick riding on his back whispers a secret to a child and a little kitten in a wizard hat.",
+      "intro": ["story.ch6-1.intro.1", "story.ch6-1.intro.2", "story.ch6-1.intro.3"],
+      "sentences": [
+        {"id": "ch6-1.1", "text": "Gus has a chick on his back.", "effect": "crow-flap", "trick": "chick"},
+        {"id": "ch6-1.2", "text": "Gus can tell you all of it.", "effect": "crow-flap", "trick": null},
+        {"id": "ch6-1.3", "text": "Vex has a wig and a dress.", "effect": "item-pop", "trick": "wig"},
+        {"id": "ch6-1.4", "text": "Vex will wed Ted!", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch6-1.outro.1"]
+    },
+    {
+      "id": "ch6-2",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "chip", "tess", "bix"],
+      "picture": "In a great castle hall, a bouncy boy, a girl with two hair buns and a cheerful boy set out tricks: a mop on the top step, a dish of jam and a pile of thick socks.",
+      "intro": ["story.ch6-2.intro.1"],
+      "sentences": [
+        {"id": "ch6-2.1", "text": "We have all the tricks.", "effect": "sparkle", "trick": null},
+        {"id": "ch6-2.2", "text": "Chip checks the bag.", "effect": "sparkle", "trick": null},
+        {"id": "ch6-2.3", "text": "The mop is on the top step.", "effect": "item-pop", "trick": "mop"},
+        {"id": "ch6-2.4", "text": "Tess sets the jam in a dish.", "effect": "item-pop", "trick": "jam"},
+        {"id": "ch6-2.5", "text": "Thick socks are on the bench.", "effect": "item-pop", "trick": "sock"}
+      ],
+      "outro": ["story.ch6-2.outro.1"]
+    },
+    {
+      "id": "ch6-3",
+      "bg": "hall",
+      "cast": ["princess", "kitten", "bix", "dash", "thud", "gus-flap"],
+      "picture": "In a great castle hall, a cheerful boy holds a fan, a goofy crow holds a butterfly net, and a spotted cat and a very big sleepy cat sit on a high shelf.",
+      "intro": ["story.ch6-3.intro.1"],
+      "sentences": [
+        {"id": "ch6-3.1", "text": "Bix has the fan.", "effect": "item-pop", "trick": "fan"},
+        {"id": "ch6-3.2", "text": "Gus has the net.", "effect": "item-pop", "trick": "net"},
+        {"id": "ch6-3.3", "text": "Dash and Thud sit on the shelf.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch6-3.4", "text": "Hush! Walk, do not run.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch6-3.outro.1"],
+      "question": {"line": "story.ch6-3.question", "choices": ["cast/gus-flap", "cast/bix", "cast/chip"], "answer": "cast/gus-flap"}
+    },
+    {
+      "id": "ch6-4",
+      "lesson": 50,
+      "surprise": true,
+      "bg": "chapel",
+      "cast": ["princess", "kitten", "ted", "phil"],
+      "picture": "In a wedding hall full of toys, a small stuffed elephant holds a big book at the front, and a teddy bear in a bow tie waits nervously by the flowers.",
+      "intro": ["story.ch6-4.intro.1", "story.ch6-4.intro.2"],
+      "sentences": [
+        {"id": "ch6-4.1", "text": "This is Phil.", "effect": "sparkle", "trick": null},
+        {"id": "ch6-4.2", "text": "Phil has the big book.", "effect": "item-pop", "trick": "book"},
+        {"id": "ch6-4.3", "text": "When will Dot get in?", "effect": "sparkle", "trick": null},
+        {"id": "ch6-4.4", "text": "Ted is in a fuss.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch6-4.outro.1"]
+    },
+    {
+      "id": "ch6-5",
+      "lesson": 50,
+      "surprise": true,
+      "bg": "chapel",
+      "cast": ["princess", "kitten", "ted", "phil", "vex-wig"],
+      "picture": "At a toy wedding, a nervous teddy bear peers up at a very tall bride in a lopsided mint yarn wig with orange curls poking out, while a small stuffed elephant holds a big book.",
+      "intro": ["story.ch6-5.intro.1", "story.ch6-5.intro.2"],
+      "sentences": [
+        {"id": "ch6-5.1", "text": "Is this Dot?", "effect": "sparkle", "trick": null},
+        {"id": "ch6-5.2", "text": "Ted can see the thick wig.", "effect": "sparkle", "trick": "wig"},
+        {"id": "ch6-5.3", "text": "Ted got a whiff of fish!", "effect": "sparkle", "trick": "fish"},
+        {"id": "ch6-5.4", "text": "Ted could tell!", "effect": "sparkle", "trick": null},
+        {"id": "ch6-5.5", "text": "That is not Dot!", "effect": "item-pop", "trick": "wig"}
+      ],
+      "outro": ["story.ch6-5.outro.1", "story.ch6-5.outro.2"],
+      "question": {"line": "story.ch6-5.question", "choices": ["cast/vex-idle", "cast/dot", "cast/tess"], "answer": "cast/vex-idle"}
+    },
+    {
+      "id": "ch6-6",
+      "lesson": 50,
+      "surprise": true,
+      "bg": "chapel",
+      "cast": ["princess", "kitten", "chip", "bix", "vex-wig"],
+      "picture": "In a wedding hall, a silly queen in a mint yarn wig slips on a mop and lands in jam, while a cheerful boy turns on a big fan and a bouncy boy cheers.",
+      "intro": ["story.ch6-6.intro.1", "story.ch6-6.intro.2"],
+      "sentences": [
+        {"id": "ch6-6.1", "text": "Whiz! The ball hits the mop.", "effect": "bounce", "trick": "ball"},
+        {"id": "ch6-6.2", "text": "Vex slips on the mop!", "effect": "vex-slip", "trick": "mop"},
+        {"id": "ch6-6.3", "text": "Wham! Vex sat in the jam!", "effect": "vex-slip", "trick": "jam"},
+        {"id": "ch6-6.4", "text": "Bix has the fan on.", "effect": "item-pop", "trick": "fan"},
+        {"id": "ch6-6.5", "text": "The wig is up, up, up!", "effect": "float", "trick": "wig"}
+      ],
+      "outro": ["story.ch6-6.outro.1"]
+    },
+    {
+      "id": "ch6-7",
+      "lesson": 50,
+      "surprise": true,
+      "bg": "chapel",
+      "cast": ["princess", "kitten", "dot-wed", "gus-flap", "vex-slip"],
+      "picture": "In a wedding hall, a goofy crow drops a butterfly net over a silly queen covered in socks and jam, as a rag doll bride in a white dress walks in the door.",
+      "intro": ["story.ch6-7.intro.1"],
+      "sentences": [
+        {"id": "ch6-7.1", "text": "Whack! Socks fell on Vex!", "effect": "vex-bonk", "trick": "sock"},
+        {"id": "ch6-7.2", "text": "Gus lifts the net.", "effect": "crow-flap", "trick": "net"},
+        {"id": "ch6-7.3", "text": "Vex is in the net!", "effect": "crow-flap", "trick": "net"},
+        {"id": "ch6-7.4", "text": "It is Dot!", "effect": "sparkle", "trick": null},
+        {"id": "ch6-7.5", "text": "Ted hugs Dot.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch6-7.outro.1", "story.ch6-7.outro.2"]
+    }
+  ],
+  "side": [
+    {
+      "id": "ch6-side-1",
+      "bg": "belfry",
+      "cast": ["princess", "kitten", "chip", "thud"],
+      "picture": "In a bell tower, a bouncy boy holds out a dish of fish, and a very big sleepy cat wakes right up and runs up the steps toward it.",
+      "intro": ["story.ch6-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch6-side-1.1", "text": "Thud will not walk.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch6-side-1.2", "text": "Chip has a dish of fish.", "effect": "item-pop", "trick": "dish"},
+        {"id": "ch6-side-1.3", "text": "Thud can smell it.", "effect": "kitten-cheer", "trick": "fish"},
+        {"id": "ch6-side-1.4", "text": "Thud runs up the steps!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch6-side-1.outro.1"]
+    },
+    {
+      "id": "ch6-side-2",
+      "lesson": 50,
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "phil", "nell"],
+      "picture": "In a castle kitchen, a small stuffed elephant whisks a bowl of jam, and a baby grabs the whisk so the jam flies everywhere.",
+      "intro": ["story.ch6-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch6-side-2.1", "text": "Phil has a whisk.", "effect": "item-pop", "trick": "whisk"},
+        {"id": "ch6-side-2.2", "text": "Nell will get the whisk.", "effect": "sparkle", "trick": "whisk"},
+        {"id": "ch6-side-2.3", "text": "Whiz! Whiz! Whiz!", "effect": "float", "trick": "whisk"},
+        {"id": "ch6-side-2.4", "text": "Jam is on Phil!", "effect": "item-pop", "trick": "jam"},
+        {"id": "ch6-side-2.5", "text": "Nell got a whiff of jam.", "effect": "kitten-cheer", "trick": "jam"}
+      ],
+      "outro": ["story.ch6-side-2.outro.1"]
+    }
+  ]
+}

@@ -11,3 +11,7 @@ export function beforeNasal(segs, i) {
 export function hasShortIE(segs) {
   return segs.some(([, p], i) => phonemeCodes(p).some(code => code === 'i' || code === 'e') && !beforeNasal(segs, i));
 }
+
+export function hasNasalIE(segs) {
+  return segs.some(([, p], i) => phonemeCodes(p).some(code => code === 'i' || code === 'e') && beforeNasal(segs, i));
+}

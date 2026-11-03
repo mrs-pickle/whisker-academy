@@ -6,5 +6,8 @@
 {"id":"bix","display":"Bix","segs":[["b","b"],["i","i"],["x","k s"]],"lesson":31},
 {"id":"tess","display":"Tess","segs":[["t","t"],["e","e"],["ss","s"]],"lesson":42},
 {"id":"nell","display":"Nell","segs":[["n","n"],["e","e"],["ll","l"]],"lesson":42},
-{"id":"chip","display":"Chip","segs":[["ch","ch"],["i","i"],["p","p"]],"lesson":48}
+{"id":"chip","display":"Chip","segs":[["ch","ch"],["i","i"],["p","p"]],"lesson":48},
+{"id":"dash","display":"Dash","segs":[["d","d"],["a","a"],["sh","sh"]],"lesson":45},
+{"id":"thud","display":"Thud","segs":[["th","th"],["u","u"],["d","d"]],"lesson":47},
+{"id":"phil","display":"Phil","segs":[["ph","f"],["i","i"],["l","l"]],"lesson":50}
 ]

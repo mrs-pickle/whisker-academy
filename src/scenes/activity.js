@@ -9,7 +9,7 @@ import { bigButton } from '../ui/components.js';
 
 
 
-export const ACTIVITY_IDS = Object.freeze(['warmup', 'cards', 'spell', 'chain', 'charm', 'story']);
+export const ACTIVITY_IDS = Object.freeze(['warmup', 'cards', 'pencil', 'spell', 'chain', 'charm', 'story']);
 
 
 function forcedItem(a, { word, scene, mode }, content, profile) {
@@ -18,6 +18,7 @@ function forcedItem(a, { word, scene, mode }, content, profile) {
   if (!word) return null;
   switch (a) {
     case 'spell': return item(`w:${word}`, 'spell');
+    case 'pencil': return (content.letters ?? []).some(( l) => l.id === word) ? item(`lf:${word}`, 'paper') : null;
     case 'charm': return item(`iw:${word}`, 'read');
     case 'chain': {
       const chains = content.chains ?? [];
@@ -47,6 +48,7 @@ export function debugRound(plan, a, params, { content, profile }) {
   let items = found ? [...found.items] : [];
   const forced = forcedItem(a, params, content, profile);
   if (forced) items = a === 'story' ? [forced] : [forced, ...items.filter(i => !(i.id === forced.id && i.mode === forced.mode))];
+  if (a === 'charm' && params.robot === '1') items = [];
   return { activity: (a), items };
 }
 
@@ -98,7 +100,10 @@ export function mount(el, ctx, params) {
     console.info(`[activity] ${a} round`, round.items.map(i => `${i.id}#${i.mode}${i.isNew ? ' (new)' : ''}`));
     const host = h('div', { class: 'activity-host' });
     el.replaceChildren(host);
-    await activity.run(host, ctx, round, hooks);
+    const box = Number(params.box);
+    const forcedLetter = a === 'pencil' && round.items[0]?.id.startsWith('lf:') && Number.isInteger(box) && params.box !== undefined;
+    const states = forcedLetter ? new Map([...ctx.states, [`${round.items[0].id}#paper`, { key: `${round.items[0].id}#paper`, box, due: ctx.day + 1, last: ctx.day - 1 }]]) : ctx.states;
+    await activity.run(host, forcedLetter ? { ...ctx, states } : ctx, round, hooks);
     if (!live) return;
     panel(
       h('h2', {}, `The ${a} round is over (${results.length} answers)`),

@@ -5,7 +5,7 @@ import { CORRESPONDENCES } from '../curriculum/correspondences.js';
 import { PHONEMES, phonemeCodes } from '../curriculum/phonemes.js';
 import { heroOf } from '../profile/hero.js';
 import { artUrl, bigButton, copilotBanner, copilotHold, copilotUndoAside, keysOnPage, nextButton, passButton, setUndo, tile } from '../ui/components.js';
-import { HELP_TIPS, markTipSeen, offerTips, TURN_TIPS } from '../ui/tips.js';
+import { HELP_TIPS, markTipSeen, offerTips, TH_TIPS, TURN_TIPS } from '../ui/tips.js';
 
 
 
@@ -397,7 +397,7 @@ function selfCheck(buttons) {
     }));
 }
 
-export function judgeAloud(view, { copilot, kind, model, target, praise, praiseLines, canUndo = false }) {
+export function judgeAloud(view, { copilot, kind, model, target, praise, praiseLines, canUndo = false, tips = [] }) {
   return new Promise((resolve) => {
     if (!view.live()) return;
     const start = now();
@@ -481,7 +481,7 @@ export function judgeAloud(view, { copilot, kind, model, target, praise, praiseL
         : selfCheck([['I said it!', 'ui/sparkle', yes], ['Let me try again', { glyph: '↻' }, again], passing]);
     }
     view.root.append(panel);
-    if (copilot) offerTips(view.ctx, panel, TURN_TIPS[kind]);
+    if (copilot) offerTips(view.ctx, panel, [...TURN_TIPS[kind], ...tips]);
     view.choosing(true);
     if (!copilot) sayCheckLine(view, kind);
   });
@@ -685,12 +685,13 @@ async function listenPair(view, kind, a, b, { first, abandon }) {
 async function readWord(view, item, word, { copilot, modeled, made, canUndo = false }) {
   const card = h('div', { class: 'word-card', lang: 'en' }, word);
   view.show(card);
-  const model = item.isNew && !modeled.has(item.id) ? [`ws.${word}`, `w.${word}`] : [];
+  const model = (item.isNew || item.model) && !modeled.has(item.id) ? [`ws.${word}`, `w.${word}`] : [];
   modeled.add(item.id);
   const spoken = [...(made ? ['v.entrance.nonsense'] : []), ...model];
   await view.prompt([...spoken, copilot ? 'v.copilot.readto' : null]);
   if (!copilot && spoken.length > 0) await wait(CLIP_GAP_MS);
-  return judgeAloud(view, { copilot, kind: 'read', model: [`w.${word}`], target: card, praise: 'read', canUndo });
+  const th = item.id.startsWith('n:') && view.ctx.content?.byWord?.get(word)?.segs.some(( [g]) => g === 'th');
+  return judgeAloud(view, { copilot, kind: 'read', model: [`w.${word}`], target: card, praise: 'read', canUndo, tips: th ? TH_TIPS : [] });
 }
 
 async function readLine(view, id, text, { copilot, canUndo = false }) {

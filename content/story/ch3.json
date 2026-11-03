@@ -1,0 +1,132 @@
+{
+  "id": "ch3",
+  "title": "Into the Carriage",
+  "lessons": [45],
+  "requiresKnown": ["a", "goes", "have", "no", "says", "see", "the", "to", "you", "your"],
+  "scenes": [
+    {
+      "id": "ch3-1",
+      "bg": "toyroom",
+      "cast": ["princess", "kitten", "dot", "vex-grab", "gus-idle"],
+      "picture": "In a toy room, a silly queen with a big crooked crown snatches a white wedding dress with a sash from a rag doll, while a goofy crow flaps toward the door.",
+      "intro": ["story.ch3-1.intro.1", "story.ch3-1.intro.2"],
+      "sentences": [
+        {"id": "ch3-1.1", "text": "Dot has a dress.", "effect": "item-pop", "trick": "dress"},
+        {"id": "ch3-1.2", "text": "The dress has a sash.", "effect": "sparkle", "trick": "dress"},
+        {"id": "ch3-1.3", "text": "Vex can see the dress.", "effect": "sparkle", "trick": null},
+        {"id": "ch3-1.4", "text": "Vex grabs the dress!", "effect": "crow-flap", "trick": "dress"},
+        {"id": "ch3-1.5", "text": "Vex and Gus rush off!", "effect": "crow-flap", "trick": null}
+      ],
+      "outro": ["story.ch3-1.outro.1", "story.ch3-1.outro.2"]
+    },
+    {
+      "id": "ch3-2",
+      "bg": "hub",
+      "cast": ["princess", "kitten", "tess", "nell"],
+      "picture": "Outside a castle, a royal carriage rolls away with a baby peeking out of the back window and blowing a bubble, while a girl with two hair buns points and runs.",
+      "intro": ["story.ch3-2.intro.1"],
+      "sentences": [
+        {"id": "ch3-2.1", "text": "Tess can not see Nell.", "effect": "sparkle", "trick": null},
+        {"id": "ch3-2.2", "text": "Nell hid in the cab!", "effect": "item-pop", "trick": "carriage"},
+        {"id": "ch3-2.3", "text": "The cab is off!", "effect": "float", "trick": "carriage"},
+        {"id": "ch3-2.4", "text": "Tess says to run.", "effect": "sparkle", "trick": null},
+        {"id": "ch3-2.5", "text": "You run and run.", "effect": "sparkle", "trick": null}
+      ],
+      "outro": ["story.ch3-2.outro.1"],
+      "question": {"line": "story.ch3-2.question", "choices": ["cast/nell", "cast/bix", "cast/ted"], "answer": "cast/nell"}
+    },
+    {
+      "id": "ch3-3",
+      "bg": "hub",
+      "cast": ["princess", "kitten", "tess", "bix"],
+      "picture": "On a bumpy road to the sea, a girl with two hair buns, a cheerful boy and a little kitten in a wizard hat ride on the back of a royal carriage, and a big ship waits ahead.",
+      "intro": ["story.ch3-3.intro.1"],
+      "sentences": [
+        {"id": "ch3-3.1", "text": "You hop on the cab.", "effect": "item-pop", "trick": "carriage"},
+        {"id": "ch3-3.2", "text": "Bump, bump, bump!", "effect": "sparkle", "trick": "carriage"},
+        {"id": "ch3-3.3", "text": "Hush! Vex can not see you.", "effect": "sparkle", "trick": null},
+        {"id": "ch3-3.4", "text": "It is a big ship!", "effect": "item-pop", "trick": "ship"}
+      ],
+      "outro": ["story.ch3-3.outro.1"]
+    },
+    {
+      "id": "ch3-4",
+      "bg": "ship",
+      "cast": ["princess", "kitten", "dash"],
+      "picture": "Below the deck of a ship, a thin spotted cat in a sailor collar sits on a coil of rope, and a little kitten in a wizard hat rubs noses with her while a child smiles.",
+      "intro": ["story.ch3-4.intro.1", "story.ch3-4.intro.2"],
+      "sentences": [
+        {"id": "ch3-4.1", "text": "It is a ship cat!", "effect": "item-pop", "trick": "ship"},
+        {"id": "ch3-4.2", "text": "The ship cat is Dash.", "effect": "sparkle", "trick": null},
+        {"id": "ch3-4.3", "text": "Dash has no pal.", "effect": "sparkle", "trick": null},
+        {"id": "ch3-4.4", "text": "The cat rubs Dash.", "effect": "kitten-cheer", "trick": null},
+        {"id": "ch3-4.5", "text": "Dash has a pal!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch3-4.outro.1", "story.ch3-4.outro.2"],
+      "question": {"line": "story.ch3-4.question", "choices": ["cast/dash", "cast/gus-idle", "cast/tess"], "answer": "cast/dash"}
+    },
+    {
+      "id": "ch3-5",
+      "bg": "ship",
+      "cast": ["princess", "kitten", "dash", "tess", "vex-idle"],
+      "picture": "On the deck of a purple ship, a silly queen in a wedding dress far too small for her slips on a puddle of mashed potato and lands in a barrel of fish, as a spotted cat grabs one.",
+      "intro": ["story.ch3-5.intro.1", "story.ch3-5.intro.2"],
+      "sentences": [
+        {"id": "ch3-5.1", "text": "You spill the mash.", "effect": "item-pop", "trick": "mash"},
+        {"id": "ch3-5.2", "text": "The mash is on the ship.", "effect": "item-pop", "trick": "mash"},
+        {"id": "ch3-5.3", "text": "Vex slips on the mash!", "effect": "vex-slip", "trick": "mash"},
+        {"id": "ch3-5.4", "text": "Vex sat in the fish!", "effect": "vex-bonk", "trick": "fish"},
+        {"id": "ch3-5.5", "text": "Dash got a fish.", "effect": "kitten-cheer", "trick": "fish"}
+      ],
+      "outro": ["story.ch3-5.outro.1"]
+    },
+    {
+      "id": "ch3-6",
+      "bg": "ship",
+      "cast": ["princess", "kitten", "tess", "nell", "dash"],
+      "picture": "In the sea by a ship, a baby in a little rowboat blows a huge bubble that lifts a wedding dress into the air, while a child swims with a spotted cat riding on their back.",
+      "intro": ["story.ch3-6.intro.1"],
+      "sentences": [
+        {"id": "ch3-6.1", "text": "Nell is on the dress.", "effect": "sparkle", "trick": "dress"},
+        {"id": "ch3-6.2", "text": "Nell will puff and puff.", "effect": "float", "trick": null},
+        {"id": "ch3-6.3", "text": "The dress goes up, up, up!", "effect": "float", "trick": "dress"},
+        {"id": "ch3-6.4", "text": "You can swim!", "effect": "sparkle", "trick": null},
+        {"id": "ch3-6.5", "text": "Dash sits on your back!", "effect": "kitten-cheer", "trick": null}
+      ],
+      "outro": ["story.ch3-6.outro.1", "story.ch3-6.outro.2"],
+      "reward": {"wardrobe": "o-sailor"}
+    }
+  ],
+  "side": [
+    {
+      "id": "ch3-side-1",
+      "bg": "kitchen",
+      "cast": ["princess", "kitten", "dash", "gus-idle"],
+      "picture": "In a castle kitchen, a little kitten in a wizard hat and a spotted cat in a sailor collar hiss at a goofy crow, who drops a dish with a fish on it and runs.",
+      "intro": ["story.ch3-side-1.intro.1"],
+      "sentences": [
+        {"id": "ch3-side-1.1", "text": "The cat can smell a fish.", "effect": "kitten-cheer", "trick": "fish"},
+        {"id": "ch3-side-1.2", "text": "Dash can smell it.", "effect": "kitten-cheer", "trick": "fish"},
+        {"id": "ch3-side-1.3", "text": "The fish is on a dish.", "effect": "item-pop", "trick": "dish"},
+        {"id": "ch3-side-1.4", "text": "Gus has the dish!", "effect": "crow-flap", "trick": "dish"},
+        {"id": "ch3-side-1.5", "text": "Hiss! Gus runs.", "effect": "crow-flap", "trick": null}
+      ],
+      "outro": ["story.ch3-side-1.outro.1"]
+    },
+    {
+      "id": "ch3-side-2",
+      "bg": "ship",
+      "cast": ["princess", "kitten", "tess", "vex-idle"],
+      "picture": "By a ship on the shore, a girl with two hair buns sells seashells, and a little bug pops out of a big shell and hops onto the crown of a silly queen.",
+      "intro": ["story.ch3-side-2.intro.1"],
+      "sentences": [
+        {"id": "ch3-side-2.1", "text": "Tess has a shell shop.", "effect": "item-pop", "trick": "shell"},
+        {"id": "ch3-side-2.2", "text": "Vex will have a big shell.", "effect": "sparkle", "trick": "shell"},
+        {"id": "ch3-side-2.3", "text": "A bug is in the shell!", "effect": "item-pop", "trick": "bug"},
+        {"id": "ch3-side-2.4", "text": "The bug hops on Vex!", "effect": "vex-slip", "trick": "bug"},
+        {"id": "ch3-side-2.5", "text": "Vex runs and runs.", "effect": "vex-slip", "trick": null}
+      ],
+      "outro": ["story.ch3-side-2.outro.1"]
+    }
+  ]
+}

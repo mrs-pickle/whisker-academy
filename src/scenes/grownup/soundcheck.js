@@ -18,6 +18,7 @@ const GROUPS = Object.freeze([
   ['ws', 'Stretched words: each word said slowly, sound by sound'],
   ['s', 'Sentences'],
   ['v', 'Narrator lines'],
+  ['rr', "Gus's silly readings, not the real word on purpose, in his own voice, for robot reading. The tutor may want to hear them"],
 ]);
 const OTHER = Object.freeze(['other', 'Other clips']);
 
@@ -84,6 +85,7 @@ function labeler(content, hx = (text) => text) {
     if (kind === 'ln') return `the letter name ${rest}`;
     if (kind === 'w') return rest;
     if (kind === 'ws') return `${rest}, stretched`;
+    if (kind === 'rr') return `${rest}, Gus's silly reading, on purpose`;
     if (kind === 's') return sentences.get(rest) ?? id;
     if (kind === 'v' && rest.endsWith(PRINCE_TWIN)) return content?.voice?.[rest.slice(0, -PRINCE_TWIN.length)]?.prince ?? id;
     if (kind === 'v') return content?.voice?.[rest]?.text ?? id;

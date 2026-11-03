@@ -2,6 +2,7 @@ import { h } from '../../core/dom.js';
 import { TINTS } from '../../core/stage.js';
 import { LESSONS } from '../../curriculum/lessons.js';
 import { HEROES, heroOf, heroWords, withHero } from '../../profile/hero.js';
+import { withTaughtLessons } from '../../profile/profile.js';
 import { MIX_IT_UP, normalizeSettings } from '../../profile/settings.js';
 import { BREAK_STYLES } from '../break.js';
 import { checkPin, cornerFrame, hashPin, isValidPin } from './gate.js';
@@ -11,7 +12,7 @@ import { startOverSection } from './start-over.js';
 
 export const SETTING_HELP = Object.freeze({
   taughtUpTo: { label: 'Taught up to UFLI lesson',
-    help: 'The last UFLI lesson her tutor has taught. Everything she reads or spells uses only patterns up to this lesson. Moving it back hides later words from her sessions; her progress on them is kept for when it moves forward again.' },
+    help: "The last UFLI lesson her tutor has taught. Everything she reads or spells uses only patterns up to this lesson. Moving it forward marks each new lesson's heart words as known, and you can change them in Instant words. Moving it back hides later words from her sessions; her progress on them is kept for when it moves forward again." },
   sessionMinutes: { label: 'Session length',
     help: "About how long a day's adventure lasts, in active minutes, with short movement breaks between rounds." },
   copilot: { label: 'Co-pilot (a grown-up plays with her)',
@@ -32,6 +33,8 @@ export const SETTING_HELP = Object.freeze({
     help: 'The PIN that opens this corner (4 to 8 digits). Holding the button on the gate for 3 seconds also opens it, so if you forget the PIN, open the corner that way and choose a new one here.' },
   printWords: { label: '"Words I can read" strip',
     help: 'A printed coloring page has a line along the bottom with up to 4 words she built that day, like "Words I can read: mop • net • bell". Turn it off to print the page alone.' },
+  flash: { label: "Kitty's blink game",
+    help: "Off unless you turn it on, and best only with her tutor's yes. On a reread day, with you beside her, a word she already reads well shows, then fades. She can peek again as often as she likes, and there is never a limit on answering. The research suggests this only as an option once accuracy is secure, and found no study of it as training; speed drills are out, and rereads are what build fluency. It opens only when she has enough words she reads well and high accuracy over her last 5 sessions. If she dislikes it, turn it off: nothing is lost." },
   tipsSeen: { label: 'Grown-up tips',
     help: 'Directions meant for you (when to judge, waiting before you help, when to start timing) are never spoken aloud. Each shows once, in a small box, the first time it is needed, and goes after your first tap. Press the button to see them all once more.' },
 });
@@ -44,6 +47,7 @@ const CHOICES = Object.freeze({
   copilot: [[true, 'On'], [false, 'Off']],
   sShContrast: [[false, 'Off'], [true, 'On']],
   ieEmphasis: [[true, 'On'], [false, 'Off']],
+  flash: [[false, 'Off'], [true, 'On']],
   cardRoutine: [['sound', 'Sound only'], ['name-key-sound', 'Letter name, key word, sound']],
   breakStyle: [[MIX_IT_UP, 'Mix it up'], ...BREAK_STYLES.map((style) => [style, BREAK_LABELS[ (style)] ?? capitalized(style)])],
   textSpacing: [['normal', 'Normal'], ['wide', 'Wide']],
@@ -82,6 +86,7 @@ export function mount(el, ctx, params = {}) {
   };
   const change = (key, value) => {
     ctx.settings = updateSetting(ctx.settings, key, value);
+    if (key === 'taughtUpTo') ctx.profile = withTaughtLessons(ctx.profile, ctx.settings.taughtUpTo);
     save();
   };
 
@@ -101,17 +106,27 @@ export function mount(el, ctx, params = {}) {
   };
 
   const lessonNotes = h('div', { class: 'gu-notes' });
+  const addedWords = [];
+  let addedCard = false;
   const drawLessonNotes = () => {
     const n = ctx.settings.taughtUpTo;
     const missing = newHeartWords(ctx.profile.instant, n);
     const beyond = contentNote(n, ctx.content);
     lessonNotes.replaceChildren(...[
       beyond && h('p', { class: 'gu-hint' }, beyond),
+      addedWords.length > 0 && h('p', { class: 'gu-hint' }, `Added as known: ${addedWords.join(', ')}. Change them in Instant words.`),
+      addedCard && h('p', { class: 'gu-hint' }, 'Added a ph sound card, as learning. Change it in Sound cards.'),
       missing.length > 0 && h('p', { class: 'gu-hint' }, `Heart words up to lesson ${n} ${hx("that aren't on her Instant words list yet:")} ${missing.join(', ')}. ${hx('Mark them in Instant words once her tutor has taught them.')}`),
     ].filter((note) => note));
   };
   const lesson = h('select', { class: 'gu-select', 'aria-label': SETTING_HELP.taughtUpTo.label,
-    onChange: ( e) => { change('taughtUpTo', Number( (e.target).value)); drawLessonNotes(); } },
+    onChange: ( e) => {
+      const before = ctx.profile;
+      change('taughtUpTo', Number( (e.target).value));
+      addedWords.push(...Object.keys(ctx.profile.instant).filter((word) => !Object.hasOwn(before.instant, word)));
+      addedCard ||= ctx.profile.deck.length > before.deck.length;
+      drawLessonNotes();
+    } },
   LESSONS.map((l) => h('option', { value: String(l.n), selected: l.n === ctx.settings.taughtUpTo }, `${l.n}: ${l.concept}`)));
   drawLessonNotes();
 
@@ -176,6 +191,7 @@ export function mount(el, ctx, params = {}) {
     row('breakStyle', segmented('breakStyle')),
     row('textSpacing', segmented('textSpacing')),
     row('tint', segmented('tint')),
+    row('flash', segmented('flash')),
     row('tipsSeen', tipsAgain, tipsMessage),
     row('pin', pinForm),
     h('section', { class: 'gu-setting', 'data-setting': 'names' },

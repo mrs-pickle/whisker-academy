@@ -8,8 +8,12 @@
 {"id":"o-gardener","slot":"outfit","art":"wardrobe/o-gardener","starter":false,"label":"Gardening overalls","prince":"Gardening overalls"},
 {"id":"o-wizard","slot":"outfit","art":"wardrobe/o-wizard","starter":false,"label":"Wizard robe","prince":"Wizard robe"},
 {"id":"o-wedding-guest","slot":"outfit","art":"wardrobe/o-wedding-guest","starter":false,"label":"Wedding-guest dress","prince":"Wedding-guest suit"},
+{"id":"o-baker","slot":"outfit","art":"wardrobe/o-baker","starter":false,"label":"Baker apron and hat","prince":"Baker apron and hat"},
+{"id":"o-sailor","slot":"outfit","art":"wardrobe/o-sailor","starter":false,"label":"Sailor top","prince":"Sailor top"},
+{"id":"o-wedding-gown","slot":"outfit","art":"wardrobe/o-wedding-gown","starter":false,"label":"Coral wedding gown","prince":"Coral wedding suit"},
 {"id":"k-hat-blue","slot":"kitten-acc","art":"wardrobe/k-hat-blue","starter":true,"label":"Blue magic hat"},
 {"id":"k-bow-pink","slot":"kitten-acc","art":"wardrobe/k-bow-pink","starter":false,"label":"Pink bow"},
+{"id":"k-moth-wings","slot":"kitten-acc","art":"wardrobe/k-moth-wings","starter":false,"label":"Moth wings"},
 {"id":"crown-gold","slot":"crown","art":"princess/crown-gold","starter":true,"label":"Gold crown","prince":"Gold crown"},
-{"id":"crown-flower","slot":"crown","art":"princess/crown-flower","starter":false,"label":"Flower crown","prince":"Leaf crown"}
+{"id":"crown-flower","slot":"crown","art":"princess/crown-flower","starter":true,"label":"Flower crown","prince":"Leaf crown"}
 ]

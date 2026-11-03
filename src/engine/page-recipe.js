@@ -86,7 +86,7 @@ function wordsRead(keys) {
   return words;
 }
 
-const shownIn = (id) => (id === 'ted-dot-hearts' ? ['ted', 'dot'] : [id.split('-')[0]]);
+export const shownIn = (id) => (id.startsWith('ted-dot-') ? ['ted', 'dot'] : [id.split('-')[0]]);
 
 function latestPoses(cast) {
   const seen = new Set();
