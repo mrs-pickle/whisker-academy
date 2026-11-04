@@ -56,12 +56,14 @@ const CATCH_UP = Object.freeze({
   steady: Object.freeze({ words: 6, max: 7, spell: 3 }),
   quick: Object.freeze({ words: 4, max: 8, spell: 5 }),
 });
+const HOLD_BACK = 0.8;
 
-export function paceOf(settings, content, unmet = 0) {
+export function paceOf(settings, content, unmet = 0, lastAccuracy = null) {
   const name = (Object.hasOwn(PACES, settings.newWordPace ?? '') ? settings.newWordPace : 'steady');
   const pace = PACES[name];
   const rule = CATCH_UP[name];
-  const catchUp = Math.min(rule.max, Math.max(0, Math.floor(unmet / rule.words) - 1));
+  const heldBack = lastAccuracy !== null && lastAccuracy < HOLD_BACK;
+  const catchUp = heldBack ? 0 : Math.min(rule.max, Math.max(0, Math.floor(unmet / rule.words) - 1));
   const spellLow = Math.min(rule.spell, catchUp);
   const big = name === 'quick' ? Math.floor(content.words.filter(w => w.lesson === settings.taughtUpTo && w.real !== false).length / BIG_LESSON_WORDS) : 0;
   return {
@@ -197,7 +199,7 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const first = weightedOrder(easy.length > 0 ? easy : mastered, rng)
     .sort((a, b) => (b.state).box - (a.state).box)[0];
 
-  const pace = paceOf(settings, content, back ? 0 : p.read.filter(isNewWord).length);
+  const pace = paceOf(settings, content, back ? 0 : p.read.filter(isNewWord).length, lastAccuracy);
   const pairMax = Math.floor(sizes.cards / 2);
   const pencilCards = pencilPlanned(profile, settings, day) ? PENCIL_TRIM[ (settings.sessionMinutes)].cards : undefined;
   const wordBase = Math.ceil(sizes.cards / pace.wordPart);
