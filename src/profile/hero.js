@@ -1,7 +1,7 @@
 export const HEROES = Object.freeze(['princess', 'prince']);
 
-export const SAME_OUTFITS = Object.freeze(['o-baker', 'o-sailor', 'o-beach', 'o-cape', 'o-raincoat', 'o-scout', 'o-star-cloak', 'o-conductor',
-  'o-moon-swim', 'o-cloud-cape', 'o-knight', 'o-tinker', 'o-ringmaster', 'o-librarian', 'o-pajamas']);
+export const SAME_OUTFITS = Object.freeze(['o-baker', 'o-sailor', 'o-beach', 'o-cape', 'o-raincoat', 'o-scout', 'o-conductor',
+  'o-moon-swim', 'o-cloud-cape', 'o-knight', 'o-tinker', 'o-ringmaster', 'o-pajamas']);
 
 export const heroOf = (profile) => (profile?.look?.hero === 'prince' ? 'prince' : 'princess');
 

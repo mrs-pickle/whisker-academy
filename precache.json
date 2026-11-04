@@ -1,5 +1,5 @@
 {
-  "version": "9347c79af20d11309b39a4f4ec8a8161fcf2d651193d6cb7b8a33e546fe03bf0",
+  "version": "8de9ba8e55965e86ce78fce90355db4029a27a094d2f4a6b20381c60837af7bd",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -290,12 +290,14 @@
     "assets/art/prince/o-gardener.webp",
     "assets/art/prince/o-gown-pink.webp",
     "assets/art/prince/o-gown-teal.webp",
+    "assets/art/prince/o-librarian.webp",
     "assets/art/prince/o-meadow.webp",
     "assets/art/prince/o-mermaid.webp",
     "assets/art/prince/o-pirate.webp",
     "assets/art/prince/o-ranch.webp",
     "assets/art/prince/o-royal-robe.webp",
     "assets/art/prince/o-snow-queen.webp",
+    "assets/art/prince/o-star-cloak.webp",
     "assets/art/prince/o-starry-gown.webp",
     "assets/art/prince/o-swim.webp",
     "assets/art/prince/o-tunic-green.webp",
@@ -6709,7 +6711,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "d276356d5e50f3a6d784c8ee92c6a2ef00332cf605019976d45dc60f44da2146",
+      "hash": "c1ca9f9eba838f857bab372074a00c97ca9356c344076392e88639694cf702c5",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",
@@ -11189,7 +11191,7 @@
     },
     {
       "id": "r-controlled",
-      "hash": "261dde8cfd5d15d07c5edff73c89ffb44737ba515a61a6c2d19f1d79d2e83fae",
+      "hash": "22d4532f8409e1fe0edae75c04d1f97dc8bde1fc59f3fdb7201584a5d3438705",
       "files": [
         "assets/art/bg/fort.webp",
         "assets/art/pageparts/place-fort.svg",
@@ -11203,6 +11205,7 @@
         "assets/art/pageparts/thing-star.svg",
         "assets/art/pageparts/thing-turtle.svg",
         "assets/art/pageparts/thing-yarn.svg",
+        "assets/art/prince/o-star-cloak.webp",
         "assets/art/tricks/bird.webp",
         "assets/art/tricks/horn.webp",
         "assets/art/tricks/jar.webp",
@@ -13211,7 +13214,7 @@
     },
     {
       "id": "affixes-2",
-      "hash": "89518bbcf2a526c258e2228182786d36b6ddbebbcd7d4a32bd3fff212ac231ee",
+      "hash": "190eedf52a9f438a393c7827a7d5dc9855d783ea44088daa08e1965e7a970837",
       "files": [
         "assets/art/bg/academy.webp",
         "assets/art/bg/library.webp",
@@ -13221,6 +13224,7 @@
         "assets/art/pageparts/thing-potion.svg",
         "assets/art/pageparts/thing-unicorn.svg",
         "assets/art/prince/crown-book.webp",
+        "assets/art/prince/o-librarian.webp",
         "assets/art/princess/crown-book.webp",
         "assets/art/tricks/crown.webp",
         "assets/art/tricks/potion.webp",
