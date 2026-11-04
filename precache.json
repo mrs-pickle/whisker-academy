@@ -1,5 +1,5 @@
 {
-  "version": "8de9ba8e55965e86ce78fce90355db4029a27a094d2f4a6b20381c60837af7bd",
+  "version": "8fa950a05ba4e41f1a9277f1230192fc1f539975218110f8aaab3ed907638db7",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -284,6 +284,8 @@
     "assets/art/prince/o-ballet.webp",
     "assets/art/prince/o-butterfly.webp",
     "assets/art/prince/o-candy.webp",
+    "assets/art/prince/o-cape.webp",
+    "assets/art/prince/o-cloud-cape.webp",
     "assets/art/prince/o-dragon-rider.webp",
     "assets/art/prince/o-explorer.webp",
     "assets/art/prince/o-fairy.webp",
@@ -293,7 +295,9 @@
     "assets/art/prince/o-librarian.webp",
     "assets/art/prince/o-meadow.webp",
     "assets/art/prince/o-mermaid.webp",
+    "assets/art/prince/o-pajamas.webp",
     "assets/art/prince/o-pirate.webp",
+    "assets/art/prince/o-raincoat.webp",
     "assets/art/prince/o-ranch.webp",
     "assets/art/prince/o-royal-robe.webp",
     "assets/art/prince/o-snow-queen.webp",
@@ -6711,7 +6715,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "c1ca9f9eba838f857bab372074a00c97ca9356c344076392e88639694cf702c5",
+      "hash": "2ae386fd0705300426040f11b56d27574999983b7221d8a7b3ba18b8db41d68f",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",
@@ -6915,6 +6919,7 @@
         "assets/art/prince/o-gown-teal.webp",
         "assets/art/prince/o-meadow.webp",
         "assets/art/prince/o-mermaid.webp",
+        "assets/art/prince/o-pajamas.webp",
         "assets/art/prince/o-pirate.webp",
         "assets/art/prince/o-ranch.webp",
         "assets/art/prince/o-royal-robe.webp",
@@ -10237,7 +10242,7 @@
     },
     {
       "id": "vce",
-      "hash": "24ff82754f7fe239119ae977f09ff2f705b7cbf80273308fea7b95ee560a63a9",
+      "hash": "c9ea3af2a83b25ef140ec5a2f35d145ebdb5edc2d84d130621330d98382b0ddd",
       "files": [
         "assets/art/bg/maze.webp",
         "assets/art/pageparts/place-maze.svg",
@@ -10251,6 +10256,7 @@
         "assets/art/pageparts/thing-rope.svg",
         "assets/art/pageparts/thing-slide.svg",
         "assets/art/pageparts/thing-tree.svg",
+        "assets/art/prince/o-cape.webp",
         "assets/art/tricks/cage.webp",
         "assets/art/tricks/cloud.webp",
         "assets/art/tricks/cupcake.webp",
@@ -10600,7 +10606,7 @@
     },
     {
       "id": "longer-words",
-      "hash": "0590ec9942a07756b3ac718cf01923beb6e48ceb3b62ff217e7451a8ff24a107",
+      "hash": "b64dfef2d9b6ebf3c3212e169d350119974f2fff7f29f33dcc86aed88264699e",
       "files": [
         "assets/art/bg/river.webp",
         "assets/art/pageparts/place-river.svg",
@@ -10610,6 +10616,7 @@
         "assets/art/pageparts/thing-pumpkin.svg",
         "assets/art/pageparts/thing-robot.svg",
         "assets/art/pageparts/thing-windmill.svg",
+        "assets/art/prince/o-raincoat.webp",
         "assets/art/tricks/backpack.webp",
         "assets/art/tricks/boat.webp",
         "assets/art/tricks/pancake.webp",
@@ -12237,13 +12244,14 @@
     },
     {
       "id": "diphthongs",
-      "hash": "9b84fd979cd8233c1961f5601879727e619b99d58f6edfc29fdbf036701dd4fe",
+      "hash": "1894cc388cdea3b787e23ec8eb9f358837d6750f2330c6bff8148bc9f576f8bd",
       "files": [
         "assets/art/bg/clouds.webp",
         "assets/art/pageparts/place-clouds.svg",
         "assets/art/pageparts/thing-coin.svg",
         "assets/art/pageparts/thing-mouse.svg",
         "assets/art/pageparts/thing-owl.svg",
+        "assets/art/prince/o-cloud-cape.webp",
         "assets/art/tricks/coin.webp",
         "assets/art/tricks/mouse.webp",
         "assets/art/tricks/owl.webp",
