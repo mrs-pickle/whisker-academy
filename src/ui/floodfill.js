@@ -1,5 +1,7 @@
 export const LINE_THRESHOLD = 100;
 const HEX = /^#[0-9a-f]{6}$/i;
+export const ERASE_COLOR = '#ffffff';
+const CLEAR = Object.freeze([0, 0, 0, 0]);
 
 
 export function lineMask(rgba, w, h, threshold = LINE_THRESHOLD) {
@@ -19,6 +21,11 @@ export function rgbaOf(hex) {
   if (typeof hex !== 'string' || !HEX.test(hex)) return null;
   const n = parseInt(hex.slice(1), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255, 255];
+}
+
+export function paintOf(hex) {
+  if (typeof hex === 'string' && hex.toLowerCase() === ERASE_COLOR) return CLEAR;
+  return rgbaOf(hex);
 }
 
 function pushRuns(stack, mask, seen, from, to) {
@@ -68,7 +75,7 @@ export function replayFills(w, h, mask, ops) {
   const list = Array.isArray(ops) ? ops : [];
   for (let k = list.length - 1; k >= 0; k--) {
     const op = list[k];
-    const rgba = rgbaOf(op?.color);
+    const rgba = paintOf(op?.color);
     if (rgba) fill(layer, mask, w, h, op.x, op.y, rgba, seen);
   }
   return layer;

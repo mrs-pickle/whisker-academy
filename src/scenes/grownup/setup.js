@@ -76,8 +76,7 @@ export function checkSetupStep(step, answers) {
 
 export function starterChoices(wardrobe, hero) {
   const fresh = withHero(newProfile(), hero === 'prince' ? 'prince' : 'princess');
-  const starters = (Array.isArray(wardrobe) ? wardrobe : []).filter((w) => w?.starter === true);
-  const choices = dressupChoices(starters, { ...fresh, unlocked: { ...fresh.unlocked, wardrobe: [] } });
+  const choices = dressupChoices(wardrobe, { ...fresh, unlocked: { ...fresh.unlocked, wardrobe: [] } });
   return { outfit: choices.outfit.map(({ value, label }) => ({ value, label })), crown: choices.crown.map(({ value, label }) => ({ value, label })) };
 }
 
@@ -209,7 +208,7 @@ export function mount(el, ctx) {
     outfit: () => [
       h('h1', { class: 'gu-title' }, 'Something to wear'),
       h('div', { class: 'gu-look' }, preview(),
-        h('div', { class: 'gu-look-choices' }, swatchRow('outfit', 'Outfit', starterRow('outfit')), swatchRow('crown', 'Crown', starterRow('crown')))),
+        h('div', { class: ['gu-look-choices', 'gu-wear-choices'] }, swatchRow('outfit', 'Outfit', starterRow('outfit')), swatchRow('crown', 'Crown', starterRow('crown')))),
     ],
     kitten: () => [
       h('h1', { class: 'gu-title' }, 'Your kitten'),

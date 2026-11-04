@@ -15,6 +15,8 @@ const CHOICE_EVERY = 3;
 const CHOICE_WINDOW = 3;
 const S_SH_IDEA = 'close.idea.2';
 
+export const GIFT_SLOTS = Object.freeze( (['outfit', 'crown', 'kitten-acc']));
+
 const isGift = isGiftRecord;
 const same = (a, b) => a.type === b.type && a.id === b.id;
 const plain = (g) => ({ type: g.type, id: g.id });
@@ -40,23 +42,55 @@ function cycleCrayon(profile, list, offset) {
   return { type: 'crayon', id: palette[turn % palette.length] };
 }
 
+export function slotOf(id) {
+  if (typeof id !== 'string') return null;
+  return /^o-/.test(id) ? 'outfit' : /^crown-/.test(id) ? 'crown' : /^k-/.test(id) ? 'kitten-acc' : null;
+}
+
+export const giftSlot = (profile) => GIFT_SLOTS[finishedSessions(profile) % GIFT_SLOTS.length];
+
+function unownedOfSlot(profile, list, slot) {
+  const out = [];
+  for (const g of list) {
+    if (isGift(g) && g.type === 'wardrobe' && slotOf(g.id) === slot && !owns(profile, g) && !out.some(o => same(o, g))) out.push(plain(g));
+  }
+  return out;
+}
+
+function wardrobeTurns(profile, list) {
+  const start = finishedSessions(profile) % GIFT_SLOTS.length;
+  return GIFT_SLOTS.map((_, k) => unownedOfSlot(profile, list, GIFT_SLOTS[(start + k) % GIFT_SLOTS.length])).filter(q => q.length > 0);
+}
+
+const afterWardrobe = (profile, list) => ahead(profile, list).filter(g => g.type !== 'wardrobe');
+
 export function nextGift(profile, rewardsList) {
   const list = asList(rewardsList);
-  return ahead(profile, list)[0] ?? cycleCrayon(profile, list, 0);
+  return wardrobeTurns(profile, list)[0]?.[0] ?? afterWardrobe(profile, list)[0] ?? cycleCrayon(profile, list, 0);
 }
 
 export function pickGiftChoices(profile, rewardsList, rng) {
   const list = asList(rewardsList);
-  const queue = ahead(profile, list);
-  const first = queue[0] ?? cycleCrayon(profile, list, 0);
+  const turns = wardrobeTurns(profile, list);
+  const crayons = afterWardrobe(profile, list);
+  const first = turns[0]?.[0] ?? crayons[0] ?? cycleCrayon(profile, list, 0);
   if ((finishedSessions(profile) + 1) % CHOICE_EVERY !== 0) return [first];
-  const later = queue.slice(1).filter(g => !same(g, first)).slice(0, CHOICE_WINDOW);
-  const second = later.length > 0 ? rng.pick(later) : cycleCrayon(profile, list, queue.length > 0 ? 0 : 1);
+  let second;
+  if (turns.length > 0) {
+    const later = turns[0].slice(1, 1 + CHOICE_WINDOW);
+    second = later.length > 0 ? rng.pick(later) : turns[1]?.[0] ?? crayons[0] ?? cycleCrayon(profile, list, 0);
+  } else {
+    const later = crayons.slice(1).filter(g => !same(g, first)).slice(0, CHOICE_WINDOW);
+    second = later.length > 0 ? rng.pick(later) : cycleCrayon(profile, list, crayons.length > 0 ? 0 : 1);
+  }
   return same(first, second) ? [first] : [first, second];
 }
 
-export function pendingGifts(profile) {
-  return asList(profile?.pendingGifts).filter(isGift).filter(g => !owns(profile, g)).slice(0, 2).map(plain);
+export function pendingGifts(profile, rewardsList) {
+  const stored = asList(profile?.pendingGifts).filter(isGift);
+  const waiting = stored.filter(g => !owns(profile, g)).slice(0, 2).map(plain);
+  if (waiting.length > 0 || stored.length === 0) return waiting;
+  return [plain(nextGift(profile, rewardsList))];
 }
 
 export function grantGift(profile, gift, rewardsList) {

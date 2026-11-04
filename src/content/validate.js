@@ -6,6 +6,8 @@ import { RULES, affixOf, baseSegs, chunkClip, morphParts, ruleFits, ruleStep, wi
 import { tierOf } from '../curriculum/tiers.js';
 import { UNITS } from '../curriculum/units.js';
 import { artFile } from '../core/art-file.js';
+import { SAME_OUTFITS } from '../profile/hero.js';
+import { STARTER_ITEMS } from '../profile/profile.js';
 import { beforeNasal, hasNasalIE } from '../curriculum/ie-nasal.js';
 import { canDictate } from '../curriculum/dictation.js';
 import { BLOCKLIST_FORMAT, isBlocked } from './blocklist.js';
@@ -31,6 +33,7 @@ const PAIR_SWAPS = Object.freeze({ ie: 'EH/IH', ssh: 'S/SH' });
 const PAIR_NAMES = Object.freeze({ ie: 'i↔e', ssh: 's↔sh' });
 const NASALS = new Set(['M', 'N', 'NG']);
 
+const PAGE_THINGS_MAX = 4;
 const PICTURE_MAX = 200;
 
 const PRINCE_TWIN = '.prince';
@@ -446,6 +449,19 @@ function checkPictures(c, r) {
       if (found.length > 0) r.error(`${label}: picture names ${found.join(', ')} (describe characters without their names, like "a goofy crow")`);
     }
   }
+  for (const ch of c.story) {
+    for (const scene of scenesOf(ch)) {
+      const things = scene?.things;
+      if (things === undefined) continue;
+      const label = `story ${ch?.id} ${scene?.id}`;
+      if (!Array.isArray(things) || !things.every((t) => typeof t === 'string' && /^[a-z][a-z0-9-]*$/.test(t))) {
+        r.error(`${label}: things must be a list of picture names (the things its coloring page draws)`);
+        continue;
+      }
+      for (const t of new Set(things.filter((t, i) => things.indexOf(t) !== i))) r.error(`${label}: things names ${t} twice`);
+      if (things.length > PAGE_THINGS_MAX) r.error(`${label}: things has ${things.length} pictures (a page holds at most ${PAGE_THINGS_MAX})`);
+    }
+  }
 }
 
 function* stringsIn(v) {
@@ -552,15 +568,37 @@ function artRefs(c) {
       add(label, scene?.bg, 'bg');
       for (const who of list(scene?.cast)) if (!LAYERED_CAST.has(who)) add(label, who, 'cast');
       for (const s of list(scene?.sentences)) add(label, s?.trick, 'tricks');
+      for (const x of list(scene?.things)) add(label, x, 'tricks');
       for (const x of list(scene?.question?.choices)) add(label, x, 'tricks');
     }
   }
   for (const item of c.wardrobe) {
     add(`${LIST_FILES.wardrobe} ${item?.id}`, item?.art, 'wardrobe');
-    if (HERO_WORN.has(item?.slot) && typeof item?.id === 'string') add(`${LIST_FILES.wardrobe} ${item.id}`, `prince/${item.id}`, 'prince');
+    if (HERO_WORN.has(item?.slot) && typeof item?.id === 'string' && !SAME_OUTFITS.includes(item.id)) add(`${LIST_FILES.wardrobe} ${item.id}`, `prince/${item.id}`, 'prince');
   }
   for (const page of c.colorin) add(`${LIST_FILES.colorin} ${page?.id}`, page?.svg, 'colorin', '.svg');
   return refs;
+}
+
+const SLOT_PREFIX = Object.freeze({ outfit: 'o-', crown: 'crown-', 'kitten-acc': 'k-' });
+
+function checkGiftKinds(c, r) {
+  const ids = new Set();
+  for (const item of c.wardrobe) {
+    const id = item?.id;
+    if (typeof id !== 'string') continue;
+    ids.add(id);
+    const prefix = SLOT_PREFIX[ (item.slot)];
+    if (prefix === undefined || !id.startsWith(prefix)) r.error(`${LIST_FILES.wardrobe} ${id}: a ${item.slot} id starts with ${prefix ?? 'o-, crown- or k-'}`);
+    if ((item.starter === true) !== STARTER_ITEMS.includes(id)) r.error(`${LIST_FILES.wardrobe} ${id}: starter is ${item.starter}, but ${STARTER_ITEMS.includes(id) ? 'every child owns it from the start' : 'it is not a starter'} (STARTER_ITEMS)`);
+  }
+  const listed = new Set();
+  for (const g of c.rewards) {
+    if (g?.type !== 'wardrobe') continue;
+    if (listed.has(g.id)) r.error(`${LIST_FILES.rewards} ${g.id}: on the gift list twice`);
+    listed.add(g.id);
+    if (!ids.has(g.id)) r.error(`${LIST_FILES.rewards} ${g.id}: not in ${LIST_FILES.wardrobe}`);
+  }
 }
 
 function checkSceneGifts(c, r) {
@@ -884,5 +922,6 @@ export function validateContent(content, { cmu, audioManifest, artExists } = {})
   checkPrinceThings(c, r);
   checkRobot(c, r);
   checkLadder(c, r);
+  checkGiftKinds(c, r);
   return { errors: [...errors], warnings: [...warnings] };
 }

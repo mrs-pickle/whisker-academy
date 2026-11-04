@@ -264,13 +264,14 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   };
   for (const c of freshFor('cards')) addWord(c, true);
   let pairs = 0;
-  for (const kind of [p.iePairs, p.sshPairs]) {
+  const addPairs = (list) => {
     let n = 0;
-    for (const c of byPriority(kind)) {
+    for (const c of list) {
       if (n >= PAIRS_PER_KIND || pairs >= pairMax) break;
       if (cards.add(c)) { n++; pairs++; }
     }
-  }
+  };
+  addPairs(byPriority(p.iePairs));
   const toRead = p.read.filter(c => !spelled.has(c.id));
   const toMeet = weightedOrder(unmet.filter(c => !spelled.has(c.id)), rng)
     .sort((a, b) => (a.lesson) - (b.lesson) || (a.tier) - (b.tier));
@@ -279,6 +280,7 @@ export function buildSession({ content, states, settings, profile, day, rng, las
     if (meeting >= held) break;
     if (addWord(c, false, true)) meeting++;
   }
+  addPairs([...dueFirst(p.sshPairs), ...weightedOrder(p.sshPairs.filter(c => c.state === undefined), rng)]);
   for (const c of dueFirst(toRead)) addWord(c);
   const review = toRead.filter(c => (c.state === undefined ? (c.lesson) <= start : back && knows(c)));
   const reviewOrder = [...fillers(review.filter(c => !spellSet.has(c.id))), ...fillers(review.filter(c => spellSet.has(c.id)))];

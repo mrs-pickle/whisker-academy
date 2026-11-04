@@ -11,6 +11,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
       "picture": "On a dark hilltop, an old stone fort shaped like a star, and a silly queen marching up and down its yard holding a glass jar with a glowing page inside.",
+      "things": ["jar", "star", "moon"],
       "intro": ["story.ch11-1.intro.1", "story.ch11-1.intro.2"],
       "sentences": [
         {"id": "ch11-1.1", "text": "The sky is dark.", "effect": "sparkle", "trick": null},
@@ -26,6 +27,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "chip", "bix"],
       "picture": "At the gate of a star-shaped fort, a bouncy boy holds up a curly brass horn and a cheerful boy holds a torch, as storm clouds roll in from the north.",
+      "things": ["cloud", "star", "moon"],
       "intro": ["story.ch11-2.intro.1"],
       "sentences": [
         {"id": "ch11-2.1", "text": "Chip got a horn at the fort.", "effect": "item-pop", "trick": "horn"},
@@ -42,6 +44,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "tess", "nell", "vex-idle"],
       "picture": "Inside a dark stone fort during a thunderstorm, a clever girl and a baby find a ladder in a corner, a spider hangs from a thread, and a silly queen climbs up out of sight.",
+      "things": ["ladder", "spider", "web"],
       "intro": ["story.ch11-3.intro.1"],
       "sentences": [
         {"id": "ch11-3.1", "text": "Thunder is not a monster.", "effect": "sparkle", "trick": null},
@@ -57,6 +60,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "gus-flap", "vex-grab"],
       "picture": "At the top of a fort tower, a little purple bird chirps from its nest, a goofy crow flaps, and a silly queen reaches into the nest for a glowing page.",
+      "things": ["nest", "tree", "star"],
       "intro": ["story.ch11-4.intro.1"],
       "sentences": [
         {"id": "ch11-4.1", "text": "A purple bird is in the nest.", "effect": "item-pop", "trick": "bird"},
@@ -71,6 +75,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "chip", "bix"],
       "picture": "In the yard of a star fort, a slow old turtle carries a glowing page on its shell, and two boys kneel down to talk to it kindly.",
+      "things": ["rock", "plant", "star"],
       "intro": ["story.ch11-5.intro.1"],
       "sentences": [
         {"id": "ch11-5.1", "text": "A turtle has the spell.", "effect": "item-pop", "trick": "turtle"},
@@ -87,6 +92,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "vex-slip", "tess", "gus-flap"],
       "picture": "Over a star-shaped fort, the night sky fills with stars, a child holds up a glowing page, and a silly queen slips over in the dark.",
+      "things": ["moon", "ladder"],
       "intro": ["story.ch11-6.intro.1"],
       "sentences": [
         {"id": "ch11-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
@@ -104,6 +110,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "dash", "phil"],
       "picture": "At the bottom of a hill, a small dog barks happily at a red barn, and a small stuffed elephant is wrapped up in balls of yarn like a present.",
+      "things": ["yarn", "pig", "duck", "basket"],
       "intro": ["story.ch11-side-1.intro.1"],
       "sentences": [
         {"id": "ch11-side-1.1", "text": "Dash is barking at the barn.", "effect": "bounce", "trick": null},
@@ -118,6 +125,7 @@
       "bg": "fort",
       "cast": ["princess", "kitten", "thud", "chip"],
       "picture": "At a dinner table in a stone fort, a very big sleepy cat eats bread and butter, then dozes off right on the table while a bouncy boy laughs.",
+      "things": ["dish", "cup", "spoon", "muffin"],
       "intro": ["story.ch11-side-2.intro.1"],
       "sentences": [
         {"id": "ch11-side-2.1", "text": "Thud had a big dinner.", "effect": "kitten-cheer", "trick": null},

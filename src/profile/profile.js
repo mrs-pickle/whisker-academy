@@ -43,7 +43,12 @@ export const DEFAULT_DECK = Object.freeze([
 
 const PH_LESSON = 50;
 
-const STARTER_WARDROBE = Object.freeze(['o-gown-teal', 'o-gown-pink', 'o-tunic-green', 'k-hat-blue', 'crown-flower']);
+const STARTER_WARDROBE = Object.freeze(['o-gown-teal', 'o-gown-pink', 'o-meadow', 'k-hat-blue', 'k-bow-pink', 'k-sun-hat',
+  'crown-flower', 'crown-silver']);
+export const STARTER_ITEMS = Object.freeze([...STARTER_WARDROBE, 'crown-gold']);
+export const LEGACY_STARTERS = Object.freeze(['o-gown-teal', 'o-gown-pink', 'o-tunic-green', 'o-meadow', 'o-pajamas', 'k-hat-blue',
+  'crown-flower', 'crown-silver', 'crown-rainbow', 'crown-shell']);
+export const WARDROBE_SET = 2;
 const STARTER_CRAYONS = ['#e63946', '#f4a261', '#f6d55c', '#6bbf59', '#4a90d9', '#9b6bcc', '#f28fb5', '#8d5b3e'];
 
 export function newProfile(startLesson = 41) {
@@ -62,6 +67,7 @@ export function newProfile(startLesson = 41) {
     unlocked: { wardrobe: [...STARTER_WARDROBE], colorin: [], crayons: [...STARTER_CRAYONS], tricks: [], charms: [], sparkles: [] },
     sessions: [],
     giftIndex: 0,
+    wardrobeSet: WARDROBE_SET,
   }, start);
 }
 
@@ -107,7 +113,7 @@ export function latestAccuracy(profile) {
 export const GIFT_COLLECTION = Object.freeze({ wardrobe: 'wardrobe', colorin: 'colorin', crayon: 'crayons' });
 
 export function owns(profile, gift) {
-  if (gift.type === 'wardrobe' && STARTER_WARDROBE.includes(gift.id)) return true;
+  if (gift.type === 'wardrobe' && STARTER_ITEMS.includes(gift.id)) return true;
   const kept = profile?.unlocked?.[GIFT_COLLECTION[gift.type]];
   return Array.isArray(kept) && kept.includes(gift.id);
 }
@@ -174,6 +180,7 @@ const PROFILE_FIELDS = Object.freeze({
   unlocked: ( v) => fieldsOk(v, Object.fromEntries(UNLOCKED_FIELDS.map((f) => [f, isStrings]))),
   sessions: ( v) => Array.isArray(v) && v.every(isRecord),
   giftIndex: isNumber,
+  wardrobeSet: isNumber,
   customInstant: isStrings,
   pendingGifts: ( v) => Array.isArray(v) && v.every(isGiftRecord),
   passes: ( v) => Array.isArray(v) && v.every(isPassRecord),
@@ -226,6 +233,11 @@ export function normalizeProfile(stored, startLesson) {
     sessions: Array.isArray(stored.sessions) ? stored.sessions.filter((s) => isPlainObject(s) && isNumber(s.day)) : fresh.sessions,
     giftIndex: isNumber(stored.giftIndex) && stored.giftIndex >= 0 ? stored.giftIndex : fresh.giftIndex,
   };
+  if (stored.wardrobeSet !== WARDROBE_SET) {
+    const kept = profile.unlocked.wardrobe;
+    profile.unlocked = { ...profile.unlocked, wardrobe: [...kept, ...LEGACY_STARTERS.filter((id) => !kept.includes(id))] };
+    profile.wardrobeSet = WARDROBE_SET;
+  }
   if (!isNumber(stored.heartSeededTo)) delete profile.heartSeededTo;
   const custom = Array.isArray(stored.customInstant)
     ? [...new Set(stored.customInstant.filter((w) => isString(w) && w.length <= CUSTOM_WORD_MAX && CUSTOM_WORD.test(w)))]

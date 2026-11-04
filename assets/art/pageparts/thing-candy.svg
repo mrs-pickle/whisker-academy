@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="268" height="155" viewBox="0 0 268 155">
+<!-- The picture of candy, as line art. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<path class="fill" fill="#ffffff" d="M12.3,137.1 C-0.1,99.9 -0.1,55.2 12.3,17.9 L84.3,77.5 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M12.3,137.1 L8.2,122.8 L5.4,108 L3.6,92.9 L3,77.5 L3.6,62.1 L5.4,47 L8.2,32.2 L12.3,17.9 L57.8,55.5 M57.8,99.5 L12.3,137.1" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M183.7,77.5 L255.7,17.9 C268.1,55.2 268.1,99.9 255.7,137.1 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M210.2,55.5 L255.7,17.9 L259.8,32.2 L262.6,47 L264.4,62.1 L265,77.5 L264.4,92.9 L262.6,108 L259.8,122.8 L255.7,137.1 L210.2,99.5" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M54.5,77.5 C54.5,36.4 90.2,3 134,3 C177.8,3 213.5,36.4 213.5,77.5 C213.5,118.6 177.8,152 134,152 C90.2,152 54.5,118.6 54.5,77.5 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M54.5,77.5 C54.5,36.4 90.2,3 134,3 C177.8,3 213.5,36.4 213.5,77.5 C213.5,118.6 177.8,152 134,152 C90.2,152 54.5,118.6 54.5,77.5 Z" stroke-width="6"/><path d="M91.8,20.4 C121.6,57.6 121.6,102.3 96.7,142.1 M176.2,20.4 C146.4,57.6 146.4,102.3 171.3,142.1" stroke-width="5.5"/></g>
+</svg>

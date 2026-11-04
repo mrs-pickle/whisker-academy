@@ -19,6 +19,7 @@ export const PROFILE_FATES = Object.freeze({
   unlocked: 'reset',
   sessions: 'reset',
   giftIndex: 'reset',
+  wardrobeSet: 'reset',
   pendingGifts: 'reset',
   passes: 'reset',
   breaks: 'reset',

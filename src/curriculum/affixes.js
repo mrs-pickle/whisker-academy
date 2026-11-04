@@ -1,3 +1,7 @@
+import { phonemeCodes, soundKind } from './phonemes.js';
+
+
+
 const affix = (id, lesson, spellings) => Object.freeze({
   id, kind: id.endsWith('-') ? 'prefix' : 'suffix', lesson, spellings: Object.freeze([...spellings]),
 });
@@ -77,6 +81,8 @@ export function morphParts(segs, morph) {
   return { affixes, from: base, to: base + n };
 }
 
+const UE_DROPS = new Set(['ment', 'ly']);
+
 const VOWEL_LETTERS = new Set(['a', 'e', 'i', 'o', 'u']);
 
 export function baseSegs(segs, parts, base) {
@@ -91,7 +97,13 @@ export function baseSegs(segs, parts, base) {
     own[own.length - 1] = [g[0], last[1]];
     return own;
   }
-  if (base.rule === 'drop-e') return [...own, ['e', '']];
+  if (base.rule === 'drop-e') {
+    if (g.toLowerCase() === 'u' && phonemeCodes(last[1]).some((c) => soundKind(c) === 'vowel')) {
+      own[own.length - 1] = [`${g}e`, phonemeCodes(last[1]).includes('y') || phonemeCodes(last[1]).includes('U') ? 'U' : 'oo'];
+      return own;
+    }
+    return [...own, ['e', '']];
+  }
   if (base.rule === 'y-to-i') {
     if (g.toLowerCase() !== 'i') return null;
     own[own.length - 1] = ['y', last[1]];
@@ -109,7 +121,10 @@ export function ruleFits(base, rule, suffix) {
     const c = String(base.at(-1)?.[0] ?? '').toLowerCase();
     return startsVowel && v.length === 1 && VOWEL_LETTERS.has(v) && c.length === 1 && !VOWEL_LETTERS.has(c) && !'wxy'.includes(c);
   }
-  if (rule === 'drop-e') return letters.endsWith('e') && String(base.at(-1)?.[1] ?? 'x') === '' && startsVowel;
+  if (rule === 'drop-e') {
+    if (String(base.at(-1)?.[0] ?? '').toLowerCase() === 'ue') return startsVowel || UE_DROPS.has(s);
+    return letters.endsWith('e') && String(base.at(-1)?.[1] ?? 'x') === '' && startsVowel;
+  }
   if (rule === 'y-to-i') return letters.endsWith('y') && !VOWEL_LETTERS.has(letters.at(-2) ?? 'a') && !s.startsWith('i');
   return false;
 }

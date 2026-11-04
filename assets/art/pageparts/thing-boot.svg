@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="190" height="234" viewBox="0 0 190 234">
+<!-- The picture of boot, as line art. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<path class="fill" fill="#ffffff" d="M14.2,34.3 L103.6,34.3 L103.6,150.5 C141.6,150.5 184.1,168.4 186.3,206.4 L186.3,231 L14.2,231 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M103.6,47.7 L103.6,150.5 L118,151.4 L125.2,152.4 L139.1,155.8 L152.3,161 L158.4,164.3 L169.2,172 L177.8,181.6 L181,187.2 L183.6,193.1 L185.4,199.5 L186.3,206.4 L186.3,231 L14.2,231 L14.2,47.7" stroke-width="6"/><path d="M14.2,213.1 L186.3,213.1" stroke-width="4.9"/></g>
+<path class="fill" fill="#ffffff" d="M14.2,3 L103.6,3 Q114.8,3 114.8,14.2 L114.8,36.5 Q114.8,47.7 103.6,47.7 L14.2,47.7 Q3,47.7 3,36.5 L3,14.2 Q3,3 14.2,3 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M14.2,3 L103.6,3 Q114.8,3 114.8,14.2 L114.8,36.5 Q114.8,47.7 103.6,47.7 L14.2,47.7 Q3,47.7 3,36.5 L3,14.2 Q3,3 14.2,3 Z" stroke-width="5.5"/></g>
+</svg>

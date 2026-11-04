@@ -11,6 +11,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
       "picture": "In the magic workshop, a silly queen hops up and down, tapping a glowing page with her finger, and copies of the page start flying out of it like birds.",
+      "things": ["book", "lamp", "clock"],
       "intro": ["story.ch16-1.intro.1", "story.ch16-1.intro.2"],
       "sentences": [
         {"id": "ch16-1.1", "text": "Vex is hopping up and down.", "effect": "bounce", "trick": null},
@@ -24,6 +25,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "dash", "phil"],
       "picture": "Pages fly all around the workshop, a small dog leaps and snaps one out of the air, and a small stuffed elephant claps.",
+      "things": ["book", "ball", "lamp"],
       "intro": ["story.ch16-2.intro.1"],
       "sentences": [
         {"id": "ch16-2.1", "text": "Dash is running and hopping.", "effect": "bounce", "trick": null},
@@ -38,6 +40,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "tess", "bix"],
       "picture": "A stack of pages grows and grows on the workshop floor, and a clever girl holds up one page that glows warm and red.",
+      "things": ["book", "candle", "lamp"],
       "intro": ["story.ch16-3.intro.1"],
       "sentences": [
         {"id": "ch16-3.1", "text": "The stack is bigger and bigger.", "effect": "item-pop", "trick": null},
@@ -54,6 +57,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-grab", "tess"],
       "picture": "A silly queen chases a clever girl around a workbench, and the girl tucks a glowing page under a big hat while a kitten grins.",
+      "things": ["book", "box", "lamp"],
       "intro": ["story.ch16-4.intro.1"],
       "sentences": [
         {"id": "ch16-4.1", "text": "Vex chased Tess.", "effect": "bounce", "trick": null},
@@ -68,6 +72,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-slip", "nell"],
       "picture": "Fluffy bunnies and playful puppies pop out of the copied pages and tumble onto a silly queen, and a baby giggles with delight.",
+      "things": ["dog", "ball", "page"],
       "intro": ["story.ch16-5.intro.1"],
       "sentences": [
         {"id": "ch16-5.1", "text": "The spell made puppies and bunnies!", "effect": "item-pop", "trick": "bunny"},
@@ -83,6 +88,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-idle", "tess", "bix"],
       "picture": "The copied pages fade away like soap bubbles, a child holds up the one real glowing page, and a silly queen sits on the floor and sniffles.",
+      "things": ["book", "clock", "wand"],
       "intro": ["story.ch16-6.intro.1"],
       "sentences": [
         {"id": "ch16-6.1", "text": "Vex tried to grab it.", "effect": "bounce", "trick": "page"},
@@ -100,6 +106,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "thud", "chip"],
       "picture": "A very big sleepy cat naps on a soft rug in the workshop, and a bouncy boy gently pets him.",
+      "things": ["ball", "lamp", "book", "bed"],
       "intro": ["story.ch16-side-1.intro.1"],
       "sentences": [
         {"id": "ch16-side-1.1", "text": "Thud is napping on a rug.", "effect": "float", "trick": null},
@@ -114,6 +121,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "ted", "dot"],
       "picture": "A happy couple, just back from their trip, set a fresh cake on the workbench, and everyone gathers round.",
+      "things": ["whisk", "cupcake", "muffin"],
       "intro": ["story.ch16-side-2.intro.1"],
       "sentences": [
         {"id": "ch16-side-2.1", "text": "Ted and Dot are back!", "effect": "kitten-cheer", "trick": null},

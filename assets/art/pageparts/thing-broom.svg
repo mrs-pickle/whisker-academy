@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="214" height="234" viewBox="0 0 214 234">
+<!-- The picture of broom, as line art. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M106.6,3 L106.6,111.2" stroke-width="6"/></g>
+<path class="fill" fill="#ffffff" d="M56,148.1 L157.3,148.1 C184.9,182.6 203.4,212.6 210.3,231 L3,231 C9.9,212.6 28.3,182.6 56,148.1 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M161.1,152.9 L176.3,173.1 L191.6,195.6 L203,215.1 L210.3,231 L3,231 L10.3,215.1 L21.8,195.6 L37,173.1 L52.2,152.9" stroke-width="6"/><path d="M65.2,168.8 L39.8,224.1 M90.5,166.5 L79,224.1 M122.8,166.5 L134.3,224.1 M148.1,168.8 L173.4,224.1" stroke-width="3.8"/></g>
+<path class="fill" fill="#ffffff" d="M58.3,113.5 L155,113.5 Q164.2,113.5 164.2,122.8 L164.2,145.8 Q164.2,155 155,155 L58.3,155 Q49.1,155 49.1,145.8 L49.1,122.8 Q49.1,113.5 58.3,113.5 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M58.3,113.5 L155,113.5 Q164.2,113.5 164.2,122.8 L164.2,145.8 Q164.2,155 155,155 L58.3,155 Q49.1,155 49.1,145.8 L49.1,122.8 Q49.1,113.5 58.3,113.5 Z" stroke-width="5.7"/></g>
+</svg>

@@ -11,6 +11,7 @@
       "bg": "river",
       "cast": ["princess", "kitten", "gus-flap", "bix", "tess"],
       "picture": "By a river under a very long bridge, a silly queen shuffles two boxes on the dock while foxes and ducks swim past and a goofy crow watches.",
+      "things": ["duck"],
       "intro": ["story.ch9-1.intro.1", "story.ch9-1.intro.2"],
       "sentences": [
         {"id": "ch9-1.1", "text": "Foxes and ducks swim past.", "effect": "sparkle", "trick": "fox"},
@@ -26,6 +27,7 @@
       "bg": "river",
       "cast": ["princess", "kitten", "chip", "bix", "tess", "vex-grab"],
       "picture": "On a dock by a river, a bouncy boy jumps, a cheerful boy floats two boxes up high, and the boxes splash into the water as a silly queen yells.",
+      "things": ["boat", "duck", "fish"],
       "intro": ["story.ch9-2.intro.1"],
       "sentences": [
         {"id": "ch9-2.1", "text": "Chip jumped on the dock.", "effect": "bounce", "trick": null},
@@ -42,6 +44,7 @@
       "bg": "river",
       "cast": ["princess", "kitten", "gus-idle", "nell"],
       "picture": "On a riverbank, a goofy crow fishes from the dock, a little kitten in a wizard hat sings to the fish, and fish jump while two boxes float away.",
+      "things": ["net", "duck"],
       "intro": ["story.ch9-3.intro.1"],
       "sentences": [
         {"id": "ch9-3.1", "text": "Gus is fishing on the dock.", "effect": "crow-flap", "trick": "fish"},
@@ -74,6 +77,7 @@
       "bg": "river",
       "cast": ["princess", "kitten", "vex-idle", "chip", "bix"],
       "picture": "Inside a little windmill, a friendly round robot holds a glowing page and sings, while a silly queen sits on its shoulders and two boys wave hello.",
+      "things": ["windmill", "sun"],
       "intro": ["story.ch9-5.intro.1"],
       "sentences": [
         {"id": "ch9-5.1", "text": "A robot is in the windmill.", "effect": "item-pop", "trick": "robot"},
@@ -110,6 +114,7 @@
       "bg": "river",
       "cast": ["princess", "kitten", "nell", "thud"],
       "picture": "On a sunny riverbank, a baby rests against a very big sleepy cat as if it were a soft bed, and gives it a kiss on the nose.",
+      "things": ["duck", "fish"],
       "intro": ["story.ch9-side-1.intro.1"],
       "sentences": [
         {"id": "ch9-side-1.1", "text": "Nell is resting in the sun.", "effect": "sparkle", "trick": "sun"},
@@ -125,6 +130,7 @@
       "bg": "river",
       "cast": ["princess", "kitten", "phil", "nell"],
       "picture": "On a picnic blanket by a river, a small stuffed elephant holds out a napkin and a pancake, and a baby grabs the pancake, syrup everywhere.",
+      "things": ["pancake", "basket", "cup"],
       "intro": ["story.ch9-side-2.intro.1"],
       "sentences": [
         {"id": "ch9-side-2.1", "text": "Phil has a napkin and a pancake.", "effect": "item-pop", "trick": null},

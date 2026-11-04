@@ -30,12 +30,12 @@ export function mount(el, ctx, params = {}) {
   const go = (name, sceneParams) => {
     lock.run(() => ctx.router.go(name, sceneParams)).catch((err) => console.warn(`The menu could not open "${name}"`, err));
   };
-  const waiting = pendingGifts(ctx.profile);
+  const waiting = pendingGifts(ctx.profile, ctx.content?.rewards ?? []);
   if (params.home === true) ctx.giftWaits = true;
   const stays = params.from === 'reward' || (!cold && ctx.giftWaits === true);
   const offerGift = () => {
     if (!lock.locked()) ctx.giftWaits = false;
-    go('reward', { gifts: pendingGifts(ctx.profile), late: true });
+    go('reward', { gifts: pendingGifts(ctx.profile, ctx.content?.rewards ?? []), late: true });
   };
   const spent = (event) => {
     const first = cold;
@@ -67,7 +67,7 @@ export function mount(el, ctx, params = {}) {
   const play = (event) => {
     if (spent(event)) return;
     const onward = () => {
-      if (pendingGifts(ctx.profile).length > 0) offerGift();
+      if (pendingGifts(ctx.profile, ctx.content?.rewards ?? []).length > 0) offerGift();
       else go(adventureScene(ctx.profile));
     };
     if (ctx.dayEnding) lock.run(() => ctx.dayEnding).then(onward).catch((err) => console.warn('The menu could not go on to the adventure', err));

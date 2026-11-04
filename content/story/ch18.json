@@ -11,6 +11,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "gus-idle", "tess"],
       "picture": "In the Academy library, a clever girl stirs a bubbling pink potion in a little bottle with a spoon, beside a big old spell book with loose pages.",
+      "things": ["shelf"],
       "intro": ["story.ch18-1.intro.1", "story.ch18-1.intro.2"],
       "sentences": [
         {"id": "ch18-1.1", "text": "Tess has a potion.", "effect": "item-pop", "trick": "potion"},
@@ -25,6 +26,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "bix", "chip"],
       "picture": "High on a library shelf, between the books, two big round eyes blink in the dark, and a cheerful boy and a bouncy boy peer up at them.",
+      "things": ["book", "candle"],
       "intro": ["story.ch18-2.intro.1"],
       "sentences": [
         {"id": "ch18-2.1", "text": "A creature is on the shelf.", "effect": "item-pop", "trick": "shelf"},
@@ -39,6 +41,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "bix", "chip"],
       "picture": "A wise old owl in little round glasses sits on a stack of books reading, and two boys help put books back on the shelf.",
+      "things": ["shelf", "lamp"],
       "intro": ["story.ch18-3.intro.1"],
       "sentences": [
         {"id": "ch18-3.1", "text": "The owl is a reader.", "effect": "sparkle", "trick": "owl"},
@@ -54,6 +57,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
       "picture": "A silly queen, dusty and yawning, shuffles into the library holding one last glowing page, and a friendly crow flaps in surprise.",
+      "things": ["book", "broom", "candle"],
       "intro": ["story.ch18-4.intro.1"],
       "sentences": [
         {"id": "ch18-4.1", "text": "Vex is dusty and sleepy.", "effect": "float", "trick": null},
@@ -68,6 +72,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "vex-idle", "nell"],
       "picture": "A silly queen kneels and hands a glowing page to a child, and a baby hugs the queen's knee.",
+      "things": ["book", "shelf", "candle"],
       "intro": ["story.ch18-5.intro.1"],
       "sentences": [
         {"id": "ch18-5.1", "text": "Vex will give you the page.", "effect": "sparkle", "trick": "page"},
@@ -83,6 +88,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "vex-idle", "tess", "bix"],
       "picture": "The big spell book glows gold as every page flies home into it, a clever girl pours the last drop of potion on its spine, and everyone cheers.",
+      "things": ["spoon", "page"],
       "intro": ["story.ch18-6.intro.1"],
       "sentences": [
         {"id": "ch18-6.1", "text": "The potion is dripping.", "effect": "sparkle", "trick": "potion"},
@@ -101,6 +107,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "phil", "nell"],
       "picture": "At a little library table, a baby sips from a pink cup and a small stuffed elephant holds a green cup, and they giggle.",
+      "things": ["teapot", "book", "shelf"],
       "intro": ["story.ch18-side-1.intro.1"],
       "sentences": [
         {"id": "ch18-side-1.1", "text": "Nell has a pinkish cup.", "effect": "item-pop", "trick": "cup"},
@@ -115,6 +122,7 @@
       "bg": "library",
       "cast": ["princess", "kitten", "thud", "dash"],
       "picture": "Down the stairs in a cozy library basement, a very big sleepy cat snoozes on a pile of old cushions, and a small dog peeks in.",
+      "things": ["broom", "lamp", "box", "candle"],
       "intro": ["story.ch18-side-2.intro.1"],
       "sentences": [
         {"id": "ch18-side-2.1", "text": "Thud is in the basement.", "effect": "float", "trick": null},

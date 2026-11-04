@@ -67,6 +67,12 @@ self.addEventListener('install', (event) => {
   event.waitUntil(precache());
 });
 
+self.addEventListener('message', (event) => {
+  if (event.data?.type !== 'skip-waiting') return;
+  const takingOver = self.skipWaiting();
+  event.waitUntil?.(takingOver);
+});
+
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keep = new Set([CACHE, ...await packCaches()]);

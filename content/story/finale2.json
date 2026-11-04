@@ -10,6 +10,7 @@
       "bg": "academy",
       "cast": ["princess", "kitten", "ted", "dot"],
       "picture": "The Academy courtyard is full of bunting, book stalls and balloons for the Book Fair, and a happy couple wave from the gate.",
+      "things": ["balloon", "cake", "star"],
       "intro": ["story.finale2-1.intro.1", "story.finale2-1.intro.2"],
       "sentences": [
         {"id": "finale2-1.1", "text": "It is the Book Fair!", "effect": "sparkle", "trick": "book"},
@@ -23,6 +24,7 @@
       "bg": "academy",
       "cast": ["princess", "kitten", "bix", "tess", "chip"],
       "picture": "On a little stage at the Book Fair, three friends take turns reading aloud from the big golden spell book.",
+      "things": ["shelf", "balloon", "lamp"],
       "intro": ["story.finale2-2.intro.1"],
       "sentences": [
         {"id": "finale2-2.1", "text": "Tess will read the book.", "effect": "sparkle", "trick": "book"},
@@ -36,6 +38,7 @@
       "bg": "academy",
       "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
       "picture": "A silly queen with a big crooked crown stands on the stage and reads from the golden book, and a friendly crow beams up at her.",
+      "things": ["feather", "balloon", "star"],
       "intro": ["story.finale2-3.intro.1"],
       "sentences": [
         {"id": "finale2-3.1", "text": "Vex will read the book too.", "effect": "sparkle", "trick": "book"},
@@ -50,6 +53,7 @@
       "bg": "academy",
       "cast": ["princess", "kitten", "nell", "phil"],
       "picture": "A white unicorn with a rainbow mane trots around the Book Fair, a baby rides on its back, and a small stuffed elephant waves.",
+      "things": ["rainbow", "balloon", "star"],
       "intro": ["story.finale2-4.intro.1"],
       "sentences": [
         {"id": "finale2-4.1", "text": "A unicorn is at the fair!", "effect": "item-pop", "trick": "unicorn"},
@@ -64,6 +68,7 @@
       "bg": "academy",
       "cast": ["princess", "kitten", "vex-idle", "ted-dot-hearts", "dash"],
       "picture": "Everyone at the Book Fair gathers round a child wearing a new crown shaped like an open book, the kitten purrs, and even the silly queen smiles.",
+      "things": ["crown", "balloon", "star"],
       "intro": ["story.finale2-5.intro.1"],
       "sentences": [
         {"id": "finale2-5.1", "text": "You get a book crown!", "effect": "sparkle", "trick": null},

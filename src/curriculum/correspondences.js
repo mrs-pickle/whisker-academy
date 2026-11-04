@@ -15,6 +15,8 @@ export const UNSTRESSED = 'V0';
 
 export const SIGNAL = 'eiy';
 
+export const SOFT = 'c/g';
+
 const cg =(g, p, lesson, before) => Object.freeze(before === undefined ? { g, p, lesson } : { g, p, lesson, before });
 
 const ca = (g, p, lesson, after) => Object.freeze({ g, p, lesson, after });
@@ -112,6 +114,7 @@ export const CORRESPONDENCES = Object.freeze([
   cg('o', 'O', 72, 's+t'),
   cg('y', 'I', 73, END),
   cg('y', 'I', 73, 'ing'),
+  cg('y', 'I', 73, OPEN),
   cg('y', 'E', 74, END),
   cg('le', '@ l', 75, END),
   cg('le', '@ l', 75, 's'),
@@ -180,6 +183,7 @@ export const CORRESPONDENCES = Object.freeze([
   cg('ough', 'O', 116),
   cg('c', 's', 117, SIGNAL),
   cg('g', 'j', 117, SIGNAL),
+  ca('e', '', 117, SOFT),
   cg('ch', 'sh', 118),
   cg('ch', 'k', 118),
   ca('gn', 'n', 118, START),

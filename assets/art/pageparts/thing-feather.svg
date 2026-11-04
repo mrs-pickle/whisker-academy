@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="182" height="234" viewBox="0 0 182 234">
+<!-- The picture of feather, as line art. A part for the page maker: fills and ink back to front; regions are numbered when a page is composed. -->
+<path class="fill" fill="#ffffff" d="M156.5,3 C192.6,25.6 183.6,100.1 138.4,152 C104.6,190.4 64,206.2 32.3,208.4 C32.3,172.3 50.4,115.9 82,75.2 C104.6,45.9 129.4,14.3 156.5,3 Z"/>
+<g class="ink" pointer-events="none" fill="none" stroke="#221d19" stroke-linecap="round" stroke-linejoin="round"><path d="M156.5,3 C192.6,25.6 183.6,100.1 138.4,152 C104.6,190.4 64,206.2 32.3,208.4 C32.3,172.3 50.4,115.9 82,75.2 C104.6,45.9 129.4,14.3 156.5,3 Z" stroke-width="6"/><path d="M156.5,7.5 C136.2,70.7 93.3,149.7 3,231" stroke-width="6"/><path d="M167.8,59.4 L149.7,70.7 M68.5,106.8 L91,120.4 M136.2,140.7 L115.9,138.4" stroke-width="4.3"/></g>
+</svg>

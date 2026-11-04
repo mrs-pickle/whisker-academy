@@ -11,6 +11,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
       "picture": "Inside a little red train on a rainy day, rain streams down the round windows, and a silly queen with a glowing page in her hat waves from her seat.",
+      "things": ["cloud", "rainbow", "lamp"],
       "intro": ["story.ch12-1.intro.1", "story.ch12-1.intro.2"],
       "sentences": [
         {"id": "ch12-1.1", "text": "Rain is on the train.", "effect": "sparkle", "trick": "train"},
@@ -26,6 +27,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "tess", "bix"],
       "picture": "Inside a rainy train, a clever girl and a cheerful boy sit on red seats eating peaches, sheep pass by outside the window, and the girl holds a little key.",
+      "things": ["peach", "lamb", "key"],
       "intro": ["story.ch12-2.intro.1"],
       "sentences": [
         {"id": "ch12-2.1", "text": "Tess and Bix have a seat.", "effect": "kitten-cheer", "trick": null},
@@ -41,6 +43,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "nell", "chip"],
       "picture": "In a train car, a white goat nibbles a raincoat, a snail slides slowly along the floor, and a baby points out of the window at a rainbow.",
+      "things": ["rainbow", "train"],
       "intro": ["story.ch12-3.intro.1"],
       "sentences": [
         {"id": "ch12-3.1", "text": "A goat is on the train!", "effect": "bounce", "trick": "goat"},
@@ -57,6 +60,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "gus-flap", "vex-grab"],
       "picture": "In a dark train tunnel, a goofy crow holds up a bright lantern, and a silly queen hangs on tight to the top of the train, a page flapping in her hand.",
+      "things": ["lamp", "star", "moon", "train"],
       "intro": ["story.ch12-4.intro.1"],
       "sentences": [
         {"id": "ch12-4.1", "text": "Gus has a light.", "effect": "item-pop", "trick": null},
@@ -72,6 +76,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "vex-slip", "bix"],
       "picture": "By a lake next to the train track, a silly queen jumps into a little sailboat that is still tied up, and tumbles into the water with a splash.",
+      "things": ["duck", "fish", "rope"],
       "intro": ["story.ch12-5.intro.1"],
       "sentences": [
         {"id": "ch12-5.1", "text": "Vex is in a boat.", "effect": "item-pop", "trick": "boat"},
@@ -87,6 +92,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "tess", "chip", "nell"],
       "picture": "Beside a little red train, a child holds up a glowing page as the sun comes out, and a bouncy boy and a baby play on the train steps.",
+      "things": ["clock", "ball"],
       "intro": ["story.ch12-6.intro.1"],
       "sentences": [
         {"id": "ch12-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
@@ -105,6 +111,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "phil", "dot"],
       "picture": "In the dining car of a train, a small stuffed elephant pours tea and spills it everywhere, and a rag doll laughs with a green bean in her hand.",
+      "things": ["teapot", "spoon", "muffin"],
       "intro": ["story.ch12-side-1.intro.1"],
       "sentences": [
         {"id": "ch12-side-1.1", "text": "Phil has a cup of tea.", "effect": "item-pop", "trick": "cup"},
@@ -119,6 +126,7 @@
       "bg": "train",
       "cast": ["princess", "kitten", "thud", "nell"],
       "picture": "Outside a train window it is snowing, a baby has made a little snowman, and a very big sleepy cat naps in the snow with snow on his head.",
+      "things": ["snowman", "mitten", "hat", "cloud"],
       "intro": ["story.ch12-side-2.intro.1"],
       "sentences": [
         {"id": "ch12-side-2.1", "text": "Snow is on the window.", "effect": "sparkle", "trick": null},

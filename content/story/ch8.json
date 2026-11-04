@@ -11,6 +11,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "gus-flap", "bix"],
       "picture": "In front of a tall hedge maze, a goofy crow flaps down with news, and a child in a new magic cape taps a leafy gate that swings open.",
+      "things": ["hat", "tree"],
       "intro": ["story.ch8-1.intro.1", "story.ch8-1.intro.2"],
       "sentences": [
         {"id": "ch8-1.1", "text": "Gus came with a spell.", "effect": "crow-flap", "trick": "page"},
@@ -28,6 +29,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "chip", "bix", "tess"],
       "picture": "In a hedge maze, a white kite is stuck at the top of a pine tree, a bouncy boy jumps for it and a cheerful boy floats it down.",
+      "things": ["tree", "cloud"],
       "intro": ["story.ch8-2.intro.1"],
       "sentences": [
         {"id": "ch8-2.1", "text": "A white kite is in a pine.", "effect": "item-pop", "trick": "kite"},
@@ -44,6 +46,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "vex-grab", "gus-idle"],
       "picture": "In a hedge maze, a silly queen reaches for a kite with a long pole and a coil of rope, while a goofy crow tells her a joke and the pole snaps.",
+      "things": ["stick", "tree"],
       "intro": ["story.ch8-3.intro.1"],
       "sentences": [
         {"id": "ch8-3.1", "text": "Vex has a rope and a pole.", "effect": "item-pop", "trick": "rope"},
@@ -61,6 +64,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "nell"],
       "picture": "Through a hole in a hedge, a cute mule plays a silver flute, and a white kite drifts down beside it while a baby claps.",
+      "things": ["tree", "sun"],
       "intro": ["story.ch8-4.intro.1"],
       "sentences": [
         {"id": "ch8-4.1", "text": "Here is a hole in the maze.", "effect": "sparkle", "trick": null},
@@ -77,6 +81,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "tess"],
       "picture": "In a hedge maze, a row of little gray mice carry a loose page away, spinning in circles, while a little kitten in a wizard hat races after them.",
+      "things": ["cat", "tree"],
       "intro": ["story.ch8-5.intro.1"],
       "sentences": [
         {"id": "ch8-5.1", "text": "Nice mice race in a line.", "effect": "item-pop", "trick": "mice"},
@@ -92,6 +97,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "vex-idle", "tess", "nell"],
       "picture": "In a hedge maze, a silly queen guards a huge gold birdcage with a page inside, a girl with two hair buns shrinks it, and a baby hugs the queen.",
+      "things": ["cupcake"],
       "intro": ["story.ch8-6.intro.1"],
       "sentences": [
         {"id": "ch8-6.1", "text": "Vex hid the spell in a cage.", "effect": "item-pop", "trick": "cage"},
@@ -111,6 +117,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "nell"],
       "picture": "In a hedge maze, a baby whooshes down a little slide again and again with a kitten in a wizard hat riding in her lap.",
+      "things": ["slide", "cat", "tree", "sun"],
       "intro": ["story.ch8-side-1.intro.1"],
       "sentences": [
         {"id": "ch8-side-1.1", "text": "Nell is on the slide.", "effect": "sparkle", "trick": null},
@@ -126,6 +133,7 @@
       "bg": "maze",
       "cast": ["princess", "kitten", "thud"],
       "picture": "In the shade of a hedge, a very big sleepy cat naps on a flat stone by a garden gate, and does not wake up at all.",
+      "things": ["rock", "tree", "sun"],
       "intro": ["story.ch8-side-2.intro.1"],
       "sentences": [
         {"id": "ch8-side-2.1", "text": "Thud is in the shade.", "effect": "sparkle", "trick": null},

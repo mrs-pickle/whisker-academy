@@ -7,7 +7,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   taughtUpTo: 41,
   sessionMinutes: 15,
   copilot: true,
-  sShContrast: false,
+  sShContrast: true,
   ieEmphasis: true,
   newWordPace: 'steady',
   cardRoutine: 'sound',
@@ -17,7 +17,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
   tint: 'paper',
   pin: null,
   printWords: true,
-  flash: false,
+  flash: true,
+  gamesOffered: true,
   muted: false,
   tipsSeen: Object.freeze({}),
 });
@@ -52,7 +53,7 @@ function tipsSeen(value) {
 const SETTING_TYPES = Object.freeze({
   taughtUpTo: 'number', sessionMinutes: 'number', copilot: 'boolean', sShContrast: 'boolean', ieEmphasis: 'boolean',
   newWordPace: 'string', cardRoutine: 'string', breakStyle: 'string', mixOffered: 'boolean', textSpacing: 'string', tint: 'string', pin: 'string',
-  printWords: 'boolean', flash: 'boolean', muted: 'boolean', tipsSeen: 'object',
+  printWords: 'boolean', flash: 'boolean', gamesOffered: 'boolean', muted: 'boolean', tipsSeen: 'object',
 });
 
 export function isSettingsShape(raw) {
@@ -66,11 +67,12 @@ export function isSettingsShape(raw) {
 export function normalizeSettings(raw) {
   const r = raw !== null && typeof raw === 'object' && !Array.isArray(raw) ? (raw) : {};
   const d = DEFAULT_SETTINGS;
+  const games = r.gamesOffered === true;
   return {
     taughtUpTo: clampTaughtUpTo(r.taughtUpTo),
     sessionMinutes: oneOf(r.sessionMinutes, SESSION_MINUTES, d.sessionMinutes),
     copilot: bool(r.copilot, d.copilot),
-    sShContrast: bool(r.sShContrast, d.sShContrast),
+    sShContrast: games ? bool(r.sShContrast, d.sShContrast) : true,
     ieEmphasis: bool(r.ieEmphasis, d.ieEmphasis),
     newWordPace: oneOf(r.newWordPace, NEW_WORD_PACES, d.newWordPace),
     cardRoutine: oneOf(r.cardRoutine, CARD_ROUTINES, d.cardRoutine),
@@ -80,7 +82,8 @@ export function normalizeSettings(raw) {
     tint: name(r.tint, d.tint),
     pin: typeof r.pin === 'string' && r.pin.length > 0 && r.pin.length <= MAX_PIN_HASH_LENGTH ? r.pin : d.pin,
     printWords: bool(r.printWords, d.printWords),
-    flash: bool(r.flash, d.flash),
+    flash: games ? bool(r.flash, d.flash) : true,
+    gamesOffered: true,
     muted: bool(r.muted, d.muted),
     tipsSeen: tipsSeen(r.tipsSeen),
   };

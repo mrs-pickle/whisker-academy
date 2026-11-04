@@ -1,4 +1,4 @@
-import { CORRESPONDENCES } from './correspondences.js';
+import { CORRESPONDENCES, SOFT } from './correspondences.js';
 import { segCorrespondence } from './decodable.js';
 import { baseSegs, morphParts } from './affixes.js';
 import { consonantClusters, phonemeCodes, soundKind } from './phonemes.js';
@@ -38,6 +38,7 @@ export function competingBoxes(segs, shape) {
   if (parts) return competingBoxes(parts.base).flatMap((j) => (parts.from + j < parts.to ? [parts.from + j] : []));
   return segs.flatMap((_, i) => {
     const c = segCorrespondence(segs, i, shape?.stress ?? undefined);
+    if (i + 1 < segs.length && segCorrespondence(segs, i + 1)?.after === SOFT) return [i];
     return c && c.lesson >= SPELLING_CHOICE_LESSON && (SPELLINGS.get(c.p)?.size ?? 0) > 1 ? [i] : [];
   });
 }

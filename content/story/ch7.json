@@ -11,6 +11,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-jam", "gus-idle"],
       "picture": "In a magic workshop, a silly queen still sticky with jam sniffs at a big old book, while loose pages fly up past a goofy crow.",
+      "things": ["lamp"],
       "intro": ["story.ch7-1.intro.1", "story.ch7-1.intro.2", "story.ch7-1.intro.3"],
       "sentences": [
         {"id": "ch7-1.1", "text": "Vex is at the big book.", "effect": "item-pop", "trick": "book"},
@@ -26,6 +27,7 @@
       "bg": "toyroom",
       "cast": ["princess", "kitten", "ted", "dot"],
       "picture": "In a toy room, a teddy bear and a rag doll just back from a trip unpack a suitcase, and the rag doll holds up a long list.",
+      "things": ["trunk", "ball"],
       "intro": ["story.ch7-2.intro.1", "story.ch7-2.intro.2"],
       "sentences": [
         {"id": "ch7-2.1", "text": "Ted and Dot are back!", "effect": "sparkle", "trick": null},
@@ -41,6 +43,7 @@
       "bg": "seashore",
       "cast": ["princess", "kitten", "bix", "tess", "nell"],
       "picture": "On a sunny beach, a cheerful boy, a girl with two hair buns and a baby find a pink shell that sings, while a little kitten in a wizard hat listens.",
+      "things": ["pail", "sun"],
       "intro": ["story.ch7-3.intro.1", "story.ch7-3.intro.2"],
       "sentences": [
         {"id": "ch7-3.1", "text": "The shells ring and ring!", "effect": "sparkle", "trick": "shell"},
@@ -58,6 +61,7 @@
       "bg": "seashore",
       "cast": ["princess", "kitten", "vex-grab", "gus-flap"],
       "picture": "On a beach, a silly queen tiptoes up with a big old trunk to grab a pink shell, while a goofy crow flaps and winks at a child.",
+      "things": ["pail", "shell", "sun"],
       "intro": ["story.ch7-4.intro.1"],
       "sentences": [
         {"id": "ch7-4.1", "text": "Vex is on the bank.", "effect": "sparkle", "trick": null},
@@ -75,6 +79,7 @@
       "bg": "seashore",
       "cast": ["princess", "kitten", "chip", "bix", "gus-flap"],
       "picture": "At the edge of the sea, a pink shrimp springs out of the water with a loose page, while a bouncy boy and a cheerful boy tug on a long string.",
+      "things": ["net", "shell"],
       "intro": ["story.ch7-5.intro.1"],
       "sentences": [
         {"id": "ch7-5.1", "text": "Splash! A shrimp sprang up.", "effect": "bounce", "trick": "shrimp"},
@@ -90,6 +95,7 @@
       "bg": "seashore",
       "cast": ["princess", "kitten", "vex-slip", "chip"],
       "picture": "On a beach, a silly queen slips off a wet plank into the sand as her trunk sinks, and a child holds up a glowing page while a shrimp waves.",
+      "things": ["pail"],
       "intro": ["story.ch7-6.intro.1"],
       "sentences": [
         {"id": "ch7-6.1", "text": "Vex slips on the wet plank.", "effect": "vex-slip", "trick": null},
@@ -109,6 +115,7 @@
       "bg": "seashore",
       "cast": ["princess", "kitten", "nell"],
       "picture": "On a beach, a friendly skunk peeks out of a pile of junk and winks at a little kitten in a wizard hat, while a baby sings to it.",
+      "things": ["cat", "box", "pail"],
       "intro": ["story.ch7-side-1.intro.1"],
       "sentences": [
         {"id": "ch7-side-1.1", "text": "A skunk is in the junk.", "effect": "item-pop", "trick": "skunk"},
@@ -124,6 +131,7 @@
       "bg": "seashore",
       "cast": ["princess", "kitten", "dash"],
       "picture": "On a beach, a spotted ship cat holds a dish with a shrimp in it, and the shrimp springs out and away as a little kitten laughs.",
+      "things": ["cat", "shell"],
       "intro": ["story.ch7-side-2.intro.1"],
       "sentences": [
         {"id": "ch7-side-2.1", "text": "Dash has a shrimp in a dish.", "effect": "item-pop", "trick": "dish"},

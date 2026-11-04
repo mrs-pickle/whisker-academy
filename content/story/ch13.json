@@ -11,6 +11,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "vex-grab", "gus-idle"],
       "picture": "At the mouth of a sea cave, a silly queen holds a fishing hook with a glowing page caught on it, and points into the cave.",
+      "things": ["rock", "lamp", "moon"],
       "intro": ["story.ch13-1.intro.1", "story.ch13-1.intro.2"],
       "sentences": [
         {"id": "ch13-1.1", "text": "Vex has a hook.", "effect": "item-pop", "trick": null},
@@ -26,6 +27,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "bix", "tess"],
       "picture": "Inside a cool cave, a round pool glows like the moon, a cheerful boy taps the water with a big silver spoon, and a clever girl holds a broom.",
+      "things": ["broom", "rock"],
       "intro": ["story.ch13-2.intro.1"],
       "sentences": [
         {"id": "ch13-2.1", "text": "The pool is a moon!", "effect": "sparkle", "trick": "moon"},
@@ -42,6 +44,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "gus-flap", "nell"],
       "picture": "In a glowing cave, a goofy crow flies in with a bowl of fruit, a baby drinks fruit juice, and the pool shines blue.",
+      "things": ["cup", "moon", "rock"],
       "intro": ["story.ch13-3.intro.1"],
       "sentences": [
         {"id": "ch13-3.1", "text": "Gus flew in with fruit.", "effect": "crow-flap", "trick": "fruit"},
@@ -57,6 +60,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "vex-grab", "chip"],
       "picture": "By a glowing pool in a cave, a silly queen fishes with a long pole and pulls up an old boot, and a little kitten dips one paw in the water.",
+      "things": ["boot", "cat", "rock"],
       "intro": ["story.ch13-4.intro.1"],
       "sentences": [
         {"id": "ch13-4.1", "text": "Vex saw the spell.", "effect": "sparkle", "trick": "page"},
@@ -71,6 +75,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "tess", "bix"],
       "picture": "By a moon pool in a cave, a little kitten in a wizard hat waves a magic wand, and a heavy glowing page rises up out of the water.",
+      "things": ["wand", "star", "moon"],
       "intro": ["story.ch13-5.intro.1"],
       "sentences": [
         {"id": "ch13-5.1", "text": "The cat has a wand.", "effect": "item-pop", "trick": null},
@@ -87,6 +92,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "vex-slip", "gus-idle"],
       "picture": "In a moonlit cave, a child holds up a glowing page, a silly queen slips into a muddy swamp, and a goofy crow puts a feather on her head.",
+      "things": ["feather", "mud"],
       "intro": ["story.ch13-6.intro.1"],
       "sentences": [
         {"id": "ch13-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
@@ -104,6 +110,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "chip", "dash"],
       "picture": "At the mouth of a sea cave, a bouncy boy cooks a pudding over a little fire, and a small dog has stepped right into the pudding.",
+      "things": ["spoon", "boot", "dish", "cup"],
       "intro": ["story.ch13-side-1.intro.1"],
       "sentences": [
         {"id": "ch13-side-1.1", "text": "Chip will cook a pudding.", "effect": "item-pop", "trick": null},
@@ -118,6 +125,7 @@
       "bg": "cave",
       "cast": ["princess", "kitten", "thud", "nell"],
       "picture": "In a quiet cave, a very big sleepy cat gives an enormous yawn, and a baby crawls over to snuggle under his paw.",
+      "things": ["bed", "moon", "star", "rock"],
       "intro": ["story.ch13-side-2.intro.1"],
       "sentences": [
         {"id": "ch13-side-2.1", "text": "Thud has a big yawn.", "effect": "kitten-cheer", "trick": null},

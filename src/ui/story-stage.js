@@ -1,5 +1,6 @@
 import { h } from '../core/dom.js';
 import { newProfile } from '../profile/profile.js';
+import { SAME_OUTFITS } from '../profile/hero.js';
 import { artUrl } from './components.js';
 
 export const STAGE_EFFECTS = Object.freeze(['vex-slip', 'vex-bonk', 'crow-flap', 'item-pop', 'float', 'shrink', 'sparkle', 'ring-found', 'kitten-cheer', 'bounce']);
@@ -9,7 +10,8 @@ const DEFAULT_LOOK = Object.freeze(newProfile().look);
 const SKINS = Object.freeze(['s1', 's2', 's3', 's4', 's5']);
 const HAIRS = Object.freeze(['long', 'curly', 'bun']);
 const HAIR_COLORS = Object.freeze(['brown', 'black', 'blonde', 'red']);
-const CROWNS = Object.freeze(['gold', 'flower', 'book']);
+const CROWNS = Object.freeze(['gold', 'flower', 'silver', 'rainbow', 'shell', 'book',
+  'snowflake', 'butterfly', 'star', 'heart', 'dragon', 'candy', 'sun', 'peacock']);
 const FURS = Object.freeze(['orange', 'gray', 'black', 'calico']);
 export const LOOK_OPTIONS = Object.freeze({ skin: SKINS, hair: HAIRS, hairColor: HAIR_COLORS, crown: CROWNS, kittenFur: FURS });
 const OUTFIT = /^o-[a-z0-9-]+$/;
@@ -24,7 +26,7 @@ const optional = (value, allowed, fallback) => (value === undefined ? fallback :
 
 const isPrince = (look) => look?.hero === 'prince';
 
-export const outfitArt = (id, look) => `${isPrince(look) ? 'prince' : 'wardrobe'}/${id}`;
+export const outfitArt = (id, look) => `${isPrince(look) && !SAME_OUTFITS.includes(id) ? 'prince' : 'wardrobe'}/${id}`;
 
 export function castArt(id, look, pose = 'sit') {
   const l = look ?? DEFAULT_LOOK;

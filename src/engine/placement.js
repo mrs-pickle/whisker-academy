@@ -5,11 +5,11 @@ import { clampTaughtUpTo } from '../profile/settings.js';
 import { LINE_MISSES, questSelection, scoreLine } from './quest-results.js';
 
 
-export const ASSESSMENT_DEADLINES = Object.freeze({ ladder: 6 * 60000, nonsense: 7.5 * 60000, dictation: 9.5 * 60000 });
+export const ASSESSMENT_DEADLINES = Object.freeze({ mix: 4 * 60000, dictation: 5.5 * 60000 });
 
 export const READ_MISSES = 1;
 
-export const DICTATION_WORDS = 5;
+export const DICTATION_WORDS = 3;
 
 
 export function ladderLines(content) {

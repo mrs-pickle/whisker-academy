@@ -116,7 +116,7 @@ export function dayOptions({ content, parts, profile, states, scene, practice, d
   const hers = unique(practice).filter(isThing);
   const read = wordsRead(states.keys());
   const fromWords = (content.words ?? []).map((w) => w.w).filter((w) => read.has(w) && isThing(w));
-  const tricksOf = (s) => s.sentences.flatMap((line) => line.trick ?? []).filter(isThing);
+  const tricksOf = (s) => [...s.sentences.flatMap((line) => line.trick ?? []), ...(s.things ?? [])].filter(isThing);
   const recipeOf = (s, place = s.bg, who = unique(s.cast.map(cast).filter(isCast).flatMap(inRow))) => ({ place, scene: s.id,
     cast: (who.length > 0 ? who : met).slice(0, MAX_CAST),
     things: unique([...hers, ...tricksOf(s), ...fromWords]).slice(0, MAX_THINGS) });

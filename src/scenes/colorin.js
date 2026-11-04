@@ -4,7 +4,7 @@ import { composePage } from '../engine/page-recipe.js';
 import { pageBlobId, pageFillKey, pagesNow, storyFillKey } from '../profile/pages.js';
 import { newProfile } from '../profile/profile.js';
 import { artUrl, bigButton, holdToActivate, kittenBubble, layeredArt } from '../ui/components.js';
-import { cleanOps, fillRegion, lineMask, replayFills, rgbaOf } from '../ui/floodfill.js';
+import { ERASE_COLOR, cleanOps, fillRegion, lineMask, paintOf, replayFills } from '../ui/floodfill.js';
 import { pageUrl } from '../ui/page-parts.js';
 import { notePrinted, printOptions, printPages } from '../ui/print-pages.js';
 import { castArt } from '../ui/story-stage.js';
@@ -13,6 +13,7 @@ import { castArt } from '../ui/story-stage.js';
 export const COLORIN_LINES = Object.freeze({ pick: 'colorin.pick', start: 'colorin.start', empty: 'colorin.empty' });
 
 const STARTER_CRAYONS = Object.freeze(newProfile().unlocked.crayons.map((c) => c.toLowerCase()));
+export const ERASER = 'eraser';
 const CRAYON = /^#[0-9a-f]{6}$/i;
 const FILL_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 const REGION = /^r\d+$/;
@@ -56,6 +57,13 @@ export function createColoring(pageId, saved) {
       fills = applyFill(fills, pageId, region, color);
       return true;
     },
+    erase(region) {
+      if (!Object.hasOwn(fills, region)) return false;
+      past.push(fills);
+      const { [region]: _gone, ...rest } = fills;
+      fills = rest;
+      return true;
+    },
     undo() {
       const before = past.pop();
       if (!before) return false;
@@ -88,7 +96,9 @@ export function galleryPages(colorin, profile, library) {
   const kept = profile?.unlocked?.colorin;
   const unlocked = Array.isArray(kept) ? kept : [];
   const shown = [];
-  for (const page of unlockedPages(colorin, profile)) {
+  const earnedStory = new Set(list.filter((p) => p.source === 'story' && Number.isFinite(p.earnedDay)).map((p) => p.id));
+  const have = new Set(unlocked);
+  for (const page of pageList(colorin).filter((p) => have.has(p.id) || earnedStory.has(p.id))) {
     const day = list.find((p) => p.source === 'story' && p.id === page.id)?.earnedDay;
     shown.push({ page: { source: 'story', id: page.id, page }, day: Number.isFinite(day) ? (day) : -Infinity, rank: unlocked.indexOf(page.id) });
   }
@@ -122,8 +132,8 @@ export function fitPage(width, height) {
 
 
 const ROW = 20;
-const SCREEN = 6;
-const CARD = Object.freeze({ width: 384, height: 240 });
+const ERASER_SLOTS = 2;
+const CARD = Object.freeze({ width: 280, height: 175 });
 
 
 
@@ -221,6 +231,8 @@ function crayonPicture(hex) {
     : h('span', { class: 'colorin-crayon-art gift-crayon', style: { '--crayon': hex } }, img);
 }
 
+const eraserPicture = () => h('span', { class: 'colorin-eraser-art', 'aria-hidden': 'true' });
+
 function printButton(onHeld) {
   const button = h('button', { type: 'button', class: 'colorin-print', 'aria-label': 'Print this page: grown-ups, hold for 3 seconds' },
     h('span', { class: 'colorin-print-fill', 'aria-hidden': 'true' }),
@@ -297,7 +309,9 @@ async function showStoryPage(room, page, { sheet, crayon, canUndo }) {
     if (!room.arrival.allows(event)) return;
     const target = (event.target);
     const id = target?.closest?.('[data-region]')?.getAttribute('data-region');
-    if (!id || !loaded.regions.has(id) || !loaded.coloring.fill(id, crayon())) return;
+    if (!id || !loaded.regions.has(id)) return;
+    const held = crayon();
+    if (!(held === ERASER ? loaded.coloring.erase(id) : loaded.coloring.fill(id, held))) return;
     loaded.paint();
     persist();
   });
@@ -334,8 +348,9 @@ async function showFamilyPage(room, meta, { sheet, crayon, canUndo }) {
     const box = area.getBoundingClientRect();
     const x = Math.min(width - 1, Math.max(0, Math.floor(((event.clientX - box.left) / box.width) * width)));
     const y = Math.min(height - 1, Math.max(0, Math.floor(((event.clientY - box.top) / box.height) * height)));
-    const color = crayon();
-    const rgba = rgbaOf(color);
+    const held = crayon();
+    const color = held === ERASER ? ERASE_COLOR : held;
+    const rgba = paintOf(color);
     if (!rgba || fillRegion(picture.layer, mask, width, height, x, y, rgba) === 0) return;
     ops.push({ x, y, color });
     made++;
@@ -365,17 +380,22 @@ function showPage(room, page, others) {
   let crayon = colors[0];
   let view = null;
   const sheet = h('div', { class: 'colorin-sheet' });
-  const crayons = colors.map((hex) => {
+  const crayons = [];
+  const pick = (held, button) => {
+    crayon = held;
+    for (const c of crayons) c.setAttribute('aria-pressed', String(c === button));
+    button.classList.remove('pop');
+    void button.offsetWidth;
+    button.classList.add('pop');
+  };
+  for (const hex of colors) {
     const button = h('button', { type: 'button', class: 'colorin-crayon', 'aria-label': `Crayon ${hex}`, 'aria-pressed': String(hex === crayon),
-      'data-color': hex, onClick: () => {
-        crayon = hex;
-        for (const c of crayons) c.setAttribute('aria-pressed', String(c === button));
-        button.classList.remove('pop');
-        void button.offsetWidth;
-        button.classList.add('pop');
-      } }, crayonPicture(hex));
-    return button;
-  });
+      'data-color': hex, onClick: () => pick(hex, button) }, crayonPicture(hex));
+    crayons.push(button);
+  }
+  const eraser = h('button', { type: 'button', class: 'colorin-crayon colorin-eraser', 'aria-label': 'Eraser', 'aria-pressed': 'false',
+    onClick: () => pick(ERASER, eraser) }, eraserPicture());
+  crayons.push(eraser);
   const undo = (toolButton({ label: 'Undo', icon: h('span', { class: 'colorin-undo-icon', 'aria-hidden': 'true' }),
     className: 'colorin-undo', onClick: () => view?.undo() }));
   undo.disabled = true;
@@ -390,11 +410,11 @@ function showPage(room, page, others) {
   root.append(
     h('div', { class: 'colorin-tools' },
       undo,
-      others.length > 0 ? toolButton({ label: 'Pages', icon: pagesIcon(room, others[0]), onClick: () => room.go('colorin') }) : null,
+      toolButton({ label: 'Pages', icon: pagesIcon(room, others[0] ?? page), onClick: () => room.go('colorin') }),
       toolButton({ label: 'Back', icon: h('img', { src: artUrl('ui/door-button'), alt: '', draggable: 'false' }), onClick: () => room.go('hub') }),
       print.button),
     sheet,
-    h('div', { class: ['colorin-tray', colors.length > ROW && 'two-rows'], role: 'group', 'aria-label': 'Crayons' }, crayons));
+    h('div', { class: ['colorin-tray', colors.length + ERASER_SLOTS > ROW && 'two-rows'], role: 'group', 'aria-label': 'Crayons' }, crayons));
 
   const host = { sheet, crayon: () => crayon, canUndo: (yes) => { undo.disabled = !yes; } };
   (page.source === 'family' ? showFamilyPage(room, page.meta, host) : showStoryPage(room, regionsOf(ctx, page), host))
@@ -408,11 +428,8 @@ function showPage(room, page, others) {
 function showGallery(room, pages) {
   const { ctx, root } = room;
   let drawing = Promise.resolve();
-  const cards = new Map();
-  const cardFor = (p) => {
-    const made = cards.get(p);
-    if (made) return made;
-    const frame = h('span', { class: 'colorin-card-picture' });
+  const waiting = new Map();
+  const draw = (p, frame) => {
     const show = (picture) => { if (room.live()) frame.append(picture); };
     const failed = (err) => console.error(`The page ${p.id} could not be shown`, err);
     if (p.source !== 'family') loadPage(ctx, regionsOf(ctx, p), room.doc).then(({ svg }) => show(svg)).catch(failed);
@@ -420,21 +437,36 @@ function showGallery(room, pages) {
       const { meta } = p;
       drawing = drawing.then(() => (room.live() ? familyCard(ctx, meta).then(show) : undefined)).catch(failed);
     }
+  };
+  const cardFor = (p) => {
+    const frame = h('span', { class: 'colorin-card-picture' });
     const param = p.source === 'story' ? p.id : pageParam(p.meta);
     const card = h('button', { type: 'button', class: 'colorin-card', 'aria-label': p.source === 'story' ? p.page.title ?? p.id : 'Coloring page', 'data-page': param,
       onClick: ( event) => { if (room.arrival.allows(event)) room.go('colorin', { page: param }); } }, frame);
-    cards.set(p, card);
+    waiting.set(card, () => draw(p, frame));
     return card;
   };
-  const grid = h('div', { class: 'colorin-pages', style: { '--cols': String(pages.length <= 4 ? 2 : 3) } });
-  let first = 0;
-  const showScreen = () => grid.replaceChildren(...pages.slice(first, first + SCREEN).map(cardFor));
-  showScreen();
-  const more = pages.length > SCREEN ? bigButton({ label: 'More', glyph: '▶', onClick: () => {
-    first = first + SCREEN < pages.length ? first + SCREEN : 0;
-    showScreen();
-  } }) : null;
-  root.append(grid, h('div', { class: 'colorin-leave' }, more, backButton(room)));
+  const grid = h('div', { class: 'colorin-pages colorin-shelf', role: 'group', 'aria-label': 'My coloring pages' }, pages.map(cardFor));
+  root.append(grid, h('div', { class: 'colorin-leave' }, backButton(room)));
+  const drawCard = (card) => {
+    const start = waiting.get(card);
+    waiting.delete(card);
+    start?.();
+  };
+  const Observer = globalThis.IntersectionObserver;
+  if (typeof Observer === 'function') {
+    const seen = new Observer((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        seen.unobserve(entry.target);
+        drawCard(entry.target);
+      }
+    }, { root: grid, rootMargin: '240px 0px' });
+    for (const card of waiting.keys()) seen.observe(card);
+    room.onExit(() => seen.disconnect());
+  } else {
+    for (const card of [...waiting.keys()]) drawCard(card);
+  }
   ctx.say(COLORIN_LINES.pick);
 }
 
@@ -475,7 +507,7 @@ export function mount(el, ctx, params = {}) {
     if (!live) return;
     room.library = library;
     const pages = galleryPages(ctx.content?.colorin, ctx.profile, library);
-    const page = askedPage(params.page, ctx.content?.colorin, library) ?? (pages.length === 1 ? pages[0] : undefined);
+    const page = askedPage(params.page, ctx.content?.colorin, library);
     if (page) showPage(room, page, pages.filter((p) => p.source !== page.source || p.id !== page.id));
     else if (pages.length > 0) showGallery(room, pages);
     else showEmpty(room);

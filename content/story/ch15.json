@@ -11,6 +11,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
       "picture": "At the top of a tall dark tower, a silly queen leans out of a window writing with a big feather pen, and a friendly crow flaps down to the children at the gate.",
+      "things": ["feather", "key"],
       "intro": ["story.ch15-1.intro.1", "story.ch15-1.intro.2"],
       "sentences": [
         {"id": "ch15-1.1", "text": "Vex is up in the tower.", "effect": "float", "trick": null},
@@ -25,6 +26,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "gus-flap", "bix"],
       "picture": "A friendly crow lets down a long rope with a knot every few steps from a high tower window, and a cheerful boy starts to climb it.",
+      "things": ["knot", "ladder", "star"],
       "intro": ["story.ch15-2.intro.1"],
       "sentences": [
         {"id": "ch15-2.1", "text": "Gus has a rope with knots.", "effect": "item-pop", "trick": "rope"},
@@ -40,6 +42,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "vex-grab", "tess"],
       "picture": "In a round room at the top of the tower, a silly queen tugs at a glowing page tied up in a big knot, and a clever girl watches.",
+      "things": ["page", "rope", "feather"],
       "intro": ["story.ch15-3.intro.1"],
       "sentences": [
         {"id": "ch15-3.1", "text": "The page is in a knot.", "effect": "sparkle", "trick": "knot"},
@@ -55,6 +58,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "vex-jam", "gus-idle"],
       "picture": "A kitten tiptoes toward a knotted page, a silly queen steps back in surprise, and a big pot of jam tips over onto the floor.",
+      "things": ["page", "cake"],
       "intro": ["story.ch15-4.intro.1"],
       "sentences": [
         {"id": "ch15-4.1", "text": "Kitty sits softly by the knot.", "effect": "kitten-cheer", "trick": "knot"},
@@ -71,6 +75,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "vex-jam", "chip"],
       "picture": "A silly queen sits stuck in a sticky puddle of jam, and a bouncy boy runs up with a mop.",
+      "things": ["pail", "cake"],
       "intro": ["story.ch15-5.intro.1"],
       "sentences": [
         {"id": "ch15-5.1", "text": "Vex is helpless in the jam.", "effect": "vex-slip", "trick": "jam"},
@@ -85,6 +90,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "vex-slip", "tess", "bix"],
       "picture": "A child holds up a glowing page as a knot falls loose, and a silly queen hops up out of a puddle of jam, free at last.",
+      "things": ["rope"],
       "intro": ["story.ch15-6.intro.1"],
       "sentences": [
         {"id": "ch15-6.1", "text": "Untie the knot!", "effect": "sparkle", "trick": "knot"},
@@ -102,6 +108,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "phil", "dash"],
       "picture": "In a corner of the tower, a small stuffed elephant cuddles a fluffy white toy lamb, and a small dog gives the lamb a lick.",
+      "things": ["bell", "hat", "ball"],
       "intro": ["story.ch15-side-1.intro.1"],
       "sentences": [
         {"id": "ch15-side-1.1", "text": "Phil has a lamb.", "effect": "item-pop", "trick": "lamb"},
@@ -116,6 +123,7 @@
       "bg": "tower",
       "cast": ["princess", "kitten", "thud", "nell"],
       "picture": "A very big sleepy cat curls up beside a pile of books, and a baby holds up the same book again and again.",
+      "things": ["teapot", "lamp"],
       "intro": ["story.ch15-side-2.intro.1"],
       "sentences": [
         {"id": "ch15-side-2.1", "text": "Nell has a book.", "effect": "item-pop", "trick": "book"},

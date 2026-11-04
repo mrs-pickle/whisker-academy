@@ -11,6 +11,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
       "picture": "High above the clouds, a silly queen floats up on a bunch of balloons, holding a gold coin and pointing at a glowing page drifting in the sky.",
+      "things": ["cloud", "sun"],
       "intro": ["story.ch14-1.intro.1", "story.ch14-1.intro.2"],
       "sentences": [
         {"id": "ch14-1.1", "text": "Vex has a gold coin.", "effect": "item-pop", "trick": "coin"},
@@ -25,6 +26,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "chip", "gus-flap"],
       "picture": "At the top of a cliff, a bouncy boy waves from a little wooden sky boat with a big round balloon tied above it, and the boat begins to rise into the sky.",
+      "things": ["cloud", "sun", "bird"],
       "intro": ["story.ch14-2.intro.1"],
       "sentences": [
         {"id": "ch14-2.1", "text": "Chip is a happy boy.", "effect": "kitten-cheer", "trick": null},
@@ -40,6 +42,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "tess", "bix"],
       "picture": "Above the clouds, a big round gray cloud booms loudly and cries big raindrops, and a clever girl and a cheerful boy cover their ears and shout.",
+      "things": ["rainbow", "sun", "bird"],
       "intro": ["story.ch14-3.intro.1"],
       "sentences": [
         {"id": "ch14-3.1", "text": "It is a loud cloud!", "effect": "sparkle", "trick": "cloud"},
@@ -55,6 +58,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "gus-flap", "nell"],
       "picture": "On a fluffy cloud stands a little cloud house, where a round brown owl lives with a little gray mouse, and the mouse holds up a glowing page.",
+      "things": ["cloud"],
       "intro": ["story.ch14-4.intro.1"],
       "sentences": [
         {"id": "ch14-4.1", "text": "An owl is in a house.", "effect": "item-pop", "trick": "owl"},
@@ -71,6 +75,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "vex-grab", "bix"],
       "picture": "On a fluffy cloud, a silly queen reaches for a little mouse, a cross owl flaps its wings at her, and her balloons pop one by one.",
+      "things": ["cloud", "star"],
       "intro": ["story.ch14-5.intro.1"],
       "sentences": [
         {"id": "ch14-5.1", "text": "Vex will grab the mouse!", "effect": "bounce", "trick": "mouse"},
@@ -85,6 +90,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "vex-slip", "tess", "chip"],
       "picture": "Above the clouds, a child holds up a glowing page, the big cloud smiles and snores gently, and a silly queen sits in a puff of cloud.",
+      "things": ["rainbow", "sun"],
       "intro": ["story.ch14-6.intro.1"],
       "sentences": [
         {"id": "ch14-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
@@ -102,6 +108,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "phil", "dash"],
       "picture": "In a little wooden sky boat, a small stuffed elephant holds up a squeaky toy, and a small dog chases it round and round.",
+      "things": ["puppet", "ball", "robot", "cloud"],
       "intro": ["story.ch14-side-1.intro.1"],
       "sentences": [
         {"id": "ch14-side-1.1", "text": "Phil has a toy.", "effect": "item-pop", "trick": null},
@@ -116,6 +123,7 @@
       "bg": "clouds",
       "cast": ["princess", "kitten", "thud", "nell"],
       "picture": "High in the sky, a very big sleepy cat floats on a fluffy cloud of his own, and a baby climbs up to hug him.",
+      "things": ["rainbow", "sun", "star"],
       "intro": ["story.ch14-side-2.intro.1"],
       "sentences": [
         {"id": "ch14-side-2.1", "text": "Thud is on a cloud.", "effect": "float", "trick": "cloud"},

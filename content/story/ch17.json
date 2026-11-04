@@ -11,6 +11,7 @@
       "bg": "fair",
       "cast": ["princess", "kitten", "vex-idle", "gus-flap"],
       "picture": "On a hill above an old fair, a silly queen bumps along on a puffing old tractor, holding up a jar with a glowing page inside, and a friendly crow flaps after her.",
+      "things": ["jar", "pumpkin", "balloon"],
       "intro": ["story.ch17-1.intro.1", "story.ch17-1.intro.2"],
       "sentences": [
         {"id": "ch17-1.1", "text": "Vex is on a tractor.", "effect": "bounce", "trick": null},
@@ -25,6 +26,7 @@
       "bg": "fair",
       "cast": ["princess", "kitten", "bix", "tess"],
       "picture": "At the old fair, a big brown bear sits in a striped chair eating a pear, and a cheerful boy and a clever girl wave hello.",
+      "things": ["chair", "doughnut"],
       "intro": ["story.ch17-2.intro.1"],
       "sentences": [
         {"id": "ch17-2.1", "text": "A bear is in a chair.", "effect": "item-pop", "trick": "bear"},
@@ -40,6 +42,7 @@
       "bg": "fair",
       "cast": ["princess", "kitten", "chip", "nell"],
       "picture": "A bouncy boy rides to the very top of a tall old fair wheel and waves, and a baby claps from below.",
+      "things": ["balloon", "sun", "cloud", "chair"],
       "intro": ["story.ch17-3.intro.1"],
       "sentences": [
         {"id": "ch17-3.1", "text": "Chip is near the top.", "effect": "float", "trick": null},
@@ -54,6 +57,7 @@
       "bg": "fair",
       "cast": ["princess", "kitten", "vex-grab", "gus-idle"],
       "picture": "At a fair stall, a silly queen shuffles eight cups upside down on a table, and one of them glows a little.",
+      "things": ["balloon", "doughnut"],
       "intro": ["story.ch17-4.intro.1"],
       "sentences": [
         {"id": "ch17-4.1", "text": "Vex has eight cups.", "effect": "item-pop", "trick": "cup"},
@@ -68,6 +72,7 @@
       "bg": "fair",
       "cast": ["princess", "kitten", "vex-idle", "bix"],
       "picture": "At a fair stall, a silly queen holds up a big pink doughnut with a glowing page poking out of the hole, and a cheerful boy points at it.",
+      "things": ["coin", "page", "balloon"],
       "intro": ["story.ch17-5.intro.1"],
       "sentences": [
         {"id": "ch17-5.1", "text": "Vex bought a doughnut.", "effect": "item-pop", "trick": "doughnut"},
@@ -101,6 +106,7 @@
       "bg": "fair",
       "cast": ["princess", "kitten", "thud", "dash"],
       "picture": "A very big sleepy cat curls up in a big striped fair chair, and a small dog squeezes in beside him.",
+      "things": ["balloon", "pear", "doughnut"],
       "intro": ["story.ch17-side-1.intro.1"],
       "sentences": [
         {"id": "ch17-side-1.1", "text": "Thud sat in a chair.", "effect": "float", "trick": "chair"},
@@ -115,6 +121,7 @@
       "bg": "fair",
       "cast": ["princess", "kitten", "phil", "dash"],
       "picture": "Under a little circus tent at the fair, a small dog in a fancy ruffled collar does a magic trick, and a small stuffed elephant watches.",
+      "things": ["wand", "hat", "balloon", "star"],
       "intro": ["story.ch17-side-2.intro.1"],
       "sentences": [
         {"id": "ch17-side-2.1", "text": "Phil is at the circus.", "effect": "kitten-cheer", "trick": null},

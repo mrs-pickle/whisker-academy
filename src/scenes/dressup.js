@@ -2,6 +2,7 @@ import { h } from '../core/dom.js';
 import { createLock } from '../core/lock.js';
 import { artUrl, bigButton, layeredArt } from '../ui/components.js';
 import { HEROES, heroLine, heroOf, heroWords, withHero } from '../profile/hero.js';
+import { owns } from '../profile/profile.js';
 import { castArt, LOOK_OPTIONS, outfitArt } from '../ui/story-stage.js';
 
 
@@ -17,11 +18,9 @@ export const HERO_CHOICES = Object.freeze(HEROES.map((hero) => Object.freeze({ f
 const FUR_LABELS = Object.freeze({ orange: 'Orange kitten', gray: 'Gray kitten', black: 'Black kitten', calico: 'Calico kitten' });
 
 export function dressupChoices(wardrobe, profile) {
-  const kept = profile?.unlocked?.wardrobe;
   const hero = heroOf(profile);
-  const owned = new Set(Array.isArray(kept) ? kept : []);
   const items = (Array.isArray(wardrobe) ? wardrobe : []).filter((w) =>
-    typeof w?.id === 'string' && typeof w.slot === 'string' && (w.starter === true || owned.has(w.id)));
+    typeof w?.id === 'string' && typeof w.slot === 'string' && owns(profile, { type: 'wardrobe', id: w.id }));
   const named = (id, label) => (typeof label === 'string' && label !== '' ? label : id);
   const slot = (name, field, value = (id) => id) => items.filter((w) => w.slot === name)
     .map((w) => ({ field, value: value(w.id), label: named(w.id, heroLine(w, hero, 'label')) }));

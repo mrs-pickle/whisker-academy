@@ -1,26 +1,27 @@
 import { h } from '../core/dom.js';
 import { LAST_LESSON, LESSONS } from '../curriculum/lessons.js';
 import { questDetail } from '../engine/quest-results.js';
-import { ASSESSMENT_DEADLINES, assessmentPlan, atLesson, confirmNew, confirmRetake, ladderLines, ladderStart, nextLadderLine, suggestLesson } from '../engine/placement.js';
-import { createActivityView, wait } from '../activities/cards.js';
+import { ASSESSMENT_DEADLINES, assessmentPlan, atLesson, confirmNew, confirmRetake } from '../engine/placement.js';
+import { isReadAloud, mixPlan, mixState, mixSummary } from '../engine/placement-mix.js';
+import { cardSoundClips, createActivityView, wait } from '../activities/cards.js';
 import { heroWords } from '../profile/hero.js';
 import { clampTaughtUpTo } from '../profile/settings.js';
 import { COPILOT_HELP, layeredArt } from '../ui/components.js';
 import { castArt } from '../ui/story-stage.js';
 import { checkPage } from './check.js';
 import { buildBaseline, questEndLines, questPage, seedWeakItems, spellTierFromDictation } from './entrance.js';
-import { dictateWords, readLines, readPassage } from './reading-check.js';
+import { askMix } from './assessment-mix.js';
+import { dictateWords, readPassage } from './reading-check.js';
 import { isTooFast } from './passage-timer.js';
 import { createActiveClock, libraryForTheDay, partsForTheDay } from './session.js';
 
 
 export const LEAVE_ASSESSMENT = 'Leave the Assessment? Nothing is saved until you confirm her lesson at the end.';
-const HELP = `${COPILOT_HELP} Today: one mark per word (Try again means not yet). A line stops after 3 misses; Help counts as a miss.`;
+const HELP = `${COPILOT_HELP} Today: one mark per word or phrase (Try again means not yet); Help counts as a miss. Her picks are hers: nothing shows whether they are right.`;
 const STORY_NOTE = "Say \"your best story voice\", never \"fast\". She reads to the end; Stop ends it without a timing.";
 export const ASSESSMENT_VOICE = Object.freeze({
   first: { welcome: 'v.entrance.welcome', thanks: 'v.entrance.thanks', passage: 'v.entrance.passage' },
   again: { welcome: 'v.check.welcome', thanks: 'v.check.thanks', passage: 'v.check.passage', done: 'v.check.done' },
-  lines: { real: 'v.entrance.real', nonsense: 'v.entrance.nonsense', next: 'v.entrance.next' },
   dictation: 'v.entrance.dictation',
 });
 export const ladderGuess = (profile, settings) => (Number.isInteger(profile?.assessFrom) ? (profile.assessFrom) : settings.taughtUpTo);
@@ -29,19 +30,21 @@ const CLOSE_MS = 1800;
 const FIRST_WORDS_LESSON = 4;
 
 export function suggestionNote(suggested, hx) {
-  if (suggested === null) return hx(`No line was read with at most 1 miss, so there is no suggestion. Lesson ${FIRST_WORDS_LESSON} is the first with practice words; her tutor's lesson is better if you know it.`);
+  if (suggested === null) return hx(`The first lesson asked about was not read yet, so there is no suggestion. Lesson ${FIRST_WORDS_LESSON} is the first with practice words; her tutor's lesson is better if you know it.`);
   const concept = LESSONS.find((l) => l.n === suggested)?.concept ?? '';
-  return hx(`Suggested: lesson ${suggested}${concept ? ` (${concept})` : ''}, the highest set of words she read with at most 1 miss in a line. It is a suggestion: her tutor's number wins.`);
+  return hx(`Suggested: lesson ${suggested}${concept ? ` (${concept})` : ''}, the highest lesson whose items she got (2 right before 2 not yet), next to one she has not yet. It is a suggestion: her tutor's number wins.`);
 }
 
-export function ladderSummary(ladder, log) {
-  return log.flatMap((line) => {
-    const band = ladder.find((l) => l.words.map((w) => w.w).join(' ') === line.words.join(' '));
-    if (!band) return [];
-    const right = line.marks.filter(Boolean).length;
-    return [`Lesson ${band.lesson}: ${line.stopped ? `stopped, ${right} read` : `${right} of ${line.size}`}`];
-  });
+export function mixReading(answers) {
+  const read = answers.filter((a) => isReadAloud(a.item) && a.item.word);
+  return {
+    lines: read.map((a) => ({ kind: a.item.type === 'nonsense' ? 'nonsense' : 'real', size: 1, words: [ (a.item.word).w], marks: [a.correct], stopped: false })),
+    results: read.map((a) => ({ word: (a.item.word), mode: ('read'), correct: a.correct, helped: a.helped === true, ms: a.ms ?? 0 })),
+  };
 }
+
+export const mixRecord = (answers) => answers.map((a) => ({ type: a.item.type, lesson: a.item.probe, text: a.item.text,
+  ...(a.picked !== undefined ? { picked: a.picked } : {}), correct: a.correct }));
 
 export function mount(el, ctx) {
   const first = ctx.profile?.baseline == null;
@@ -86,15 +89,12 @@ export function mount(el, ctx) {
     view.show(hall(first ? '' : 'sit'));
     await view.prompt([voice.welcome]);
 
-    const ladder = ladderLines(ctx.content);
-    const start = ladderStart(ladder, ladderGuess(ctx.profile, ctx.settings));
-    const climbed = await readLines(view, ladder, { open: () => open('ladder'), voice: ASSESSMENT_VOICE.lines, helpText: HELP,
-      pick: (at, log) => nextLadderLine(start, ladder.length, at.map((i, k) => ({ at: i, line: log[k] }))) });
-    const suggested = suggestLesson(ladder, climbed.lines);
+    const mix = mixPlan(ctx.content, ladderGuess(ctx.profile, ctx.settings), { soundOf: cardSoundClips });
+    const answers = await askMix(view, mix, { open: () => open('mix'), helpText: HELP });
+    const { suggested } = mixState(mix, answers);
+    const reading = mixReading(answers);
     const plan = assessmentPlan(ctx.content, suggested, ctx.profile);
-    if (climbed.lines.length > 0 && view.live()) await view.say([voice.thanks], 700);
-    const madeUp = await readLines(view, plan.lines, { open: () => open('nonsense'), voice: ASSESSMENT_VOICE.lines, helpText: HELP });
-    if (madeUp.lines.length > 0 && view.live()) await view.say([voice.thanks], 700);
+    if (answers.length > 0 && view.live()) await view.say([voice.thanks], 700);
     const dictation = await dictateWords(view, plan.dictation, { open: () => open('dictation'), voice: { intro: ASSESSMENT_VOICE.dictation, thanks: voice.thanks } });
     const passage = plan.passage && view.live()
       ? await readPassage(view, plan.passage, { prompt: voice.passage, thanks: voice.thanks }, first ? {} : { stop: true, note: STORY_NOTE }) : null;
@@ -106,21 +106,21 @@ export function mount(el, ctx) {
     if (!view.live()) return;
 
     const day = ctx.day;
-    const lines = [...climbed.lines, ...madeUp.lines];
+    const lines = reading.lines;
     const before = ctx.settings.taughtUpTo;
-    const chosen = await askGrownUp({ suggested, before, summary: ladderSummary(ladder, climbed.lines), dictation, passage });
+    const chosen = await askGrownUp({ suggested, before, summary: mixSummary(mix, answers), dictation, passage });
     if (!view.live()) return;
     const lesson = chosen.lesson ?? before;
     const detail = questDetail({ day, taughtUpTo: lesson, lines, dictation,
       passage: passage && plan.passage ? { id: plan.passage.id, wcpm: passage.wcpm, errors: (passage.errors) } : null });
-    const record = { day, suggested, before, lesson: chosen.lesson, first, detail };
+    const record = { day, suggested, before, lesson: chosen.lesson, first, detail, items: mixRecord(answers) };
     const placements = [...(Array.isArray(ctx.profile.placements) ? ctx.profile.placements : []), record];
     if (first) {
       const baseline = buildBaseline({ day, lines, dictation, passage: passage ? { wcpm: passage.wcpm, errors: passage.errors ?? 0 } : null });
       const set = confirmNew(ctx.profile, ctx.settings, lesson);
       ctx.settings = set.settings;
       ctx.profile = { ...set.profile, baseline, baselineDetail: detail, spellTier: baseline.dictation.tier, placements };
-      for (const [key, state] of seedWeakItems(atLesson([...climbed.results, ...madeUp.results, ...dictation], lesson), ctx.states, day)) ctx.states.set(key, state);
+      for (const [key, state] of seedWeakItems(atLesson([...reading.results, ...dictation], lesson), ctx.states, day)) ctx.states.set(key, state);
       const earned = questPage(ctx.profile, { pages: await libraryForTheDay(ctx), content: ctx.content, day, dictation });
       ctx.profile = earned.profile;
       if (earned.pages) ctx.pages = earned.pages;
@@ -158,7 +158,7 @@ export function mount(el, ctx) {
         h('div', { class: 'gu-card assess-result', role: 'group', 'aria-label': 'For the grown-up' },
           h('h2', { class: 'gu-title' }, 'For the grown-up'),
           h('p', { class: 'assess-suggestion' }, suggestionNote(suggested, hx)),
-          summary.length > 0 ? h('ul', { class: 'assess-summary' }, summary.map((line) => h('li', {}, line))) : null,
+          summary.length > 0 ? h('ul', { class: 'assess-summary mix' }, summary.map((line) => h('li', {}, line))) : null,
           passage && Number.isFinite(passage.wcpm) ? h('p', { class: 'gu-hint' }, isTooFast(passage.wcpm)
             ? 'The timing of the story looked too fast to be right.'
             : `The story: ${passage.wcpm} words correct per minute.`) : null,

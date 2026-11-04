@@ -17,6 +17,7 @@ import { speakerButton, fullscreenButton } from './ui/components.js';
 import { createHome, homeParams } from './ui/home.js';
 import { createMute } from './ui/mute.js';
 import { cachedParts } from './ui/page-parts.js';
+import { takeReturn } from './offline.js';
 
 const AUDIO_BASE = 'assets/audio/';
 const AUDIO_MANIFEST = 'assets/audio/manifest.json';
@@ -179,7 +180,11 @@ async function boot() {
   };
   game.save = flagFailedSaves(game, game.save);
   const saveHidden = flagFailedSaves(game, () => windows.hide());
-  game.router = createRouter(sceneLayer, game, { onNavigate: (name) => { audio.stop(); setReplay(null); home.arrived(name); mute.arrived(name); } });
+  const markStudent = () => {
+    if (store.registered()) sceneLayer.setAttribute('data-student', store.student);
+    else sceneLayer.removeAttribute('data-student');
+  };
+  game.router = createRouter(sceneLayer, game, { onNavigate: (name) => { audio.stop(); setReplay(null); home.arrived(name); mute.arrived(name); markStudent(); } });
 
   unlockOnGestures(window, audio);
   document.addEventListener('visibilitychange', () => {
@@ -193,9 +198,13 @@ async function boot() {
   document.fonts?.load('700 28px Andika').catch(() => {});
   if (launch.scene) Object.assign(window, { meadowsWorld: game });
 
+  const afterUpdate = () => {
+    try { return takeReturn(globalThis.sessionStorage, { student: store.student, registered: store.registered(), now: Date.now() }); } catch { return null; }
+  };
+
   if (playing && windows.playing()) {
     await finishCutOff(game);
-    if (!away) await game.router.go(launch.scene ?? 'start', launch.params);
+    if (!away) await game.router.go(launch.scene ?? afterUpdate() ?? 'start', launch.params);
   } else {
     away = true;
     await game.router.go(ELSEWHERE);
