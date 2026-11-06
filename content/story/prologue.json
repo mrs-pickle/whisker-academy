@@ -8,7 +8,7 @@
       "id": "prologue-1",
       "bg": "door",
       "cast": ["princess"],
-      "picture": "A brave young princess with a star wand and a big bag stands at a tall castle door on a sunny morning, holding a sparkly map with a twisty path on it.",
+      "picture": "A brave young princess with a gold scepter and a big bag stands at a tall castle door on a sunny morning, holding a sparkly map with a twisty path on it.",
       "intro": ["story.prologue-1.intro.1", "story.prologue-1.intro.2", "story.prologue-1.intro.3"],
       "sentences": [
         {"id": "prologue-1.1", "text": "The sun is up.", "effect": "sparkle", "trick": "sun"},
@@ -22,7 +22,7 @@
       "id": "prologue-2",
       "bg": "hub",
       "cast": ["princess", "kitten"],
-      "picture": "On a castle lawn, a little kitten in a wizard hat peeks out of a cardboard box, and a brave young princess with a star wand kneels down to pet her.",
+      "picture": "On a castle lawn, a little kitten in a scholar cap peeks out of a cardboard box, and a brave young princess with a gold scepter kneels down to pet her.",
       "intro": ["story.prologue-2.intro.1", "story.prologue-2.intro.2"],
       "sentences": [
         {"id": "prologue-2.1", "text": "A cat is in a box.", "effect": "item-pop", "trick": "box"},
@@ -36,7 +36,7 @@
       "id": "prologue-3",
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
-      "picture": "In a magic classroom, a silly queen with a big crooked crown slips on a wet mop and slides across the floor, while a goofy crow flaps its wings in surprise.",
+      "picture": "In a classroom, a silly queen with a big crooked crown slips on a wet mop and slides across the floor, while a goofy crow flaps its wings in surprise.",
       "intro": ["story.prologue-3.intro.1", "story.prologue-3.intro.2", "story.prologue-3.intro.3"],
       "sentences": [
         {"id": "prologue-3.1", "text": "The mop is wet.", "effect": "item-pop", "trick": "mop"},
@@ -65,7 +65,7 @@
       "id": "prologue-5",
       "bg": "hall",
       "cast": ["princess", "kitten", "bix", "gus-idle"],
-      "picture": "In a big castle hall, a cheerful boy makes a giant cup float up in the air with his magic, while a goofy crow sits tangled in a butterfly net, looking surprised.",
+      "picture": "In a big castle hall, a cheerful boy reads a word out loud and a giant cup floats up in the air, while a goofy crow sits tangled in a butterfly net, looking surprised.",
       "intro": ["story.prologue-5.intro.1", "story.prologue-5.intro.2", "story.prologue-5.intro.3"],
       "sentences": [
         {"id": "prologue-5.1", "text": "Bix taps a big cup.", "effect": "sparkle", "trick": "cup"},
@@ -109,7 +109,7 @@
       "id": "prologue-side-2",
       "bg": "hub",
       "cast": ["princess", "kitten", "gus-idle"],
-      "picture": "In a flower garden, a goofy crow hops after a shiny little bug on a log, while a princess and her little kitten in a wizard hat peek out from the flowers.",
+      "picture": "In a flower garden, a goofy crow hops after a shiny little bug on a log, while a princess and her little kitten in a scholar cap peek out from the flowers.",
       "intro": ["story.prologue-side-2.intro.1", "story.prologue-side-2.intro.2"],
       "sentences": [
         {"id": "prologue-side-2.1", "text": "A bug sat on a log.", "effect": "item-pop", "trick": "bug"},
@@ -137,7 +137,7 @@
       "id": "prologue-side-4",
       "bg": "hub",
       "cast": ["princess", "kitten", "bix"],
-      "picture": "A little kitten in a wizard hat naps on a sunny lawn as her hat floats up into the air, lifted by a cheerful boy's magic, and a princess smiles.",
+      "picture": "A little kitten in a scholar cap naps on a sunny lawn as her little hat floats up into the air after a cheerful boy taps it and reads a word, and a princess smiles.",
       "intro": ["story.prologue-side-4.intro.1", "story.prologue-side-4.intro.2"],
       "sentences": [
         {"id": "prologue-side-4.1", "text": "The cat naps in the sun.", "effect": "sparkle", "trick": "sun"},
@@ -151,7 +151,7 @@
       "id": "prologue-side-5",
       "bg": "toyroom",
       "cast": ["princess", "kitten", "ted", "dot"],
-      "picture": "In a toy room, a teddy bear counts with his paws over his eyes, a rag doll hides in a big box, and a little kitten in a wizard hat sits on top of the box.",
+      "picture": "In a toy room, a teddy bear counts with his paws over his eyes, a rag doll hides in a big box, and a little kitten in a scholar cap sits on top of the box.",
       "intro": ["story.prologue-side-5.intro.1", "story.prologue-side-5.intro.2"],
       "sentences": [
         {"id": "prologue-side-5.1", "text": "Dot hid in a big box.", "effect": "item-pop", "trick": "box"},

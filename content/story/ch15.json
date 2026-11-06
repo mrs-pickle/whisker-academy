@@ -16,7 +16,7 @@
       "sentences": [
         {"id": "ch15-1.1", "text": "Vex is up in the tower.", "effect": "float", "trick": null},
         {"id": "ch15-1.2", "text": "Knock on the gate!", "effect": "bounce", "trick": "gate"},
-        {"id": "ch15-1.3", "text": "Vex will write a spell.", "effect": "sparkle", "trick": "page"}
+        {"id": "ch15-1.3", "text": "Vex will write a list.", "effect": "sparkle", "trick": "page"}
       ],
       "outro": ["story.ch15-1.outro.1"]
     },

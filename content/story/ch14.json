@@ -16,7 +16,7 @@
       "sentences": [
         {"id": "ch14-1.1", "text": "Vex has a gold coin.", "effect": "item-pop", "trick": "coin"},
         {"id": "ch14-1.2", "text": "Vex will toss the coin.", "effect": "bounce", "trick": "coin"},
-        {"id": "ch14-1.3", "text": "Point at the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch14-1.3", "text": "Point at the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch14-1.4", "text": "Vex is up in the sky.", "effect": "float", "trick": null}
       ],
       "outro": ["story.ch14-1.outro.1"]
@@ -63,7 +63,7 @@
       "sentences": [
         {"id": "ch14-4.1", "text": "An owl is in a house.", "effect": "item-pop", "trick": "owl"},
         {"id": "ch14-4.2", "text": "A mouse is with the owl.", "effect": "item-pop", "trick": "mouse"},
-        {"id": "ch14-4.3", "text": "The mouse found the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch14-4.3", "text": "The mouse found the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch14-4.4", "text": "Nell is proud of the mouse.", "effect": "kitten-cheer", "trick": "mouse"}
       ],
       "outro": ["story.ch14-4.outro.1"],
@@ -93,7 +93,7 @@
       "things": ["rainbow", "sun"],
       "intro": ["story.ch14-6.intro.1"],
       "sentences": [
-        {"id": "ch14-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch14-6.1", "text": "You got the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch14-6.2", "text": "The cloud is not loud now.", "effect": "sparkle", "trick": "cloud"},
         {"id": "ch14-6.3", "text": "Vex is down on the cloud.", "effect": "vex-slip", "trick": "cloud"},
         {"id": "ch14-6.4", "text": "Now we can go down.", "effect": "float", "trick": null}

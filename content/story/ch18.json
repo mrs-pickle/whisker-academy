@@ -2,7 +2,7 @@
   "id": "ch18",
   "title": "The Mended Book",
   "book": 2,
-  "page": "potion",
+  "page": "lotion",
   "lessons": [119, 120, 121, 122, 123, 124, 125, 126, 127],
   "requiresKnown": ["a", "the", "what"],
   "scenes": [
@@ -10,13 +10,13 @@
       "id": "ch18-1",
       "bg": "library",
       "cast": ["princess", "kitten", "gus-idle", "tess"],
-      "picture": "In the Academy library, a clever girl stirs a bubbling pink potion in a little bottle with a spoon, beside a big old spell book with loose pages.",
-      "things": ["shelf"],
+      "picture": "In the Academy library, a clever girl threads a big needle with red yarn, beside a big old book with loose pages.",
+      "things": ["shelf", "yarn", "page"],
       "intro": ["story.ch18-1.intro.1", "story.ch18-1.intro.2"],
       "sentences": [
-        {"id": "ch18-1.1", "text": "Tess has a potion.", "effect": "item-pop", "trick": "potion"},
-        {"id": "ch18-1.2", "text": "Mix the potion with a spoon.", "effect": "sparkle", "trick": "spoon"},
-        {"id": "ch18-1.3", "text": "The potion can mend the book.", "effect": "sparkle", "trick": "book"}
+        {"id": "ch18-1.1", "text": "Tess has red yarn.", "effect": "item-pop", "trick": "yarn"},
+        {"id": "ch18-1.2", "text": "Tess will stitch the book.", "effect": "sparkle", "trick": "book"},
+        {"id": "ch18-1.3", "text": "The yarn can mend the book.", "effect": "sparkle", "trick": "book"}
       ],
       "outro": ["story.ch18-1.outro.1"]
     },
@@ -87,11 +87,11 @@
       "lesson": 126,
       "bg": "library",
       "cast": ["princess", "kitten", "vex-idle", "tess", "bix"],
-      "picture": "The big spell book glows gold as every page flies home into it, a clever girl pours the last drop of potion on its spine, and everyone cheers.",
-      "things": ["spoon", "page"],
+      "picture": "The big Word Book glows gold as every page flies home into it, a clever girl stitches its spine with red yarn, and everyone cheers.",
+      "things": ["yarn", "page", "shelf"],
       "intro": ["story.ch18-6.intro.1"],
       "sentences": [
-        {"id": "ch18-6.1", "text": "The potion is dripping.", "effect": "sparkle", "trick": "potion"},
+        {"id": "ch18-6.1", "text": "Tess stitches the book.", "effect": "sparkle", "trick": "yarn"},
         {"id": "ch18-6.2", "text": "The book is fixable!", "effect": "sparkle", "trick": "book"},
         {"id": "ch18-6.3", "text": "Now it is unbreakable.", "effect": "sparkle", "trick": "book"},
         {"id": "ch18-6.4", "text": "Vex is clapping too.", "effect": "kitten-cheer", "trick": null}

@@ -15,9 +15,9 @@
       "intro": ["story.ch9-1.intro.1", "story.ch9-1.intro.2"],
       "sentences": [
         {"id": "ch9-1.1", "text": "Foxes and ducks swim past.", "effect": "sparkle", "trick": "fox"},
-        {"id": "ch9-1.2", "text": "Vex hid the spell in the boxes.", "effect": "item-pop", "trick": "box"},
+        {"id": "ch9-1.2", "text": "Vex hid the page in the boxes.", "effect": "item-pop", "trick": "box"},
         {"id": "ch9-1.3", "text": "Vex mixes the boxes.", "effect": "bounce", "trick": "box"},
-        {"id": "ch9-1.4", "text": "Which of the boxes has the spell?", "effect": "sparkle", "trick": "page"}
+        {"id": "ch9-1.4", "text": "Which of the boxes has the page?", "effect": "sparkle", "trick": "page"}
       ],
       "outro": ["story.ch9-1.outro.1"]
     },
@@ -43,7 +43,7 @@
       "lesson": 65,
       "bg": "river",
       "cast": ["princess", "kitten", "gus-idle", "nell"],
-      "picture": "On a riverbank, a goofy crow fishes from the dock, a little kitten in a wizard hat sings to the fish, and fish jump while two boxes float away.",
+      "picture": "On a riverbank, a goofy crow fishes from the dock, a little kitten in a scholar cap sings to the fish, and fish jump while two boxes float away.",
       "things": ["net", "duck"],
       "intro": ["story.ch9-3.intro.1"],
       "sentences": [
@@ -81,7 +81,7 @@
       "intro": ["story.ch9-5.intro.1"],
       "sentences": [
         {"id": "ch9-5.1", "text": "A robot is in the windmill.", "effect": "item-pop", "trick": "robot"},
-        {"id": "ch9-5.2", "text": "The robot has the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch9-5.2", "text": "The robot has the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch9-5.3", "text": "Vex is on the robot.", "effect": "item-pop", "trick": "robot"},
         {"id": "ch9-5.4", "text": "Hello, hello, robot!", "effect": "sparkle", "trick": "robot"},
         {"id": "ch9-5.5", "text": "The robot is singing.", "effect": "kitten-cheer", "trick": "robot"}
@@ -98,7 +98,7 @@
       "intro": ["story.ch9-6.intro.1"],
       "sentences": [
         {"id": "ch9-6.1", "text": "The robot is a friend!", "effect": "sparkle", "trick": "robot"},
-        {"id": "ch9-6.2", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch9-6.2", "text": "You got the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch9-6.3", "text": "Vex landed in the mud.", "effect": "vex-slip", "trick": "mud"},
         {"id": "ch9-6.4", "text": "Gus helped Vex up.", "effect": "crow-flap", "trick": null},
         {"id": "ch9-6.5", "text": "Have a cupcake, Vex!", "effect": "item-pop", "trick": "cupcake"}

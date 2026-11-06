@@ -15,7 +15,7 @@
       "intro": ["story.ch10-1.intro.1", "story.ch10-1.intro.2"],
       "sentences": [
         {"id": "ch10-1.1", "text": "Vex has a big patch.", "effect": "item-pop", "trick": "patch"},
-        {"id": "ch10-1.2", "text": "The spell is on the patch!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch10-1.2", "text": "The page is on the patch!", "effect": "sparkle", "trick": "page"},
         {"id": "ch10-1.3", "text": "Vex will stitch it to a tent.", "effect": "item-pop", "trick": "tent"},
         {"id": "ch10-1.4", "text": "Catch the patch!", "effect": "bounce", "trick": "patch"}
       ],
@@ -75,7 +75,7 @@
       "lesson": 74,
       "bg": "camp",
       "cast": ["princess", "kitten", "nell", "ted", "dot"],
-      "picture": "By a pond in a scout camp, a teddy bear and a rag doll share candy with a happy baby, and a little kitten in a wizard hat dances, while a badge glows under the water.",
+      "picture": "By a pond in a scout camp, a teddy bear and a rag doll share candy with a happy baby, and a little kitten in a scholar cap dances, while a badge glows under the water.",
       "things": ["candy", "duck", "tent"],
       "intro": ["story.ch10-5.intro.1"],
       "sentences": [
@@ -99,7 +99,7 @@
         {"id": "ch10-6.2", "text": "Bubbles pop in the puddle.", "effect": "bounce", "trick": null},
         {"id": "ch10-6.3", "text": "You can grab the badge!", "effect": "sparkle", "trick": "badge"},
         {"id": "ch10-6.4", "text": "Vex fell in the puddle.", "effect": "vex-slip", "trick": null},
-        {"id": "ch10-6.5", "text": "You got the spell!", "effect": "sparkle", "trick": "page"}
+        {"id": "ch10-6.5", "text": "You got the page!", "effect": "sparkle", "trick": "page"}
       ],
       "outro": ["story.ch10-6.outro.1", "story.ch10-6.outro.2"],
       "reward": {"wardrobe": "o-scout"}

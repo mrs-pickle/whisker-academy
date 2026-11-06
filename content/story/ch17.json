@@ -120,13 +120,13 @@
       "lesson": 117,
       "bg": "fair",
       "cast": ["princess", "kitten", "phil", "dash"],
-      "picture": "Under a little circus tent at the fair, a small dog in a fancy ruffled collar does a magic trick, and a small stuffed elephant watches.",
-      "things": ["wand", "hat", "balloon", "star"],
+      "picture": "Under a little circus tent at the fair, a small dog in a fancy ruffled collar balances a ball on his nose, and a small stuffed elephant watches.",
+      "things": ["ball", "hat", "balloon", "star"],
       "intro": ["story.ch17-side-2.intro.1"],
       "sentences": [
         {"id": "ch17-side-2.1", "text": "Phil is at the circus.", "effect": "kitten-cheer", "trick": null},
         {"id": "ch17-side-2.2", "text": "Dash has a fancy collar.", "effect": "item-pop", "trick": null},
-        {"id": "ch17-side-2.3", "text": "Dash can do magic!", "effect": "sparkle", "trick": null}
+        {"id": "ch17-side-2.3", "text": "Dash can do a trick!", "effect": "sparkle", "trick": null}
       ],
       "outro": ["story.ch17-side-2.outro.1"]
     }

@@ -10,11 +10,11 @@
       "id": "ch8-1",
       "bg": "maze",
       "cast": ["princess", "kitten", "gus-flap", "bix"],
-      "picture": "In front of a tall hedge maze, a goofy crow flaps down with news, and a child in a new magic cape taps a leafy gate that swings open.",
-      "things": ["hat", "tree"],
+      "picture": "In front of a tall hedge maze, a goofy crow flaps down with news, and a child in a new swirly cape taps a leafy gate that swings open.",
+      "things": ["hat", "tree", "page"],
       "intro": ["story.ch8-1.intro.1", "story.ch8-1.intro.2"],
       "sentences": [
-        {"id": "ch8-1.1", "text": "Gus came with a spell.", "effect": "crow-flap", "trick": "page"},
+        {"id": "ch8-1.1", "text": "Gus came with a plan.", "effect": "crow-flap", "trick": null},
         {"id": "ch8-1.2", "text": "The maze has a big gate.", "effect": "item-pop", "trick": "gate"},
         {"id": "ch8-1.3", "text": "The gate will not shake.", "effect": "item-pop", "trick": "gate"},
         {"id": "ch8-1.4", "text": "The cap is a cape!", "effect": "sparkle", "trick": null},
@@ -35,7 +35,7 @@
         {"id": "ch8-2.1", "text": "A white kite is in a pine.", "effect": "item-pop", "trick": "kite"},
         {"id": "ch8-2.2", "text": "Chip hops, but it is up top.", "effect": "bounce", "trick": "kite"},
         {"id": "ch8-2.3", "text": "Up, up! Bix lifts the kite.", "effect": "float", "trick": "kite"},
-        {"id": "ch8-2.4", "text": "The spell is on the kite!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch8-2.4", "text": "The scroll is on the kite!", "effect": "sparkle", "trick": "page"},
         {"id": "ch8-2.5", "text": "Whiz! Off it went in the wind.", "effect": "float", "trick": "kite"}
       ],
       "outro": ["story.ch8-2.outro.1"]
@@ -80,12 +80,12 @@
       "lesson": 60,
       "bg": "maze",
       "cast": ["princess", "kitten", "tess"],
-      "picture": "In a hedge maze, a row of little gray mice carry a loose page away, spinning in circles, while a little kitten in a wizard hat races after them.",
+      "picture": "In a hedge maze, a row of little gray mice carry a loose page away, spinning in circles, while a little kitten in a scholar cap races after them.",
       "things": ["cat", "tree"],
       "intro": ["story.ch8-5.intro.1"],
       "sentences": [
         {"id": "ch8-5.1", "text": "Nice mice race in a line.", "effect": "item-pop", "trick": "mice"},
-        {"id": "ch8-5.2", "text": "The mice have the spell!", "effect": "item-pop", "trick": "page"},
+        {"id": "ch8-5.2", "text": "The mice have the scroll!", "effect": "item-pop", "trick": "page"},
         {"id": "ch8-5.3", "text": "Twice the mice spin in place.", "effect": "sparkle", "trick": "mice"},
         {"id": "ch8-5.4", "text": "The cat will race the mice.", "effect": "kitten-cheer", "trick": "mice"}
       ],
@@ -100,9 +100,9 @@
       "things": ["cupcake"],
       "intro": ["story.ch8-6.intro.1"],
       "sentences": [
-        {"id": "ch8-6.1", "text": "Vex hid the spell in a cage.", "effect": "item-pop", "trick": "cage"},
+        {"id": "ch8-6.1", "text": "Vex hid the page in a cage.", "effect": "item-pop", "trick": "cage"},
         {"id": "ch8-6.2", "text": "Tess can make the cage shrink.", "effect": "shrink", "trick": "cage"},
-        {"id": "ch8-6.3", "text": "We got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch8-6.3", "text": "We got the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch8-6.4", "text": "Nell will give Vex a hug.", "effect": "sparkle", "trick": null},
         {"id": "ch8-6.5", "text": "Come and get some cake!", "effect": "item-pop", "trick": "cake"}
       ],
@@ -116,7 +116,7 @@
       "lesson": 55,
       "bg": "maze",
       "cast": ["princess", "kitten", "nell"],
-      "picture": "In a hedge maze, a baby whooshes down a little slide again and again with a kitten in a wizard hat riding in her lap.",
+      "picture": "In a hedge maze, a baby whooshes down a little slide again and again with a kitten in a scholar cap riding in her lap.",
       "things": ["slide", "cat", "tree", "sun"],
       "intro": ["story.ch8-side-1.intro.1"],
       "sentences": [

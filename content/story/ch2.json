@@ -38,7 +38,7 @@
       "id": "ch2-3",
       "bg": "hall",
       "cast": ["princess", "kitten", "ted", "tess", "bix"],
-      "picture": "In a castle hall, a little kitten in a wizard hat sniffs a trail of black footprints up the steps, while a teddy bear, a girl with two hair buns and a cheerful boy follow.",
+      "picture": "In a castle hall, a little kitten in a scholar cap sniffs a trail of black footprints up the steps, while a teddy bear, a girl with two hair buns and a cheerful boy follow.",
       "intro": ["story.ch2-3.intro.1", "story.ch2-3.intro.2"],
       "sentences": [
         {"id": "ch2-3.1", "text": "It is not on the rack!", "effect": "sparkle", "trick": null},
@@ -53,7 +53,7 @@
       "id": "ch2-4",
       "bg": "workshop",
       "cast": ["princess", "kitten", "tess", "bix"],
-      "picture": "In a magic workshop, a girl with two hair buns and a cheerful boy stack a tall tower of socks with a rock on top, and a little kitten in a wizard hat watches.",
+      "picture": "In a workshop, a girl with two hair buns and a cheerful boy stack a tall tower of socks with a rock on top, and a little kitten in a scholar cap watches.",
       "intro": ["story.ch2-4.intro.1", "story.ch2-4.intro.2"],
       "sentences": [
         {"id": "ch2-4.1", "text": "Tess has a plan.", "effect": "sparkle", "trick": null},
@@ -116,7 +116,7 @@
       "id": "ch2-side-2",
       "bg": "hall",
       "cast": ["princess", "kitten", "bix", "gus-idle"],
-      "picture": "In a castle hall, a cheerful boy floats a black sock through the air with his magic, and it lands right on the head of a goofy crow, who flaps in a circle.",
+      "picture": "In a castle hall, a cheerful boy reads a word out loud and a black sock floats through the air, landing right on the head of a goofy crow, who flaps in a circle.",
       "intro": ["story.ch2-side-2.intro.1"],
       "sentences": [
         {"id": "ch2-side-2.1", "text": "Bix taps a black sock.", "effect": "sparkle", "trick": "sock"},

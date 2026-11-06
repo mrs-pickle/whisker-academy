@@ -16,7 +16,7 @@
       "sentences": [
         {"id": "ch11-1.1", "text": "The sky is dark.", "effect": "sparkle", "trick": null},
         {"id": "ch11-1.2", "text": "Vex is marching in the yard.", "effect": "bounce", "trick": null},
-        {"id": "ch11-1.3", "text": "The spell is in a jar.", "effect": "item-pop", "trick": "page"},
+        {"id": "ch11-1.3", "text": "The page is in a jar.", "effect": "item-pop", "trick": "page"},
         {"id": "ch11-1.4", "text": "Vex has the jar!", "effect": "item-pop", "trick": null}
       ],
       "outro": ["story.ch11-1.outro.1"]
@@ -78,7 +78,7 @@
       "things": ["rock", "plant", "star"],
       "intro": ["story.ch11-5.intro.1"],
       "sentences": [
-        {"id": "ch11-5.1", "text": "A turtle has the spell.", "effect": "item-pop", "trick": "turtle"},
+        {"id": "ch11-5.1", "text": "A turtle has the page.", "effect": "item-pop", "trick": "turtle"},
         {"id": "ch11-5.2", "text": "It is hard work to catch it.", "effect": "bounce", "trick": "turtle"},
         {"id": "ch11-5.3", "text": "Chip has a kind word.", "effect": "kitten-cheer", "trick": null},
         {"id": "ch11-5.4", "text": "The turtle will stop for Chip.", "effect": "kitten-cheer", "trick": "turtle"}
@@ -95,7 +95,7 @@
       "things": ["moon", "ladder"],
       "intro": ["story.ch11-6.intro.1"],
       "sentences": [
-        {"id": "ch11-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch11-6.1", "text": "You got the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch11-6.2", "text": "A star is in the sky.", "effect": "sparkle", "trick": "star"},
         {"id": "ch11-6.3", "text": "Vex fell in the dark.", "effect": "vex-slip", "trick": null},
         {"id": "ch11-6.4", "text": "The best fort in the world!", "effect": "kitten-cheer", "trick": "star"}

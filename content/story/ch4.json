@@ -8,7 +8,7 @@
       "id": "ch4-1",
       "bg": "belfry",
       "cast": ["princess", "kitten", "tess", "bix"],
-      "picture": "At the top of a bell tower, a girl with two hair buns and a cheerful boy tap big bells that make no sound, while a little kitten in a wizard hat covers her ears for nothing.",
+      "picture": "At the top of a bell tower, a girl with two hair buns and a cheerful boy tap big bells that make no sound, while a little kitten in a scholar cap covers her ears for nothing.",
       "intro": ["story.ch4-1.intro.1", "story.ch4-1.intro.2"],
       "sentences": [
         {"id": "ch4-1.1", "text": "Tess taps this bell.", "effect": "sparkle", "trick": "bell"},
@@ -37,7 +37,7 @@
       "id": "ch4-3",
       "bg": "toyroom",
       "cast": ["princess", "kitten", "ted", "dot"],
-      "picture": "In a toy room, a teddy bear in a bow tie and a rag doll get a big warm hug from a child and a little kitten in a wizard hat.",
+      "picture": "In a toy room, a teddy bear in a bow tie and a rag doll get a big warm hug from a child and a little kitten in a scholar cap.",
       "intro": ["story.ch4-3.intro.1"],
       "sentences": [
         {"id": "ch4-3.1", "text": "Ted and Dot are sad.", "effect": "sparkle", "trick": null},
@@ -51,7 +51,7 @@
       "id": "ch4-4",
       "bg": "workshop",
       "cast": ["princess", "kitten", "bix", "tess"],
-      "picture": "In a magic workshop, a cheerful boy opens a big old book with no words on its cover, and a girl with two hair buns points at a picture of fuzzy moths inside.",
+      "picture": "In a workshop, a cheerful boy opens a big old book with no words on its cover, and a girl with two hair buns points at a picture of fuzzy moths inside.",
       "intro": ["story.ch4-4.intro.1"],
       "sentences": [
         {"id": "ch4-4.1", "text": "Bix has a big book.", "effect": "item-pop", "trick": "book"},
@@ -118,7 +118,7 @@
       "lesson": 47,
       "bg": "toyroom",
       "cast": ["princess", "kitten", "nell"],
-      "picture": "In a toy room, a baby in a bubble bath blows a big puff of bubbles, and a little kitten in a wizard hat hops out covered from ears to tail in foam.",
+      "picture": "In a toy room, a baby in a bubble bath blows a big puff of bubbles, and a little kitten in a scholar cap hops out covered from ears to tail in foam.",
       "intro": ["story.ch4-side-1.intro.1"],
       "sentences": [
         {"id": "ch4-side-1.1", "text": "Nell has a bath.", "effect": "item-pop", "trick": "bath"},

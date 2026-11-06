@@ -15,7 +15,7 @@
       "intro": ["story.ch13-1.intro.1", "story.ch13-1.intro.2"],
       "sentences": [
         {"id": "ch13-1.1", "text": "Vex has a hook.", "effect": "item-pop", "trick": null},
-        {"id": "ch13-1.2", "text": "Vex took the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-1.2", "text": "Vex took the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch13-1.3", "text": "Look at the cave!", "effect": "sparkle", "trick": null},
         {"id": "ch13-1.4", "text": "Put it back, Vex!", "effect": "bounce", "trick": "page"}
       ],
@@ -63,7 +63,7 @@
       "things": ["boot", "cat", "rock"],
       "intro": ["story.ch13-4.intro.1"],
       "sentences": [
-        {"id": "ch13-4.1", "text": "Vex saw the spell.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-4.1", "text": "Vex saw the page.", "effect": "sparkle", "trick": "page"},
         {"id": "ch13-4.2", "text": "The cat put a paw in.", "effect": "kitten-cheer", "trick": null},
         {"id": "ch13-4.3", "text": "Vex caught a boot!", "effect": "item-pop", "trick": null}
       ],
@@ -74,13 +74,13 @@
       "lesson": 94,
       "bg": "cave",
       "cast": ["princess", "kitten", "tess", "bix"],
-      "picture": "By a moon pool in a cave, a little kitten in a wizard hat waves a magic wand, and a heavy glowing page rises up out of the water.",
-      "things": ["wand", "star", "moon"],
+      "picture": "By a moon pool in a cave, a little kitten in a scholar cap dips a fishing net, and a heavy glowing page rises up out of the water.",
+      "things": ["net", "star", "moon"],
       "intro": ["story.ch13-5.intro.1"],
       "sentences": [
-        {"id": "ch13-5.1", "text": "The cat has a wand.", "effect": "item-pop", "trick": null},
+        {"id": "ch13-5.1", "text": "The cat has a net.", "effect": "item-pop", "trick": "net"},
         {"id": "ch13-5.2", "text": "Are you ready?", "effect": "sparkle", "trick": null},
-        {"id": "ch13-5.3", "text": "The spell is heavy.", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-5.3", "text": "The page is heavy.", "effect": "sparkle", "trick": "page"},
         {"id": "ch13-5.4", "text": "Tess and Bix help you.", "effect": "kitten-cheer", "trick": null}
       ],
       "outro": ["story.ch13-5.outro.1"],
@@ -95,7 +95,7 @@
       "things": ["feather", "mud"],
       "intro": ["story.ch13-6.intro.1"],
       "sentences": [
-        {"id": "ch13-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch13-6.1", "text": "You got the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch13-6.2", "text": "Vex fell in the swamp.", "effect": "vex-slip", "trick": null},
         {"id": "ch13-6.3", "text": "Gus put a feather on Vex.", "effect": "crow-flap", "trick": null},
         {"id": "ch13-6.4", "text": "The moon is up.", "effect": "sparkle", "trick": "moon"}

@@ -8,7 +8,7 @@
       "id": "ch5-1",
       "bg": "hall",
       "cast": ["princess", "kitten", "chip"],
-      "picture": "In a castle hall, a bouncy boy rides a big red ball like a pogo stick, and it bops him gently on the chin while a little kitten in a wizard hat cheers.",
+      "picture": "In a castle hall, a bouncy boy rides a big red ball like a pogo stick, and it bops him gently on the chin while a little kitten in a scholar cap cheers.",
       "intro": ["story.ch5-1.intro.1", "story.ch5-1.intro.2"],
       "sentences": [
         {"id": "ch5-1.1", "text": "This is Chip.", "effect": "sparkle", "trick": null},
@@ -114,7 +114,7 @@
       "id": "ch5-side-2",
       "bg": "hub",
       "cast": ["princess", "kitten"],
-      "picture": "On a garden path, a little kitten in a wizard hat naps curled up inside a big hat next to a fluffy yellow chick, while a child tiptoes past.",
+      "picture": "On a garden path, a little kitten in a scholar cap naps curled up inside a big straw hat next to a fluffy yellow chick, while a child tiptoes past.",
       "intro": ["story.ch5-side-2.intro.1"],
       "sentences": [
         {"id": "ch5-side-2.1", "text": "A chick hid in the hat.", "effect": "item-pop", "trick": "hat"},

@@ -48,12 +48,22 @@ function isPageMeta(p) {
     && isDay(p.addedDay) && isDay(p.earnedDay) && isDay(p.printedDay) && isSize(p.w) && isSize(p.h);
 }
 
+export const RETIRED_THINGS = Object.freeze({ wand: 'stick', potion: 'lotion' });
+
+function renewThings(p) {
+  if (p === null || typeof p !== 'object' || p.source !== 'made' || p.recipe === null || typeof p.recipe !== 'object' || !Array.isArray(p.recipe.things)) return p;
+  const swap = (t) => (typeof t === 'string' && Object.hasOwn(RETIRED_THINGS, t) ? RETIRED_THINGS[ (t)] : t);
+  if (!p.recipe.things.some(( t) => swap(t) !== t)) return p;
+  return { ...p, recipe: { ...p.recipe, things: [...new Set(p.recipe.things.map(swap))] } };
+}
+
 export async function loadPages(store) {
   const stored = await store.get(PAGES_KEY);
   if (!Array.isArray(stored)) return [];
   const seen = new Set();
   const pages = [];
-  for (const p of stored) {
+  for (const saved of stored) {
+    const p = renewThings(saved);
     if (!isPageMeta(p) || seen.has(p.id)) continue;
     seen.add(p.id);
     pages.push(p);

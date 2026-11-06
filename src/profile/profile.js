@@ -49,6 +49,8 @@ export const STARTER_ITEMS = Object.freeze([...STARTER_WARDROBE, 'crown-gold']);
 export const LEGACY_STARTERS = Object.freeze(['o-gown-teal', 'o-gown-pink', 'o-tunic-green', 'o-meadow', 'o-pajamas', 'k-hat-blue',
   'crown-flower', 'crown-silver', 'crown-rainbow', 'crown-shell']);
 export const WARDROBE_SET = 2;
+export const WARDROBE_RENAMES = Object.freeze({ 'o-wizard': 'o-painter', 'o-fairy': 'o-petal' });
+const renamedId = (id) => (Object.hasOwn(WARDROBE_RENAMES, id) ? WARDROBE_RENAMES[ (id)] : id);
 const STARTER_CRAYONS = ['#e63946', '#f4a261', '#f6d55c', '#6bbf59', '#4a90d9', '#9b6bcc', '#f28fb5', '#8d5b3e'];
 
 export function newProfile(startLesson = 41) {
@@ -238,13 +240,16 @@ export function normalizeProfile(stored, startLesson) {
     profile.unlocked = { ...profile.unlocked, wardrobe: [...kept, ...LEGACY_STARTERS.filter((id) => !kept.includes(id))] };
     profile.wardrobeSet = WARDROBE_SET;
   }
+  const renamed = new Set(Object.values(WARDROBE_RENAMES)), owned = new Set();
+  profile.unlocked = { ...profile.unlocked, wardrobe: profile.unlocked.wardrobe.map(renamedId).filter((id) => !renamed.has(id) || (!owned.has(id) && Boolean(owned.add(id)))) };
+  profile.look = { ...profile.look, outfit: renamedId(profile.look.outfit) };
   if (!isNumber(stored.heartSeededTo)) delete profile.heartSeededTo;
   const custom = Array.isArray(stored.customInstant)
     ? [...new Set(stored.customInstant.filter((w) => isString(w) && w.length <= CUSTOM_WORD_MAX && CUSTOM_WORD.test(w)))]
     : [];
   if (custom.length > 0) profile.customInstant = custom;
   else delete profile.customInstant;
-  const waiting = Array.isArray(stored.pendingGifts) ? stored.pendingGifts.filter(isGiftRecord).map((g) => ({ type: g.type, id: g.id })) : [];
+  const waiting = Array.isArray(stored.pendingGifts) ? stored.pendingGifts.filter(isGiftRecord).map((g) => ({ type: g.type, id: g.type === 'wardrobe' ? renamedId(g.id) : g.id })) : [];
   if (waiting.length > 0) profile.pendingGifts = waiting;
   else delete profile.pendingGifts;
   const passes = normalizePasses(stored.passes);

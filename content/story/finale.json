@@ -9,7 +9,7 @@
       "surprise": true,
       "bg": "dressup",
       "cast": ["princess", "kitten", "dash", "thud"],
-      "picture": "In a dress-up room, a child picks out a party outfit, a little kitten in a wizard hat tries on a bow, a spotted cat wears a red sash and a big sleepy cat wriggles.",
+      "picture": "In a dress-up room, a child picks out a party outfit, a little kitten in a scholar cap tries on a bow, a spotted cat wears a red sash and a big sleepy cat wriggles.",
       "intro": ["story.finale-1.intro.1"],
       "sentences": [
         {"id": "finale-1.1", "text": "You can dress up!", "effect": "sparkle", "trick": null},
@@ -74,7 +74,7 @@
       "surprise": true,
       "bg": "hub",
       "cast": ["princess", "kitten", "ted-dot-hearts", "dash"],
-      "picture": "At sunset outside a castle, a teddy bear and a rag doll hug a child goodnight, a spotted cat looks on and a little kitten in a wizard hat naps on a big bag.",
+      "picture": "At sunset outside a castle, a teddy bear and a rag doll hug a child goodnight, a spotted cat looks on and a little kitten in a scholar cap naps on a big bag.",
       "intro": ["story.finale-5.intro.1"],
       "sentences": [
         {"id": "finale-5.1", "text": "You did it!", "effect": "sparkle", "trick": null},

@@ -288,7 +288,7 @@
     {"w":"fleck","segs":[["f","f"],["l","l"],["e","e"],["ck","k"]],"lesson":44,"tier":2,"real":true,"phrase":"a red fleck"},
     {"w":"flock","segs":[["f","f"],["l","l"],["o","o"],["ck","k"]],"lesson":44,"tier":2,"real":true,"phrase":"a gull flock"},
     {"w":"lack","segs":[["l","l"],["a","a"],["ck","k"]],"lesson":44,"tier":1,"real":true,"phrase":"I lack a hat"},
-    {"w":"mock","segs":[["m","m"],["o","o"],["ck","k"]],"lesson":44,"tier":1,"real":true,"phrase":"a mock spell"},
+    {"w":"mock","segs":[["m","m"],["o","o"],["ck","k"]],"lesson":44,"tier":1,"real":true,"phrase":"a mock quiz"},
     {"w":"slack","segs":[["s","s"],["l","l"],["a","a"],["ck","k"]],"lesson":44,"tier":2,"real":true,"phrase":"a slack belt"},
     {"w":"slick","segs":[["s","s"],["l","l"],["i","i"],["ck","k"]],"lesson":44,"tier":2,"real":true,"phrase":"a slick mat"},
     {"w":"smock","segs":[["s","s"],["m","m"],["o","o"],["ck","k"]],"lesson":44,"tier":2,"real":true,"phrase":"a smock dress"},

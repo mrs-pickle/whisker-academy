@@ -86,7 +86,7 @@ export function mount(el, ctx, params = {}) {
 
   const pages = pagesWon(ctx.content?.story ?? [], ctx.profile);
   const spellBook = pages.length === 0 ? null : h('button', {
-    type: 'button', class: 'hub-spellbook', 'aria-label': 'Spell Book',
+    type: 'button', class: 'hub-spellbook', 'aria-label': 'Word Book',
     onClick: ( event) => { if (!spent(event) && !lock.locked()) ctx.audio.play('v.hub.spellbook'); },
   }, h('img', { class: 'hub-spellbook-art', src: artUrl('tricks/book'), alt: '', draggable: 'false' }),
   h('span', { class: 'hub-spellbook-pages' }, pages.map(({ page }) => h('img', { class: 'hub-spellbook-page', src: artUrl(page), alt: '', draggable: 'false' }))));

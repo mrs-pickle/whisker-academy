@@ -8,7 +8,7 @@
       "id": "ch6-1",
       "bg": "hub",
       "cast": ["princess", "kitten", "gus-idle"],
-      "picture": "On a castle lawn, a goofy crow with a fluffy chick riding on his back whispers a secret to a child and a little kitten in a wizard hat.",
+      "picture": "On a castle lawn, a goofy crow with a fluffy chick riding on his back whispers a secret to a child and a little kitten in a scholar cap.",
       "intro": ["story.ch6-1.intro.1", "story.ch6-1.intro.2", "story.ch6-1.intro.3"],
       "sentences": [
         {"id": "ch6-1.1", "text": "Gus has a chick on his back.", "effect": "crow-flap", "trick": "chick"},

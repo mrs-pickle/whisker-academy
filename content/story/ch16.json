@@ -1,6 +1,6 @@
 {
   "id": "ch16",
-  "title": "The Copy Spell",
+  "title": "The Copy Page",
   "book": 2,
   "page": "bunny",
   "lessons": [107, 108, 109, 110],
@@ -10,7 +10,7 @@
       "id": "ch16-1",
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-idle", "gus-idle"],
-      "picture": "In the magic workshop, a silly queen hops up and down, tapping a glowing page with her finger, and copies of the page start flying out of it like birds.",
+      "picture": "In the workshop, a silly queen hops up and down, tapping a glowing page with her finger, and copies of the page start flying out of it like birds.",
       "things": ["book", "lamp", "clock"],
       "intro": ["story.ch16-1.intro.1", "story.ch16-1.intro.2"],
       "sentences": [
@@ -46,7 +46,7 @@
         {"id": "ch16-3.1", "text": "The stack is bigger and bigger.", "effect": "item-pop", "trick": null},
         {"id": "ch16-3.2", "text": "Tess spotted a red page.", "effect": "sparkle", "trick": "page"},
         {"id": "ch16-3.3", "text": "This page is hotter!", "effect": "sparkle", "trick": "page"},
-        {"id": "ch16-3.4", "text": "It is the real spell!", "effect": "kitten-cheer", "trick": "page"}
+        {"id": "ch16-3.4", "text": "It is the real page!", "effect": "kitten-cheer", "trick": "page"}
       ],
       "outro": ["story.ch16-3.outro.1"],
       "question": {"line": "story.ch16-3.question", "choices": ["cast/tess", "cast/bix", "cast/chip"], "answer": "cast/tess"}
@@ -75,7 +75,7 @@
       "things": ["dog", "ball", "page"],
       "intro": ["story.ch16-5.intro.1"],
       "sentences": [
-        {"id": "ch16-5.1", "text": "The spell made puppies and bunnies!", "effect": "item-pop", "trick": "bunny"},
+        {"id": "ch16-5.1", "text": "Out came puppies and bunnies!", "effect": "item-pop", "trick": "bunny"},
         {"id": "ch16-5.2", "text": "The bunnies hopped on Vex.", "effect": "vex-slip", "trick": "bunny"},
         {"id": "ch16-5.3", "text": "Nell is the happiest of all.", "effect": "kitten-cheer", "trick": null}
       ],
@@ -88,7 +88,7 @@
       "bg": "workshop",
       "cast": ["princess", "kitten", "vex-idle", "tess", "bix"],
       "picture": "The copied pages fade away like soap bubbles, a child holds up the one real glowing page, and a silly queen sits on the floor and sniffles.",
-      "things": ["book", "clock", "wand"],
+      "things": ["book", "clock", "candle"],
       "intro": ["story.ch16-6.intro.1"],
       "sentences": [
         {"id": "ch16-6.1", "text": "Vex tried to grab it.", "effect": "bounce", "trick": "page"},

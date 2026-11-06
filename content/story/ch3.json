@@ -39,7 +39,7 @@
       "id": "ch3-3",
       "bg": "hub",
       "cast": ["princess", "kitten", "tess", "bix"],
-      "picture": "On a bumpy road to the sea, a girl with two hair buns, a cheerful boy and a little kitten in a wizard hat ride on the back of a royal carriage, and a big ship waits ahead.",
+      "picture": "On a bumpy road to the sea, a girl with two hair buns, a cheerful boy and a little kitten in a scholar cap ride on the back of a royal carriage, and a big ship waits ahead.",
       "intro": ["story.ch3-3.intro.1"],
       "sentences": [
         {"id": "ch3-3.1", "text": "You hop on the cab.", "effect": "item-pop", "trick": "carriage"},
@@ -53,7 +53,7 @@
       "id": "ch3-4",
       "bg": "ship",
       "cast": ["princess", "kitten", "dash"],
-      "picture": "Below the deck of a ship, a thin spotted cat in a sailor collar sits on a coil of rope, and a little kitten in a wizard hat rubs noses with her while a child smiles.",
+      "picture": "Below the deck of a ship, a thin spotted cat in a sailor collar sits on a coil of rope, and a little kitten in a scholar cap rubs noses with her while a child smiles.",
       "intro": ["story.ch3-4.intro.1", "story.ch3-4.intro.2"],
       "sentences": [
         {"id": "ch3-4.1", "text": "It is a ship cat!", "effect": "item-pop", "trick": "ship"},
@@ -102,7 +102,7 @@
       "id": "ch3-side-1",
       "bg": "kitchen",
       "cast": ["princess", "kitten", "dash", "gus-idle"],
-      "picture": "In a castle kitchen, a little kitten in a wizard hat and a spotted cat in a sailor collar hiss at a goofy crow, who drops a dish with a fish on it and runs.",
+      "picture": "In a castle kitchen, a little kitten in a scholar cap and a spotted cat in a sailor collar hiss at a goofy crow, who drops a dish with a fish on it and runs.",
       "intro": ["story.ch3-side-1.intro.1"],
       "sentences": [
         {"id": "ch3-side-1.1", "text": "The cat can smell a fish.", "effect": "kitten-cheer", "trick": "fish"},

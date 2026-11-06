@@ -8,7 +8,7 @@
       "id": "ch1-1",
       "bg": "toyroom",
       "cast": ["princess", "kitten", "ted", "dot"],
-      "picture": "In a messy toy room, a worried teddy bear in a bow tie holds up an empty little box, while a rag doll and a princess with a star wand find a big feather on the floor.",
+      "picture": "In a messy toy room, a worried teddy bear in a bow tie holds up an empty little box, while a rag doll and a princess with a gold scepter find a big feather on the floor.",
       "intro": ["story.ch1-1.intro.1", "story.ch1-1.intro.2", "story.ch1-1.intro.3"],
       "sentences": [
         {"id": "ch1-1.1", "text": "Ted is in a fuss.", "effect": "sparkle", "trick": null},
@@ -22,7 +22,7 @@
       "id": "ch1-2",
       "bg": "hall",
       "cast": ["princess", "kitten", "tess", "nell"],
-      "picture": "In a castle hall, a girl with two puffy hair buns shrinks a big bell with her magic so it fits in a teacup, while a baby crawls by blowing bubbles.",
+      "picture": "In a castle hall, a girl with two puffy hair buns reads a word out loud and a big bell shrinks so it fits in a teacup, while a baby crawls by blowing bubbles.",
       "intro": ["story.ch1-2.intro.1", "story.ch1-2.intro.2"],
       "sentences": [
         {"id": "ch1-2.1", "text": "Tess has a big bell.", "effect": "item-pop", "trick": "bell"},
@@ -38,7 +38,7 @@
       "id": "ch1-3",
       "bg": "hall",
       "cast": ["princess", "kitten", "tess", "bix"],
-      "picture": "On a castle step, a little kitten in a wizard hat sniffs a fluffy feather, and a puff of wind carries it up and away down the hall.",
+      "picture": "On a castle step, a little kitten in a scholar cap sniffs a fluffy feather, and a puff of wind carries it up and away down the hall.",
       "intro": ["story.ch1-3.intro.1"],
       "sentences": [
         {"id": "ch1-3.1", "text": "Fluff is on the step.", "effect": "sparkle", "trick": null},

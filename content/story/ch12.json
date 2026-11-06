@@ -95,7 +95,7 @@
       "things": ["clock", "ball"],
       "intro": ["story.ch12-6.intro.1"],
       "sentences": [
-        {"id": "ch12-6.1", "text": "You got the spell!", "effect": "sparkle", "trick": "page"},
+        {"id": "ch12-6.1", "text": "You got the page!", "effect": "sparkle", "trick": "page"},
         {"id": "ch12-6.2", "text": "The train is right on time.", "effect": "kitten-cheer", "trick": "train"},
         {"id": "ch12-6.3", "text": "Chip and Nell play on the train.", "effect": "bounce", "trick": "train"},
         {"id": "ch12-6.4", "text": "What a day!", "effect": "kitten-cheer", "trick": null}
