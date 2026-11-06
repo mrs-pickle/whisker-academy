@@ -126,7 +126,7 @@
       "sentences": [
         {"id": "ch17-side-2.1", "text": "Phil is at the circus.", "effect": "kitten-cheer", "trick": null},
         {"id": "ch17-side-2.2", "text": "Dash has a fancy collar.", "effect": "item-pop", "trick": null},
-        {"id": "ch17-side-2.3", "text": "Dash can do a trick!", "effect": "sparkle", "trick": null}
+        {"id": "ch17-side-2.3", "text": "Dash can do a trick!", "effect": "bounce", "trick": "ball"}
       ],
       "outro": ["story.ch17-side-2.outro.1"]
     }

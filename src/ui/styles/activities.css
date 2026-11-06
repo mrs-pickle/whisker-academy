@@ -522,6 +522,7 @@
 }
 .activity[data-choosing] .story-stage, .activity[data-choosing] .story-stage * { animation-play-state: paused; }
 .story-prop { transform-origin: 50% 100%; }
+.story-prop img { filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 3px rgba(255, 255, 255, 0.85)) drop-shadow(0 3px 4px rgba(34, 29, 25, 0.35)); }
 .story-prop.shrunk { transform: scale(0.5); }
 
 .fx-vex-slip { animation: vex-slip 1.5s ease-in-out; }

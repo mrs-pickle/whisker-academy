@@ -1,5 +1,5 @@
 {
-  "version": "c2b9bf9b6787d0cb6aba83a5955eb8c133453e4c08ff5e8eb5c76853da5c999a",
+  "version": "a233593d23ac811e01ec1592aff6a7557d16050063703641e7dc6e9411decce6",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -6708,7 +6708,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "6ecb6df200303a81c92c41c1ce827cbf787a7f4e621f62794a9af9eff415ff5d",
+      "hash": "48927f65c4a12601fd2d6aa9129f2613d3f516fa925499a0da6d16a79cdf2493",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",
@@ -12907,7 +12907,7 @@
     },
     {
       "id": "rare-spellings",
-      "hash": "78dc45292328f3ff4c06f858257244d82d3221c70785b15d6abc054530b38280",
+      "hash": "388d24ab367d2dd64029fd67fd335931c728c76d4c826b5eae656e21e79848b3",
       "files": [
         "assets/art/bg/fair.webp",
         "assets/art/pageparts/place-fair.svg",

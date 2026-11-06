@@ -322,7 +322,7 @@ export async function run(el, ctx, round, hooks) {
       play: (item) => {
         const word = item.id.startsWith('w:') && item.mode === 'spell' ? words.get(item.id.slice(2)) : undefined;
         if (!word) {
-          console.warn(`The Spell Workshop cannot build ${item.id} in mode ${item.mode}; skipping it.`);
+          console.warn(`The spelling activity cannot build ${item.id} in mode ${item.mode}; skipping it.`);
           return Promise.resolve(null);
         }
         return spellWord(view, word, {
