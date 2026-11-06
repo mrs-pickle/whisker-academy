@@ -1,5 +1,5 @@
 {
-  "version": "8fa950a05ba4e41f1a9277f1230192fc1f539975218110f8aaab3ed907638db7",
+  "version": "f2d231d06cf03d7ca940ec0b33426ed2df468359ba39d66262b4c6e48caecd73",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -6715,7 +6715,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "2ae386fd0705300426040f11b56d27574999983b7221d8a7b3ba18b8db41d68f",
+      "hash": "8223f9f7e597c98f9988df10b70efb149bb7961fbaaeae17be90b9804547d3a2",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",

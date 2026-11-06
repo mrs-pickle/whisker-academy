@@ -11,6 +11,102 @@ const INK_MS = 250;
 const RULES = Object.freeze([['top', 40], ['middle', 200], ['base', 360]]);
 const OTHER_START_GAP = 75;
 const BLANK_BOX = Object.freeze({ w: 480, h: 480 });
+export const WRITES = 3;
+const SLOT_ROOM = 80;
+const SLOT_MIN = 280;
+export const DICTATE_BOX = Object.freeze({ w: 1120, h: 480 });
+const INK_STEP = 2;
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+export function padLayout(letter) {
+  if (!letter) return { w: DICTATE_BOX.w, h: DICTATE_BOX.h, slots: [{ x: 0, w: DICTATE_BOX.w, dx: 0 }] };
+  const { w, h: tall } = letter.box;
+  const slot = Math.max(SLOT_MIN, w + SLOT_ROOM);
+  const slots = Array.from({ length: WRITES }, (_, i) => ({ x: i * slot, w: slot, dx: i * slot + (slot - w) / 2 }));
+  return { w: slot * WRITES, h: tall, slots };
+}
+
+export function padPoint({ clientX, clientY }, rect, box) {
+  const scale = Math.min(rect.width / box.w, rect.height / box.h) || 1;
+  const left = rect.left + (rect.width - box.w * scale) / 2;
+  const top = rect.top + (rect.height - box.h * scale) / 2;
+  const clamp = ( v, max) => Math.min(max, Math.max(0, v));
+  const round = ( v) => Math.round(v * 10) / 10;
+  return [round(clamp((clientX - left) / scale, box.w)), round(clamp((clientY - top) / scale, box.h))];
+}
+
+export function addPoint(points, p) {
+  const last = points.at(-1);
+  if (last && Math.hypot(p[0] - last[0], p[1] - last[1]) < INK_STEP) return false;
+  points.push(p);
+  return true;
+}
+
+export function inkPath(points) {
+  if (points.length === 0) return '';
+  const n = ( v) => String(Math.round(v * 10) / 10);
+  const [x0, y0] = points[0];
+  if (points.length === 1) return `M${n(x0)} ${n(y0)} L${n(x0 + 0.1)} ${n(y0)}`;
+  let d = `M${n(x0)} ${n(y0)}`;
+  for (let i = 1; i < points.length - 1; i++) {
+    const [x, y] = points[i];
+    const [nx, ny] = points[i + 1];
+    d += ` Q${n(x)} ${n(y)} ${n((x + nx) / 2)} ${n((y + ny) / 2)}`;
+  }
+  const [xl, yl] = points.at(-1) ?? points[0];
+  return `${d} L${n(xl)} ${n(yl)}`;
+}
+
+export function writingPad(letter, { trace = false } = {}) {
+  const box = padLayout(letter);
+  const strokes = (letter?.strokes ?? []).map(s => `<path d="${s.d}"/>`).join('');
+  const rules = RULES.map(([name, y]) => `<line class="pencil-rule ${name}" x1="0" x2="${box.w}" y1="${y}" y2="${y}"/>`).join('');
+  const faint = trace && letter ? box.slots.map(s => `<g class="pencil-faint" transform="translate(${s.dx} 0)">${strokes}</g>`).join('') : '';
+  const markup = `<svg xmlns="${SVG_NS}" viewBox="0 0 ${box.w} ${box.h}" aria-hidden="true"><g class="pencil-rules">${rules}</g>${faint}<g class="pencil-ink"></g></svg>`;
+  const parsed = new globalThis.DOMParser().parseFromString(markup, 'image/svg+xml');
+  const svg = (document.importNode(parsed.documentElement, true));
+  svg.classList.add('pencil-svg');
+  const ink = (svg.querySelector('.pencil-ink'));
+  const pad = h('div', { class: ['pencil-pad', letter ? null : 'wide'], style: { '--w': String(box.w), '--h': String(box.h) } }, svg);
+  let stroke = null;
+  let count = 0;
+  const at = (event) => padPoint(event, (stroke).rect, box);
+  pad.addEventListener('pointerdown', ( event) => {
+    if (stroke || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    event.preventDefault?.();
+    pad.setPointerCapture?.(event.pointerId);
+    const r = pad.getBoundingClientRect?.() ?? { left: 0, top: 0, width: box.w, height: box.h };
+    const path = (document.createElementNS(SVG_NS, 'path'));
+    stroke = { id: event.pointerId, points: [], path, rect: { left: r.left, top: r.top, width: r.width, height: r.height } };
+    addPoint(stroke.points, at(event));
+    path.setAttribute('d', inkPath(stroke.points));
+    ink.append(path);
+    count++;
+  });
+  pad.addEventListener('pointermove', ( event) => {
+    if (!stroke || event.pointerId !== stroke.id) return;
+    event.preventDefault?.();
+    const events = event.getCoalescedEvents?.() ?? [];
+    let added = false;
+    for (const e of events.length > 0 ? events : [event]) added = addPoint(stroke.points, at(e)) || added;
+    if (added) stroke.path.setAttribute('d', inkPath(stroke.points));
+  });
+  const lift = (event) => {
+    if (!stroke || event.pointerId !== stroke.id) return;
+    stroke = null;
+  };
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) pad.addEventListener(type, lift);
+  const clear = () => { stroke = null; count = 0; ink.replaceChildren(); };
+  const eraser = h('button', { type: 'button', class: 'pencil-clear', 'aria-label': 'Wipe it clean', onClick: clear },
+    h('span', { class: 'pencil-clear-art', 'aria-hidden': 'true' }));
+  const el = h('div', { class: 'pencil-pad-row' }, pad, eraser);
+  return { el, pad, clear, strokes: () => count, box };
+}
+
+function showPad(view, ...nodes) {
+  view.root.classList.add('pencil-writing');
+  view.show(...nodes);
+}
 
 export function stageOf(states, id) {
   const box = states?.get(`lf:${id}#paper`)?.box;
@@ -156,18 +252,27 @@ function findStart(view, board, letter, hooks) {
   });
 }
 
-function grownUpsTurn(view, kind) {
+
+function grownUpsTurn(view, kind, paper, toPaper) {
   return new Promise((resolve) => {
     if (!view.live()) return;
     const end = (answer) => view.lock.run(async () => { banner.remove(); view.root.classList.remove('pencil-writing'); resolve(answer); });
-    const banner = pencilBanner({ kind, onYes: () => end('yes'), onAgain: () => end('again'), onSkip: () => end('skip'), hero: heroOf(view.ctx?.profile) });
+    const onPaper = paper && !paper.on && toPaper ? () => { paper.on = true; toPaper(); } : undefined;
+    const banner = pencilBanner({ kind, onYes: () => end('yes'), onAgain: () => end('again'), onSkip: () => end('skip'), onPaper, hero: heroOf(view.ctx?.profile) });
     view.root.classList.add('pencil-writing');
     view.root.append(banner);
     if (kind === 'letter') offerTips(view.ctx, banner, PENCIL_TIPS);
   });
 }
 
-async function practiceLetter(view, letter, stage, hooks) {
+async function writeLetter(view, board, letter, clips, paper, trace) {
+  const toPaper = () => view.show(board.el);
+  if (!paper.on) showPad(view, writingPad(letter, { trace }).el);
+  await view.prompt(clips);
+  return grownUpsTurn(view, 'letter', paper, toPaper);
+}
+
+async function practiceLetter(view, letter, stage, hooks, paper) {
   const board = letterBoard(letter);
   view.show(board.el);
   if (stage === 'new') {
@@ -183,14 +288,17 @@ async function practiceLetter(view, letter, stage, hooks) {
   let again = 0;
   for (;;) {
     if (!view.live()) return 'skip';
-    const writing = stage === 'secure' && again === 0 ? ['v.pencil.memory'] : ['v.pencil.your-turn', 'v.pencil.say'];
-    await view.prompt([...writing, ...letter.sounds]);
-    const answer = await grownUpsTurn(view, 'letter');
+    const fromMemory = stage === 'secure' && again === 0;
+    const writing = fromMemory ? ['v.pencil.memory'] : ['v.pencil.your-turn', 'v.pencil.say'];
+    const answer = await writeLetter(view, board, letter, [...writing, ...letter.sounds], paper, stage !== 'secure');
     if (answer === 'skip') return 'skip';
     const ms = Math.round(now() - begun);
     if (answer === 'yes') {
       hooks.record(`lf:${letter.id}`, 'paper', { correct: again === 0, helped: false, ms }, { monitor: false });
-      if (stage === 'secure' && again === 0) await playModel(view, board, letter);
+      if (fromMemory) {
+        view.show(board.el);
+        await playModel(view, board, letter);
+      }
       return 'done';
     }
     again++;
@@ -198,6 +306,7 @@ async function practiceLetter(view, letter, stage, hooks) {
       hooks.record(`lf:${letter.id}`, 'paper', { correct: false, helped: true, ms }, { monitor: false });
       return 'stuck';
     }
+    view.show(board.el);
     await view.say(['v.pencil.watch']);
     await playModel(view, board, letter);
   }
@@ -209,13 +318,12 @@ export function secureLetter(ctx, not) {
     && (marks[l.id] === 'fine' || (ctx.states?.get(`lf:${l.id}#paper`)?.box ?? 0) >= LETTER_SECURE_BOX)) ?? null;
 }
 
-async function endOnSecure(view, letter) {
+async function endOnSecure(view, letter, paper) {
   if (!letter || !view.live()) return;
   const board = letterBoard(letter);
   view.show(board.el);
   await playModel(view, board, letter);
-  await view.prompt(['v.pencil.your-turn', 'v.pencil.say', ...letter.sounds]);
-  await grownUpsTurn(view, 'letter');
+  await writeLetter(view, board, letter, ['v.pencil.your-turn', 'v.pencil.say', ...letter.sounds], paper, false);
 }
 
 export function dictationClips(item) {
@@ -224,16 +332,19 @@ export function dictationClips(item) {
   return [];
 }
 
-async function dictate(view, item) {
+async function dictate(view, item, paper) {
   const clips = dictationClips(item);
   if (clips.length === 0) return 'done';
-  const board = letterBoard(null);
-  view.show(h('div', { class: 'pencil-dictate' }, listenDisc(view, clips), board.el));
+  const onPaper = () => h('div', { class: 'pencil-dictate' }, listenDisc(view, clips), letterBoard(null).el);
+  const toPaper = () => view.show(onPaper());
+  if (paper.on) view.show(onPaper());
+  else showPad(view, h('div', { class: 'pencil-dictate' }, listenDisc(view, clips), writingPad(null).el));
   await view.prompt(['v.pencil.write', ...clips]);
   for (;;) {
-    const answer = await grownUpsTurn(view, 'write');
+    const answer = await grownUpsTurn(view, 'write', paper, toPaper);
     if (answer === 'yes') return 'done';
     if (answer === 'skip') return 'skip';
+    if (!paper.on) view.root.classList.add('pencil-writing');
     await view.say(clips);
   }
 }
@@ -243,19 +354,20 @@ export async function run(el, ctx, round, hooks) {
   if (!copilot) return;
   const view = createActivityView(el, ctx, { name: 'pencil' });
   const letters = new Map((ctx.content?.letters ?? []).map(( l) => [l.id, l]));
+  const paper = { on: false };
   try {
     for (const [n, item] of round.items.entries()) {
       if (!view.live()) return;
       if (item.id.startsWith('lf:')) {
         const letter = letters.get(item.id.slice(3));
         if (!letter) continue;
-        const end = await practiceLetter(view, letter, stageOf(ctx.states, letter.id), hooks);
+        const end = await practiceLetter(view, letter, stageOf(ctx.states, letter.id), hooks, paper);
         if (end === 'skip') break;
         if (end === 'stuck') {
-          await endOnSecure(view, secureLetter(ctx, letter.id));
+          await endOnSecure(view, secureLetter(ctx, letter.id), paper);
           break;
         }
-      } else if (item.mode === 'write' && await dictate(view, item) === 'skip') break;
+      } else if (item.mode === 'write' && await dictate(view, item, paper) === 'skip') break;
       hooks.progress?.((n + 1) / round.items.length);
     }
   } finally {

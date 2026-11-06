@@ -168,10 +168,11 @@ export function setUndo(banner, on) {
 
 export const PENCIL_TURN = Object.freeze({
   letter: Object.freeze({ title: 'Grown-up: watch the first stroke.', yes: 'Started in the right place, went the right way', again: 'Watch it again' }),
-  write: Object.freeze({ title: 'Grown-up: is it on the paper?', yes: 'Done', again: 'Hear it again' }),
+  write: Object.freeze({ title: 'Grown-up: is it written down?', yes: 'Done', again: 'Hear it again' }),
 });
+export const PENCIL_PAPER = 'Use paper today';
 
-export function pencilBanner({ kind, onYes, onAgain, onSkip, hero = 'princess' }) {
+export function pencilBanner({ kind, onYes, onAgain, onSkip, onPaper, hero = 'princess' }) {
   const words = PENCIL_TURN[kind];
   const keys = {};
   const choice = (key, cls, mark, label, fn) => {
@@ -183,7 +184,13 @@ export function pencilBanner({ kind, onYes, onAgain, onSkip, hero = 'princess' }
     keys[key] = button;
     return button;
   };
+  const paper = onPaper ? h('button', { type: 'button', class: 'pencil-paper', onClick: ( event) => {
+    if ((event?.detail ?? 0) >= 2 || paper?.hidden) return;
+    (paper).hidden = true;
+    onPaper();
+  } }, PENCIL_PAPER) : null;
   const banner = h('div', { class: 'copilot-banner pencil-banner', role: 'group', 'aria-label': "Grown-up's turn" },
+    paper,
     h('p', { class: 'copilot-title' }, heroText(words.title, hero)),
     h('div', { class: 'copilot-tips' }),
     h('div', { class: 'copilot-choices' },
