@@ -239,7 +239,7 @@ export function mount(el, ctx) {
     ],
     soundcheck: () => [
       h('h1', { class: 'gu-title' }, 'One more thing: a 5-minute sound check'),
-      h('p', {}, hx("The narrator's voice was made by a computer, and nobody has listened to it for her yet. Before her first session, please spend about 5 minutes in Sound check listening to the letter sounds (about 45 short clips).")),
+      h('p', {}, hx("The narrator's voice was made by Mom. The letter sounds are Mom's own recordings. Before her first session, please spend about 5 minutes in Sound check listening to the letter sounds (about 45 short clips).")),
       h('p', {}, 'If a sound is off (an extra "uh" on /b/, say), flag it, or record it again in your own voice. Your recording replaces it everywhere in the game.'),
       h('div', { class: 'gu-row' },
         h('button', { type: 'button', class: 'gu-button gu-primary', onClick: () => finish('grownup/soundcheck', { unlocked: true }) }, 'Finish and open Sound check'),

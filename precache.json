@@ -1,5 +1,5 @@
 {
-  "version": "1290b7bc6b653ea18d85d2bd53d78e37c91af3c8f9b3266b4ca4a3d46343b86b",
+  "version": "977ade393f62e9ed689de5e9ae9caa0d133d171711e59c66cc429cc3ab8af07d",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -6709,7 +6709,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "3cb0fc8b271d502f51492ee88796dab97c5c8f159d094a889c67a299df850b0e",
+      "hash": "fc015f40b5e96edbcde5dc939389548d5e902e6012910816a318c805e22e1f19",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",
@@ -10012,7 +10012,7 @@
     },
     {
       "id": "digraphs-end",
-      "hash": "e97c574135a5418bd9d2759b3dc84543c0eeec9f01e48517942df4ed47d30342",
+      "hash": "014a24650d997c53de532727d3a7fd3ce84abb54907eaefc22d74188cca2d55a",
       "files": [
         "assets/art/bg/seashore.webp",
         "assets/art/pageparts/place-seashore.svg",
@@ -10237,7 +10237,7 @@
     },
     {
       "id": "vce",
-      "hash": "5f3164feb83a3ed37a788bbb3c6366489e56260436296dbd34a372d31dd23338",
+      "hash": "dd40d997c3f40ebbe1811e358ef0e2a63ad13142248dcfbfa96033853d17bdd3",
       "files": [
         "assets/art/bg/maze.webp",
         "assets/art/pageparts/place-maze.svg",
@@ -10601,7 +10601,7 @@
     },
     {
       "id": "longer-words",
-      "hash": "e78bcbb9189127f42a3bdfb3c37ff8961d9f03310988f15caf08b16715b29400",
+      "hash": "b127a82f910ead6298ce68568da367912b525fc062e255accf58b1db388fbe37",
       "files": [
         "assets/art/bg/river.webp",
         "assets/art/pageparts/place-river.svg",
@@ -10876,7 +10876,7 @@
     },
     {
       "id": "ending-patterns",
-      "hash": "d84f509bd644111d3ce517606468123a3ff676e6dbaf2bb3badf9df4004aba68",
+      "hash": "8eb83c2b03e8ab80782f57e9f4dce22e9e815f55faaf26a6a4498e8932642c91",
       "files": [
         "assets/art/bg/camp.webp",
         "assets/art/pageparts/place-camp.svg",
@@ -11193,7 +11193,7 @@
     },
     {
       "id": "r-controlled",
-      "hash": "27e7af60354a077e272e603641848d80fc4bfbdee447de231157039b30ba691a",
+      "hash": "683758d09a8fcafbab65feb3fa7f0eb0429ef5ada03bef6fca6b022027507a0c",
       "files": [
         "assets/art/bg/fort.webp",
         "assets/art/pageparts/place-fort.svg",
@@ -11531,7 +11531,7 @@
     },
     {
       "id": "long-teams",
-      "hash": "b9bd92665b82cecd75db337b76de52c7a5d069ed0811e96158c22a8079dd73d9",
+      "hash": "015b20aec266f42937c70e5f3daf4d033e59ebe6c5fd3280cfe1cafdd80a1123",
       "files": [
         "assets/art/bg/train.webp",
         "assets/art/pageparts/place-train.svg",
@@ -11935,7 +11935,7 @@
     },
     {
       "id": "other-teams",
-      "hash": "670eb154c9ae40dc49ce44317e563b3a06fc8ef03bac047b8b2d9e27aec47446",
+      "hash": "2c141db08248c5e7e3d4655e3845a9d2bf7a191790c081e1e9fba55e2f509ad9",
       "files": [
         "assets/art/bg/cave.webp",
         "assets/art/pageparts/place-cave.svg",
@@ -12235,7 +12235,7 @@
     },
     {
       "id": "diphthongs",
-      "hash": "76f30e72c9d2f35e73942e239726badb9d9f255771887a6233777e9b31eed0b6",
+      "hash": "b5292c26b8770973c5741af65f6fbb564a616fa1e29a625bc8144cf7d7823cf7",
       "files": [
         "assets/art/bg/clouds.webp",
         "assets/art/pageparts/place-clouds.svg",
@@ -12430,7 +12430,7 @@
     },
     {
       "id": "silent-letters",
-      "hash": "824c3cb9703d9aa72cfd72df783f4a9c39cb6cace447e3715ba45a179092cf97",
+      "hash": "6033cb2c49960930c4896fd56f00abed19a4a29cf8f03fb3ec64264c4ec81d45",
       "files": [
         "assets/art/pageparts/thing-knot.svg",
         "assets/art/tricks/knot.webp",
@@ -12549,7 +12549,7 @@
     },
     {
       "id": "affixes-1",
-      "hash": "cea4b1999e80ca788fc1bbb1a59b86f301cdb83ba737f61e09ba67c9c9f7d594",
+      "hash": "c1dcbfea5ccb862b655c1e927354572b20a8b54866e96be4010f03cc36850812",
       "files": [
         "assets/audio/w.animal.mp3",
         "assets/audio/w.animals.mp3",
@@ -12697,7 +12697,7 @@
     },
     {
       "id": "suffix-changes",
-      "hash": "912eb114d21d308bb2d5798c5950a6984c74c0be074563f7892a3bd2ea6e6af4",
+      "hash": "068b684dbf44215d463f4048485f4b20e22065403f40901f100220c08ecb29c0",
       "files": [
         "assets/art/pageparts/thing-bunny.svg",
         "assets/art/tricks/bunny.webp",
@@ -12909,7 +12909,7 @@
     },
     {
       "id": "rare-spellings",
-      "hash": "388d24ab367d2dd64029fd67fd335931c728c76d4c826b5eae656e21e79848b3",
+      "hash": "69089bf2ad1429f13ee5d6023dc7172494b5ffa83b2df32560703fe83d820b3d",
       "files": [
         "assets/art/bg/fair.webp",
         "assets/art/pageparts/place-fair.svg",
@@ -13211,7 +13211,7 @@
     },
     {
       "id": "affixes-2",
-      "hash": "2757cfdf57cc99572c5e23552dd119e7060fd172cd257a367715959b1e15c975",
+      "hash": "bb22832c3c5456ba15421c47d87043731033b7f63c3a6abb1fabe4f07ccd1271",
       "files": [
         "assets/art/bg/academy.webp",
         "assets/art/bg/library.webp",
