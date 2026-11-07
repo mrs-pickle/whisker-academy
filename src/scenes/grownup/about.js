@@ -12,6 +12,8 @@ export const NOTICES = Object.freeze([
   'CMUdict (BSD-2-Clause): the pronunciation dictionary used to check word pronunciations.',
 ]);
 
+export const PRIVACY_PAGE = 'privacy.html';
+
 export function mount(el, ctx, params = {}) {
   const body = cornerFrame(el, ctx, params, 'about');
   if (!body) return () => {};
@@ -19,6 +21,7 @@ export function mount(el, ctx, params = {}) {
   body.append(
     h('p', {}, hx("Meadowlark's World: Whisker Academy is a home practice game for reading and spelling, played with a grown-up beside her. It practices only what has been taught, in UFLI Foundations order.")),
     h('p', {}, hx('Her names, progress and your recordings stay in this browser on this computer. Nothing is sent anywhere: there are no accounts, ads or tracking. Use Backup to keep a copy.')),
+    h('p', {}, 'Read the ', h('a', { href: PRIVACY_PAGE, target: '_blank', rel: 'noopener' }, 'Privacy policy'), ' (it opens in a new tab).'),
     h('p', {}, hx(PRINT_TIP)),
     h('h2', { class: 'gu-subtitle' }, 'Notices'),
     h('p', {}, NOTICES[0]),

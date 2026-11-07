@@ -1,5 +1,5 @@
 {
-  "version": "a233593d23ac811e01ec1592aff6a7557d16050063703641e7dc6e9411decce6",
+  "version": "1290b7bc6b653ea18d85d2bd53d78e37c91af3c8f9b3266b4ca4a3d46343b86b",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -6588,6 +6588,7 @@
     "content/words.json",
     "index.html",
     "manifest.webmanifest",
+    "privacy.html",
     "src/activities/blink.js",
     "src/activities/cards.js",
     "src/activities/chain-controller.js",
@@ -6708,7 +6709,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "48927f65c4a12601fd2d6aa9129f2613d3f516fa925499a0da6d16a79cdf2493",
+      "hash": "3cb0fc8b271d502f51492ee88796dab97c5c8f159d094a889c67a299df850b0e",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",
@@ -9890,6 +9891,7 @@
         "content/words.json",
         "index.html",
         "manifest.webmanifest",
+        "privacy.html",
         "src/activities/blink.js",
         "src/activities/cards.js",
         "src/activities/chain-controller.js",
