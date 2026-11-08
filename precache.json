@@ -1,5 +1,5 @@
 {
-  "version": "977ade393f62e9ed689de5e9ae9caa0d133d171711e59c66cc429cc3ab8af07d",
+  "version": "414946266a988123c25862aa5ed49f0b0ea5e3022798e0a1d84ed23c82809162",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -1448,6 +1448,7 @@
     "assets/audio/v.entrance.thanks.mp3",
     "assets/audio/v.entrance.welcome.mp3",
     "assets/audio/v.error.again.mp3",
+    "assets/audio/v.error.claps.mp3",
     "assets/audio/v.error.count.mp3",
     "assets/audio/v.error.later.mp3",
     "assets/audio/v.error.listen.mp3",
@@ -2094,6 +2095,7 @@
     "assets/audio/v.warmup.segment.mp3",
     "assets/audio/v.warmup.start.mp3",
     "assets/audio/v.warmup.substitute.mp3",
+    "assets/audio/v.warmup.syllables.again.mp3",
     "assets/audio/v.warmup.syllables.listen.mp3",
     "assets/audio/v.warmup.syllables.mp3",
     "assets/audio/v.warmup.without.mp3",
@@ -6709,7 +6711,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "fc015f40b5e96edbcde5dc939389548d5e902e6012910816a318c805e22e1f19",
+      "hash": "67abffdd36cd7d66a3a619336f548b8989e3566cfe1d0910dfaae7e907ad1654",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",
@@ -7614,6 +7616,7 @@
         "assets/audio/v.entrance.thanks.mp3",
         "assets/audio/v.entrance.welcome.mp3",
         "assets/audio/v.error.again.mp3",
+        "assets/audio/v.error.claps.mp3",
         "assets/audio/v.error.count.mp3",
         "assets/audio/v.error.later.mp3",
         "assets/audio/v.error.listen.mp3",
@@ -7980,6 +7983,7 @@
         "assets/audio/v.warmup.segment.mp3",
         "assets/audio/v.warmup.start.mp3",
         "assets/audio/v.warmup.substitute.mp3",
+        "assets/audio/v.warmup.syllables.again.mp3",
         "assets/audio/v.warmup.syllables.listen.mp3",
         "assets/audio/v.warmup.syllables.mp3",
         "assets/audio/v.warmup.without.mp3",
@@ -11935,7 +11939,7 @@
     },
     {
       "id": "other-teams",
-      "hash": "2c141db08248c5e7e3d4655e3845a9d2bf7a191790c081e1e9fba55e2f509ad9",
+      "hash": "2db37114392bc334459e12522fa3041fdf27a2bee367e896b1ac4e4c8c21999b",
       "files": [
         "assets/art/bg/cave.webp",
         "assets/art/pageparts/place-cave.svg",

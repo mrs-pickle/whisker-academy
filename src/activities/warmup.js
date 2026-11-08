@@ -106,7 +106,7 @@ async function segment(view, pa, first) {
   paw.disabled = true;
   view.show(wordPicture(ctx, pa.word), row, h('div', { class: 'paw-controls' }, paw, done));
   const word = `w.${pa.word}`;
-  await view.prompt([intro, word], { play: first ? [intro, word] : [word] });
+  await view.prompt([intro, word], { play: first ? [intro, word] : parts ? [`${intro}.again`, word] : [word] });
 
   const start = now();
   let ms = null;
@@ -141,7 +141,7 @@ async function segment(view, pa, first) {
     const right = count === total;
     if (!right) misses++;
     await view.lock.run(async () => {
-      await view.say(right ? (first && misses === 0 ? [`${intro}.listen`] : []) : ['v.error.count'], 300);
+      await view.say(right ? (first && misses === 0 ? [`${intro}.listen`] : []) : [parts ? 'v.error.claps' : 'v.error.count'], 300);
       await lightPaws(view, row, units);
       if (right) {
         view.cheer();

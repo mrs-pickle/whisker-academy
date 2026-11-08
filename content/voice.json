@@ -31,8 +31,9 @@
 "cards.hear": {"text": "Listen to the sound. Which letters make it? Click them."},
 "cards.listen": {"text": "Listen carefully. Which word did you hear?"},
 "cards.split": {"text": "Here it is in two parts. Read this part, then that part."},
-"warmup.syllables": {"text": "Say the word. Click one paw for each part you say, then click the check."},
-"warmup.syllables.listen": {"text": "Now listen, and watch the paws light up for each part."},
+"warmup.syllables": {"text": "Clap the word as you say it, like kit, ten. That's two claps! Click the paw once for each clap. Then click the check."},
+"warmup.syllables.again": {"text": "Clap it, and click the paw once for each clap."},
+"warmup.syllables.listen": {"text": "Now listen. One paw lights up for each clap."},
 
 "spell.start": {"text": "Welcome to the Word Workshop! Let's build some words."},
 "spell.hear": {"text": "Listen to the word."},
@@ -171,6 +172,7 @@
 "error.near": {"text": "That one says it too! This word uses these letters:"},
 "error.later": {"text": "We'll practice that one again soon."},
 "error.count": {"text": "Let's count the sounds together."},
+"error.claps": {"text": "Let's clap it together."},
 
 "praise.blend.1": {"text": "You tapped each sound and slid them together — that's what readers do."},
 "praise.blend.2": {"text": "You stretched the sounds out, and the word popped right out."},
@@ -648,7 +650,7 @@
 "story.ch13-5.outro.1": {"text": "The page rises up out of the moon pool, dripping and shining."},
 "story.ch13-5.question": {"text": "Who had the net? Click the picture."},
 "story.ch13-6.intro.1": {"text": "Vex makes one last grab for the page, but the floor of the cave is wet and slippery."},
-"story.ch13-6.outro.1": {"text": "The page glows like the moon pool. It is the page for o-o, e-w, u-i, a-u and a-w, as in book, moon, new, fruit, saw and head. Seven pages are safe!"},
+"story.ch13-6.outro.1": {"text": "The page glows like the moon pool. It is the page for o-o, as in book and moon; e-w, u-i and u-e, as in new, fruit and blue; a-u and a-w, as in haul and saw; and e-a, as in head. Seven pages are safe!"},
 "story.ch13-6.outro.2": {"text": "A silver swimsuit, covered in little moons, appears on you. It is yours to keep."},
 "story.ch13-side-1.intro.1": {"text": "Free-time high jinks! Chip is cooking a pudding at the mouth of the cave."},
 "story.ch13-side-1.outro.1": {"text": "Dash licks his paw. Yum! Chip makes another pudding, just for Dash."},
