@@ -19,6 +19,7 @@ export const PROFILE_FATES = Object.freeze({
   unlocked: 'reset',
   sessions: 'reset',
   giftIndex: 'reset',
+  giftSlotShift: 'reset',
   wardrobeSet: 'reset',
   pendingGifts: 'reset',
   passes: 'reset',
@@ -42,6 +43,7 @@ export const LOOK_FATES = Object.freeze({
   hero: 'keep',
   outfit: 'reset',
   crown: 'reset',
+  scepter: 'reset',
   kittenAcc: 'reset',
 });
 

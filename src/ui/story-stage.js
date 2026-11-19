@@ -12,8 +12,9 @@ const HAIRS = Object.freeze(['long', 'curly', 'bun']);
 const HAIR_COLORS = Object.freeze(['brown', 'black', 'blonde', 'red']);
 const CROWNS = Object.freeze(['gold', 'flower', 'silver', 'rainbow', 'shell', 'book',
   'snowflake', 'butterfly', 'star', 'heart', 'dragon', 'candy', 'sun', 'peacock']);
+const SCEPTERS = Object.freeze(['gold', 'flower', 'heart', 'starry', 'moon', 'pearl', 'rainbow', 'crystal']);
 const FURS = Object.freeze(['orange', 'gray', 'black', 'calico']);
-export const LOOK_OPTIONS = Object.freeze({ skin: SKINS, hair: HAIRS, hairColor: HAIR_COLORS, crown: CROWNS, kittenFur: FURS });
+export const LOOK_OPTIONS = Object.freeze({ skin: SKINS, hair: HAIRS, hairColor: HAIR_COLORS, crown: CROWNS, scepter: SCEPTERS, kittenFur: FURS });
 const OUTFIT = /^o-[a-z0-9-]+$/;
 const KITTEN_ACC = /^k-[a-z0-9-]+$/;
 
@@ -33,11 +34,13 @@ export function castArt(id, look, pose = 'sit') {
   if (id === 'princess') {
     const hero = isPrince(l) ? 'prince' : 'princess';
     const crown = optional(l.crown, CROWNS, DEFAULT_LOOK.crown);
+    const scepter = optional(l.scepter, SCEPTERS, DEFAULT_LOOK.scepter);
     return [
       `${hero}/body-${valid(l.skin, SKINS, DEFAULT_LOOK.skin)}`,
       outfitArt(valid(l.outfit, OUTFIT, DEFAULT_LOOK.outfit), l),
       `${hero}/hair-${valid(l.hair, HAIRS, DEFAULT_LOOK.hair)}-${valid(l.hairColor, HAIR_COLORS, DEFAULT_LOOK.hairColor)}`,
       ...(crown ? [`${hero}/crown-${crown}`] : []),
+      ...(scepter ? [`${hero}/scepter-${scepter}`] : []),
     ];
   }
   if (id === 'kitten') {
@@ -50,7 +53,8 @@ export function castArt(id, look, pose = 'sit') {
 
 const STAGE_W = 1280;
 const STAGE_H = 800;
-const SIZES = Object.freeze({ princess: [176, 317], kitten: [150, 150], cast: [196, 294] });
+const SIZES = Object.freeze({ princess: [176, 317], kitten: [150, 150], cast: [196, 294], vex: [235, 353] });
+export const castSize = (id) => (id === 'princess' || id === 'kitten' ? SIZES[id] : id.startsWith('vex') ? SIZES.vex : SIZES.cast);
 const LEFT_SLOTS = Object.freeze({ princess: 24, kitten: 178 });
 const RIGHT_STEP = 192;
 const PROP_SIZE = 168;
@@ -101,7 +105,7 @@ export function createStoryStage(el, { bg, cast, look }) {
   const actors = [];
   let right = 0;
   for (const [i, id] of (cast ?? []).entries()) {
-    const [w, hgt] = id === 'princess' || id === 'kitten' ? SIZES[id] : SIZES.cast;
+    const [w, hgt] = castSize(id);
     const left = Object.hasOwn(LEFT_SLOTS, id) ? LEFT_SLOTS[ (id)] : null;
     const x = left ?? STAGE_W - 8 - right++ * RIGHT_STEP - w;
     const bottom = id === 'kitten' ? 8 : 4;
@@ -186,7 +190,7 @@ export function createStoryStage(el, { bg, cast, look }) {
     async 'vex-bonk'(trick) {
       const vex = castMember(id => id.startsWith('vex'));
       if (!vex) { await effects.sparkle(trick); return; }
-      const head = { x: vex.box.x + vex.box.w / 2, y: vex.box.y + 40 };
+      const head = { x: vex.box.x + vex.box.w / 2, y: vex.box.y + Math.round(vex.box.h * 0.14) };
       if (trick) {
         const id = artId(trick, 'tricks');
         props.get(id)?.el.remove();

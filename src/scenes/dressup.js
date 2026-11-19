@@ -15,6 +15,8 @@ export const princessLayers = (look) => castArt('princess', look).map(artUrl);
 const HERO_NAMES = Object.freeze({ princess: 'Princess', prince: 'Prince' });
 export const HERO_CHOICES = Object.freeze(HEROES.map((hero) => Object.freeze({ field: ('hero'), value: hero, label: HERO_NAMES[hero] })));
 
+export const NO_SCEPTER = Object.freeze({ field: ('scepter'), value: '', label: 'No scepter' });
+
 const FUR_LABELS = Object.freeze({ orange: 'Orange kitten', gray: 'Gray kitten', black: 'Black kitten', calico: 'Calico kitten' });
 
 export function dressupChoices(wardrobe, profile) {
@@ -27,6 +29,7 @@ export function dressupChoices(wardrobe, profile) {
   return {
     outfit: slot('outfit', 'outfit'),
     crown: slot('crown', 'crown', (id) => id.replace(/^crown-/, '')).filter((c) => LOOK_OPTIONS.crown.includes(c.value)),
+    scepter: [...slot('scepter', 'scepter', (id) => id.replace(/^scepter-/, '')).filter((c) => LOOK_OPTIONS.scepter.includes(c.value)), { ...NO_SCEPTER }],
     kittenFur: LOOK_OPTIONS.kittenFur.map((fur) => ({ field: 'kittenFur', value: fur, label: FUR_LABELS[fur] ?? fur })),
     kittenAcc: slot('kitten-acc', 'kittenAcc'),
   };
@@ -46,6 +49,8 @@ const CROPS = Object.freeze({
   hero: { size: [400, 720], center: [190, 300], span: 380 },
   outfit: { size: [400, 720], center: [185, 540], span: 340 },
   crown: { size: [400, 720], center: [185, 215], span: 250 },
+  scepter: { size: [400, 720], center: [310, 378], span: 270 },
+  emptyHand: { size: [400, 720], center: [268, 500], span: 190 },
   kittenFur: { size: [300, 300], center: [166, 165], span: 270 },
   kittenAcc: { size: [300, 300], center: [150, 80], span: 170 },
 });
@@ -54,12 +59,14 @@ function swatchArt(choice, look) {
   if (choice.field === 'hero') return castArt('princess', { ...look, hero: choice.value });
   if (choice.field === 'outfit') return [outfitArt(choice.value, look)];
   if (choice.field === 'crown') return castArt('princess', { ...look, crown: choice.value });
+  if (choice.field === 'scepter') return castArt('princess', { ...look, scepter: choice.value });
   if (choice.field === 'kittenFur') return castArt('kitten', { kittenFur: choice.value, kittenAcc: '' });
   return castArt('kitten', { ...look, kittenAcc: choice.value });
 }
 
 function swatchPicture(choice, ids) {
-  const { size: [w, hgt], center: [cx, cy], span } = CROPS[choice.field];
+  const crop = choice.field === 'scepter' && choice.value === '' ? CROPS.emptyHand : CROPS[choice.field];
+  const { size: [w, hgt], center: [cx, cy], span } = crop;
   const scale = SWATCH / span;
   const art = layeredArt(ids, 'dressup-swatch-art');
   art.style.width = `${w * scale}px`;
@@ -135,7 +142,7 @@ export function mount(el, ctx, params = {}) {
   el.append(h('div', { class: 'dressup' },
     h('img', { class: 'scene-bg', src: artUrl('bg/dressup'), alt: '' }),
     h('div', { class: 'dressup-panel dressup-panel-princess', role: 'group', 'aria-label': hx('Princess clothes') },
-      group(choices.outfit, 'outfits'), group(choices.crown, 'crowns')),
+      group(choices.outfit, 'outfits'), group(choices.crown, 'crowns'), group(choices.scepter, 'scepters')),
     h('div', { class: 'dressup-panel dressup-panel-hero', role: 'group', 'aria-label': 'The hero' }, group(HERO_CHOICES, 'heroes')),
     princess,
     kitten,

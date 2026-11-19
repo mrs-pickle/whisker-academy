@@ -70,7 +70,7 @@ async function teachWord(view, iw, boxes, lastSound) {
 }
 
 function joinBracelet(view, iw, bracelet) {
-  const added = addUnlocked(view.ctx.profile, 'charms', iw.w);
+  if (!addUnlocked(view.ctx.profile, 'charms', iw.w)) return showNext(view, []).pressed;
   const charm = h('div', { class: 'charm-pop', 'aria-hidden': 'true' },
     h('img', { src: artUrl('ui/heart-paw'), alt: '', draggable: 'false' }),
     h('span', { class: 'charm-pop-word', lang: 'en' }, shownWord(iw.w)));
@@ -79,7 +79,7 @@ function joinBracelet(view, iw, bracelet) {
   void bracelet.offsetWidth;
   bracelet.classList.add('got');
   view.cheer();
-  return showNext(view, added ? ['v.charm.done'] : []).pressed.then(() => charm.remove());
+  return showNext(view, ['v.charm.done']).pressed.then(() => charm.remove());
 }
 
 async function charmWord(view, iw, { copilot, known, slow, bracelet, once }) {

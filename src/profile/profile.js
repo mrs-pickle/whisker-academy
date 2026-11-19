@@ -45,20 +45,26 @@ const PH_LESSON = 50;
 
 const STARTER_WARDROBE = Object.freeze(['o-gown-teal', 'o-gown-pink', 'o-meadow', 'k-hat-blue', 'k-bow-pink', 'k-sun-hat',
   'crown-flower', 'crown-silver']);
-export const STARTER_ITEMS = Object.freeze([...STARTER_WARDROBE, 'crown-gold']);
+export const STARTER_ITEMS = Object.freeze([...STARTER_WARDROBE, 'crown-gold', 'scepter-gold']);
 export const LEGACY_STARTERS = Object.freeze(['o-gown-teal', 'o-gown-pink', 'o-tunic-green', 'o-meadow', 'o-pajamas', 'k-hat-blue',
   'crown-flower', 'crown-silver', 'crown-rainbow', 'crown-shell']);
+const PRE_SCEPTER_SLOTS = Object.freeze([0, 1, 3]);
+const GIFT_KINDS = 4;
+const PRE_SCEPTER_LIST = 76;
+const SCEPTERS_ADDED = 7;
+
 export const WARDROBE_SET = 2;
 export const WARDROBE_RENAMES = Object.freeze({ 'o-wizard': 'o-painter', 'o-fairy': 'o-petal' });
 const renamedId = (id) => (Object.hasOwn(WARDROBE_RENAMES, id) ? WARDROBE_RENAMES[ (id)] : id);
-const STARTER_CRAYONS = ['#e63946', '#f4a261', '#f6d55c', '#6bbf59', '#4a90d9', '#9b6bcc', '#f28fb5', '#8d5b3e'];
+export const STARTER_CRAYONS = Object.freeze(['#e63946', '#f4a261', '#f6d55c', '#6bbf59', '#4a90d9', '#9b6bcc', '#f28fb5', '#8d5b3e',
+  '#87ceeb', '#b5e48c', '#2e7d32', '#ffdab9', '#c8b6ff', '#9e9e9e', '#333333', '#2a9d8f']);
 
 export function newProfile(startLesson = 41) {
   const start = clampTaughtUpTo(startLesson);
   return withTaughtLessons({
     princessName: '',
     kittenName: '',
-    look: { skin: 's3', hair: 'long', hairColor: 'brown', outfit: 'o-gown-teal', crown: 'gold', kittenFur: 'orange', kittenAcc: 'k-hat-blue' },
+    look: { skin: 's3', hair: 'long', hairColor: 'brown', outfit: 'o-gown-teal', crown: 'gold', scepter: 'gold', kittenFur: 'orange', kittenAcc: 'k-hat-blue' },
     deck: DEFAULT_DECK.map((card) => ({ ...card })),
     instant: {},
     startLesson: start,
@@ -137,7 +143,7 @@ const isNumber = (v) => typeof v === 'number' && Number.isFinite(v);
 const isStrings = (v) => Array.isArray(v) && v.every(isString);
 const CARD_STATUSES = Object.freeze(['learning', 'mastered']);
 const INSTANT_STATUSES = Object.freeze(['learning', 'known']);
-const LOOK_FIELDS = Object.freeze(['skin', 'hair', 'hairColor', 'outfit', 'crown', 'kittenFur', 'kittenAcc', 'hero']);
+const LOOK_FIELDS = Object.freeze(['skin', 'hair', 'hairColor', 'outfit', 'crown', 'scepter', 'kittenFur', 'kittenAcc', 'hero']);
 const UNLOCKED_FIELDS = Object.freeze(['wardrobe', 'colorin', 'crayons', 'tricks', 'charms', 'sparkles']);
 const MAX_TIER = 4;
 export const CUSTOM_WORD = /^[a-z]+(?:'[a-z]+)?$/;
@@ -182,6 +188,7 @@ const PROFILE_FIELDS = Object.freeze({
   unlocked: ( v) => fieldsOk(v, Object.fromEntries(UNLOCKED_FIELDS.map((f) => [f, isStrings]))),
   sessions: ( v) => Array.isArray(v) && v.every(isRecord),
   giftIndex: isNumber,
+  giftSlotShift: isNumber,
   wardrobeSet: isNumber,
   customInstant: isStrings,
   pendingGifts: ( v) => Array.isArray(v) && v.every(isGiftRecord),
@@ -239,6 +246,21 @@ export function normalizeProfile(stored, startLesson) {
     const kept = profile.unlocked.wardrobe;
     profile.unlocked = { ...profile.unlocked, wardrobe: [...kept, ...LEGACY_STARTERS.filter((id) => !kept.includes(id))] };
     profile.wardrobeSet = WARDROBE_SET;
+  }
+  if (!(isPlainObject(stored.look) && isString(stored.look.scepter))) {
+    const done = finishedSessions(profile);
+    const shift = (((PRE_SCEPTER_SLOTS[done % PRE_SCEPTER_SLOTS.length] - done) % GIFT_KINDS) + GIFT_KINDS) % GIFT_KINDS;
+    if (shift > 0) profile.giftSlotShift = shift;
+    else delete profile.giftSlotShift;
+    if (profile.giftIndex > PRE_SCEPTER_LIST) profile.giftIndex += SCEPTERS_ADDED;
+  } else if (!(Number.isInteger(stored.giftSlotShift) && stored.giftSlotShift > 0 && stored.giftSlotShift < GIFT_KINDS)) {
+    delete profile.giftSlotShift;
+  }
+  const crayons = profile.unlocked.crayons;
+  const has = new Set(crayons.map((c) => c.toLowerCase()));
+  if (STARTER_CRAYONS.some((c) => !has.has(c))) {
+    const starter = new Set(STARTER_CRAYONS);
+    profile.unlocked = { ...profile.unlocked, crayons: [...STARTER_CRAYONS, ...crayons.filter((c) => !starter.has(c.toLowerCase()))] };
   }
   const renamed = new Set(Object.values(WARDROBE_RENAMES)), owned = new Set();
   profile.unlocked = { ...profile.unlocked, wardrobe: profile.unlocked.wardrobe.map(renamedId).filter((id) => !renamed.has(id) || (!owned.has(id) && Boolean(owned.add(id)))) };

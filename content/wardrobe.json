@@ -67,5 +67,13 @@
 {"id":"crown-dragon","slot":"crown","art":"princess/crown-dragon","starter":false,"label":"Dragon tiara","prince":"Dragon king's crown"},
 {"id":"crown-candy","slot":"crown","art":"princess/crown-candy","starter":false,"label":"Candy crown","prince":"Sweets king's crown"},
 {"id":"crown-sun","slot":"crown","art":"princess/crown-sun","starter":false,"label":"Sunshine tiara","prince":"Sun king's crown"},
-{"id":"crown-peacock","slot":"crown","art":"princess/crown-peacock","starter":false,"label":"Peacock tiara","prince":"Peacock king's crown"}
+{"id":"crown-peacock","slot":"crown","art":"princess/crown-peacock","starter":false,"label":"Peacock tiara","prince":"Peacock king's crown"},
+{"id":"scepter-gold","slot":"scepter","art":"princess/scepter-gold","starter":true,"label":"Gold scepter","prince":"Gold scepter"},
+{"id":"scepter-flower","slot":"scepter","art":"princess/scepter-flower","starter":false,"label":"Flower scepter","prince":"Garden scepter"},
+{"id":"scepter-heart","slot":"scepter","art":"princess/scepter-heart","starter":false,"label":"Heart scepter","prince":"Ruby heart scepter"},
+{"id":"scepter-starry","slot":"scepter","art":"princess/scepter-starry","starter":false,"label":"Starry orb scepter","prince":"Starry orb scepter"},
+{"id":"scepter-moon","slot":"scepter","art":"princess/scepter-moon","starter":false,"label":"Silver moon scepter","prince":"Silver moon scepter"},
+{"id":"scepter-pearl","slot":"scepter","art":"princess/scepter-pearl","starter":false,"label":"Pearl scepter","prince":"Pearl scepter"},
+{"id":"scepter-rainbow","slot":"scepter","art":"princess/scepter-rainbow","starter":false,"label":"Rainbow scepter","prince":"Rainbow scepter"},
+{"id":"scepter-crystal","slot":"scepter","art":"princess/scepter-crystal","starter":false,"label":"Crystal scepter","prince":"Crystal scepter"}
 ]

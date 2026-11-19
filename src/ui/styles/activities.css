@@ -686,7 +686,8 @@
   cursor: pointer;
 }
 .pencil-dot.start { background: #4caf50; }
-.pencil-dot.live { opacity: 1; box-shadow: 0 0 0 8px var(--glow); }
+.pencil-dot:not(.live):not(.choice) { pointer-events: none; }
+.pencil-dot.live { opacity: 1; box-shadow: 0 0 0 8px var(--glow); z-index: 1; }
 .pencil-dot.choice { width: 72px; height: 72px; background: var(--gold); }
 .pencil-dictate { display: flex; align-items: center; gap: 40px; }
 .pencil-writing .activity-work { top: 92px; height: 300px; justify-content: flex-start; }

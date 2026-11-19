@@ -15,7 +15,7 @@ const CHOICE_EVERY = 3;
 const CHOICE_WINDOW = 3;
 const S_SH_IDEA = 'close.idea.2';
 
-export const GIFT_SLOTS = Object.freeze( (['outfit', 'crown', 'kitten-acc']));
+export const GIFT_SLOTS = Object.freeze( (['outfit', 'crown', 'scepter', 'kitten-acc']));
 
 const isGift = isGiftRecord;
 const same = (a, b) => a.type === b.type && a.id === b.id;
@@ -44,10 +44,15 @@ function cycleCrayon(profile, list, offset) {
 
 export function slotOf(id) {
   if (typeof id !== 'string') return null;
-  return /^o-/.test(id) ? 'outfit' : /^crown-/.test(id) ? 'crown' : /^k-/.test(id) ? 'kitten-acc' : null;
+  return /^o-/.test(id) ? 'outfit' : /^crown-/.test(id) ? 'crown' : /^scepter-/.test(id) ? 'scepter' : /^k-/.test(id) ? 'kitten-acc' : null;
 }
 
-export const giftSlot = (profile) => GIFT_SLOTS[finishedSessions(profile) % GIFT_SLOTS.length];
+export const giftSlot = (profile) => GIFT_SLOTS[slotTurn(profile)];
+
+function slotTurn(profile) {
+  const shift = Number.isInteger(profile?.giftSlotShift) && profile.giftSlotShift > 0 ? profile.giftSlotShift : 0;
+  return (finishedSessions(profile) + shift) % GIFT_SLOTS.length;
+}
 
 function unownedOfSlot(profile, list, slot) {
   const out = [];
@@ -58,11 +63,16 @@ function unownedOfSlot(profile, list, slot) {
 }
 
 function wardrobeTurns(profile, list) {
-  const start = finishedSessions(profile) % GIFT_SLOTS.length;
+  const start = slotTurn(profile);
   return GIFT_SLOTS.map((_, k) => unownedOfSlot(profile, list, GIFT_SLOTS[(start + k) % GIFT_SLOTS.length])).filter(q => q.length > 0);
 }
 
-const afterWardrobe = (profile, list) => ahead(profile, list).filter(g => g.type !== 'wardrobe');
+function afterWardrobe(profile, list) {
+  const out = ahead(profile, list).filter(g => g.type !== 'wardrobe');
+  const behind = list.slice(0, Math.min(list.length, giftIndexOf(profile)));
+  for (const g of behind) if (isGift(g) && g.type !== 'wardrobe' && !owns(profile, g) && !out.some(o => same(o, g))) out.push(plain(g));
+  return out;
+}
 
 export function nextGift(profile, rewardsList) {
   const list = asList(rewardsList);
@@ -97,7 +107,7 @@ export function grantGift(profile, gift, rewardsList) {
   if (!isGift(gift)) return profile;
   const list = asList(rewardsList);
   const start = giftIndexOf(profile);
-  const listed = list.some((g, i) => i >= start && isGift(g) && same(g, gift));
+  const listed = list.some((g, i) => isGift(g) && same(g, gift) && (i >= start || !owns(profile, g)));
   const next = withUnlocked(profile, GIFT_COLLECTION[gift.type], gift.id);
   let index = start;
   while (index < list.length && (!isGift(list[index]) || owns(next, (list[index])))) index++;
@@ -120,10 +130,23 @@ function giftPicture(ctx, gift) {
   if (gift.type === 'crayon') return h('div', { class: 'gift-crayon', style: { '--crayon': gift.id } }, h('img', { src: artUrl('ui/crayon'), alt: '', draggable: 'false' }));
   if (gift.type === 'colorin') return pagePicture(ctx, gift.id);
   const item = asList(ctx.content?.wardrobe).find(( w) => w?.id === gift.id);
-  const slot = (item)?.slot ?? (gift.id.startsWith('k-') ? 'kitten-acc' : gift.id.startsWith('crown-') ? 'crown' : 'outfit');
+  const slot = (item)?.slot ?? slotOf(gift.id) ?? 'outfit';
   if (slot === 'kitten-acc') return layeredArt(castArt('kitten', { ...look, kittenAcc: gift.id }), 'gift-kitten');
   if (slot === 'crown') return layeredArt(castArt('princess', { ...look, crown: gift.id.replace(/^crown-/, '') }), 'gift-princess');
+  if (slot === 'scepter') return scepterPicture(castArt('princess', { ...look, scepter: gift.id.replace(/^scepter-/, '') }));
   return layeredArt(castArt('princess', { ...look, outfit: gift.id }), 'gift-princess');
+}
+
+const SCEPTER_CROP = Object.freeze({ cx: 300, cy: 390, w: 230, h: 287.5, size: [400, 720] });
+
+function scepterPicture(ids) {
+  const { cx, cy, w, h: tall, size: [cw, ch] } = SCEPTER_CROP;
+  const art = layeredArt(ids, 'gift-scepter-art');
+  Object.assign(art.style, {
+    width: `${(cw / w) * 100}%`, height: `${(ch / tall) * 100}%`,
+    left: `${((w / 2 - cx) / w) * 100}%`, top: `${((tall / 2 - cy) / tall) * 100}%`,
+  });
+  return h('div', { class: 'gift-scepter' }, art);
 }
 
 function pagePicture(ctx, id) {

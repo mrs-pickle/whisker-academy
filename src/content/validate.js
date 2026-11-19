@@ -416,13 +416,13 @@ function checkStory(c, r) {
   }
 }
 
-const HERO_WORN = new Set(['outfit', 'crown']);
+const HERO_WORN = new Set(['outfit', 'crown', 'scepter']);
 const PAGE_TWIN = '-prince';
 
 function checkPrinceThings(c, r) {
   for (const item of c.wardrobe) {
     if (!HERO_WORN.has(item?.slot)) continue;
-    if (typeof item.prince !== 'string' || item.prince.trim() === '') r.error(`${LIST_FILES.wardrobe} ${item.id}: an outfit or crown needs a prince label`);
+    if (typeof item.prince !== 'string' || item.prince.trim() === '') r.error(`${LIST_FILES.wardrobe} ${item.id}: an outfit, crown or scepter needs a prince label`);
   }
   const ids = new Set(c.colorin.map(p => p?.id));
   for (const page of c.colorin) {
@@ -580,7 +580,7 @@ function artRefs(c) {
   return refs;
 }
 
-const SLOT_PREFIX = Object.freeze({ outfit: 'o-', crown: 'crown-', 'kitten-acc': 'k-' });
+const SLOT_PREFIX = Object.freeze({ outfit: 'o-', crown: 'crown-', scepter: 'scepter-', 'kitten-acc': 'k-' });
 
 function checkGiftKinds(c, r) {
   const ids = new Set();
@@ -589,7 +589,7 @@ function checkGiftKinds(c, r) {
     if (typeof id !== 'string') continue;
     ids.add(id);
     const prefix = SLOT_PREFIX[ (item.slot)];
-    if (prefix === undefined || !id.startsWith(prefix)) r.error(`${LIST_FILES.wardrobe} ${id}: a ${item.slot} id starts with ${prefix ?? 'o-, crown- or k-'}`);
+    if (prefix === undefined || !id.startsWith(prefix)) r.error(`${LIST_FILES.wardrobe} ${id}: a ${item.slot} id starts with ${prefix ?? 'o-, crown-, scepter- or k-'}`);
     if ((item.starter === true) !== STARTER_ITEMS.includes(id)) r.error(`${LIST_FILES.wardrobe} ${id}: starter is ${item.starter}, but ${STARTER_ITEMS.includes(id) ? 'every child owns it from the start' : 'it is not a starter'} (STARTER_ITEMS)`);
   }
   const listed = new Set();

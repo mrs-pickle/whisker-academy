@@ -4,7 +4,7 @@ import { composePage } from '../engine/page-recipe.js';
 import { pageBlobId, pageFillKey, pagesNow, storyFillKey } from '../profile/pages.js';
 import { newProfile } from '../profile/profile.js';
 import { artUrl, bigButton, holdToActivate, kittenBubble, layeredArt } from '../ui/components.js';
-import { ERASE_COLOR, cleanOps, fillRegion, lineMask, paintOf, replayFills } from '../ui/floodfill.js';
+import { ERASE_COLOR, cleanOps, fillAt, fillMask, lineMask, paintOf, regionSeeds, replayFills } from '../ui/floodfill.js';
 import { pageUrl } from '../ui/page-parts.js';
 import { notePrinted, printOptions, printPages } from '../ui/print-pages.js';
 import { castArt } from '../ui/story-stage.js';
@@ -13,6 +13,7 @@ import { castArt } from '../ui/story-stage.js';
 export const COLORIN_LINES = Object.freeze({ pick: 'colorin.pick', start: 'colorin.start', empty: 'colorin.empty' });
 
 const STARTER_CRAYONS = Object.freeze(newProfile().unlocked.crayons.map((c) => c.toLowerCase()));
+const OWN_ART = Object.freeze(STARTER_CRAYONS.slice(0, 8));
 export const ERASER = 'eraser';
 const CRAYON = /^#[0-9a-f]{6}$/i;
 const FILL_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
@@ -43,6 +44,32 @@ export function cleanFills(value) {
     if (REGION.test(region) && typeof color === 'string' && FILL_COLOR.test(color)) fills[region] = color.toLowerCase();
   }
   return fills;
+}
+
+export function storyColoring(value) {
+  if (value !== null && typeof value === 'object' && !Array.isArray(value) && (Object.hasOwn(value, 'ops') || Object.hasOwn(value, 'regions'))) {
+    const { regions, ops } = (value);
+    return { regions: cleanFills(regions), ops: Array.isArray(ops) ? ops : [] };
+  }
+  return { regions: cleanFills(value), ops: [] };
+}
+
+export function familyColoring(value) {
+  if (Array.isArray(value)) return { old: value, ops: [] };
+  if (value !== null && typeof value === 'object') {
+    const { old, ops } = (value);
+    return { old: Array.isArray(old) ? old : [], ops: Array.isArray(ops) ? ops : [] };
+  }
+  return { old: [], ops: [] };
+}
+
+const sixDigits = (hex) => (hex.length === 4 ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` : hex).toLowerCase();
+
+export function regionFills(regions, regionOf, mask, w, h) {
+  return regionSeeds(regionOf, mask, w, h).flatMap(({ x, y, region }) => {
+    const color = regions[`r${region}`];
+    return color ? [{ x, y, color: sixDigits(color) }] : [];
+  });
 }
 
 
@@ -80,7 +107,7 @@ export function crayonList(profile) {
   return colors.length > 0 ? [...new Set(colors)] : [...STARTER_CRAYONS];
 }
 
-export const crayonArt = (hex) => (STARTER_CRAYONS.includes(hex) ? `ui/crayon-${hex.slice(1)}` : null);
+export const crayonArt = (hex) => (OWN_ART.includes(hex) ? `ui/crayon-${hex.slice(1)}` : null);
 
 export function unlockedPages(colorin, profile) {
   const kept = profile?.unlocked?.colorin;
@@ -131,8 +158,17 @@ export function fitPage(width, height) {
 }
 
 
-const ROW = 20;
-const ERASER_SLOTS = 2;
+export const ONE_ROW = 16;
+const TWO_ROW_WIDTH = 1096 - 10 - 16 - 72 - 4;
+const TWO_ROW_CRAYON = Object.freeze({ min: 50, max: 54, gap: 4 });
+
+export function crayonTray(count) {
+  if (count <= ONE_ROW) return { rows: 1 };
+  const { min, max, gap } = TWO_ROW_CRAYON;
+  const columns = Math.ceil(count / 2);
+  const width = Math.max(min, Math.min(max, Math.floor((TWO_ROW_WIDTH + gap) / columns) - gap));
+  return { rows: 2, columns, width, slides: columns * (width + gap) - gap > TWO_ROW_WIDTH };
+}
 const CARD = Object.freeze({ width: 280, height: 175 });
 
 
@@ -158,26 +194,112 @@ const storyArt = (page) => ({
 
 const madeArt = (ctx, meta) => ({ id: meta.id, text: async () => composePage( (meta.recipe), await ctx.readParts()) });
 
-async function loadPage(ctx, page, doc) {
-  const [text, { saved, readable }] = await Promise.all([page.text(), readFills(ctx.store, fillsKey(page.id))]);
+function svgOf(text, id, doc) {
   const parsed = new globalThis.DOMParser().parseFromString(text, 'image/svg+xml');
   if (parsed.documentElement.nodeName !== 'svg' || parsed.getElementsByTagName('parsererror').length > 0) {
-    throw new Error(`The picture of ${page.id} is not a picture`);
+    throw new Error(`The picture of ${id} is not a picture`);
   }
   const svg = (doc.importNode(parsed.documentElement, true));
   svg.classList.add('colorin-svg');
+  return svg;
+}
+
+async function loadPage(ctx, page, doc) {
+  const [text, { saved, readable }] = await Promise.all([page.text(), readFills(ctx.store, fillsKey(page.id))]);
+  const svg = svgOf(text, page.id, doc);
+  const stored = storyColoring(saved);
+  const picture = await drawnPicture(text, svg, stored, readable).catch(( err) => {
+    console.error(`The picture of ${page.id} could not be drawn to color by area`, err);
+    return null;
+  });
   const regions = new Map();
   for (const el of svg.querySelectorAll('[data-region]')) {
     const id = el.getAttribute('data-region') ?? '';
     if (REGION.test(id)) regions.set(id, { el, drawn: el.getAttribute('fill') ?? '#ffffff' });
   }
-  const coloring = createColoring(page.id, saved);
+  const coloring = createColoring(page.id, stored.regions);
   const paint = () => {
     const fills = coloring.fills();
     for (const [id, region] of regions) region.el.setAttribute('fill', fills[id] ?? region.drawn);
   };
-  paint();
-  return { svg, regions, coloring, paint, readable };
+  if (!picture) paint();
+  return { svg, picture, regions, coloring, paint, readable, stored };
+}
+
+async function svgImage(text) {
+  const img = new globalThis.Image();
+  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(text)}`;
+  await img.decode();
+  return img;
+}
+
+function pixelsOf(img, w, h) {
+  const canvas = canvasOf(w, h);
+  const g = typeof canvas.getContext === 'function' ? canvas.getContext('2d', { willReadFrequently: true }) : null;
+  if (!g) return null;
+  g.fillStyle = '#fff';
+  g.fillRect(0, 0, w, h);
+  g.drawImage(img, 0, 0, w, h);
+  return g.getImageData(0, 0, w, h).data;
+}
+
+const REGION_BLUE = 201;
+
+export function regionMapSvg(text) {
+  const root = new globalThis.DOMParser().parseFromString(text, 'image/svg+xml').documentElement;
+  root.setAttribute('shape-rendering', 'crispEdges');
+  for (const el of root.querySelectorAll('[data-region]')) {
+    const n = Number((el.getAttribute('data-region') ?? '').slice(1));
+    el.setAttribute('fill', `rgb(${n & 255},${(n >> 8) & 255},${REGION_BLUE})`);
+  }
+  return new globalThis.XMLSerializer().serializeToString(root);
+}
+
+export async function drawnPicture(text, svg, stored, readable) {
+  const width = Number(svg.getAttribute('width'));
+  const height = Number(svg.getAttribute('height'));
+  if (typeof globalThis.Image !== 'function' || !(width > 0 && height > 0) || !canDraw()) return null;
+  const lines = await svgImage(text);
+  const mask = once(() => fillMask( (pixelsOf(lines, width, height)), width, height));
+  let base = [];
+  if (Object.keys(stored.regions).length > 0) {
+    const map = (pixelsOf(await svgImage(regionMapSvg(text)), width, height));
+    const regionOf = new Int32Array(width * height);
+    for (let i = 0, p = 0; i < regionOf.length; i++, p += 4) {
+      if (map[p + 2] === REGION_BLUE && map[p + 3] === 255) regionOf[i] = map[p] + 256 * map[p + 1];
+    }
+    base = regionFills(stored.regions, regionOf, mask(), width, height);
+  }
+  const ops = cleanOps(stored.ops, width, height);
+  return areaPicture({ width, height, lines, mask, base, ops, readable, scale: 2 });
+}
+
+function once(make) {
+  let made = null;
+  return () => (made ??= { value: make() }).value;
+}
+
+const canDraw = () => {
+  const canvas = canvasOf(1, 1);
+  return typeof canvas.getContext === 'function' && canvas.getContext('2d') !== null;
+};
+
+function areaPicture({ mask, older, ...parts }) {
+  const picture = ({
+    ...parts,
+    get mask() { return mask(); },
+    older,
+    layer: new Uint8ClampedArray(parts.width * parts.height * 4),
+  });
+  if (parts.base.length > 0 || parts.ops.length > 0) picture.layer = layerOf(picture);
+  return picture;
+}
+
+function layerOf(picture) {
+  const { width, height, base, ops, older } = picture;
+  const all = [...base, ...ops];
+  if (all.length === 0) return new Uint8ClampedArray(width * height * 4);
+  return replayFills(width, height, picture.mask, all, older && base.length > 0 ? { mask: older(), count: base.length } : undefined);
 }
 
 
@@ -199,9 +321,15 @@ async function loadFamilyPicture(ctx, meta) {
   g.fillRect(0, 0, width, height);
   g.drawImage(bitmap, 0, 0);
   bitmap.close();
-  const mask = lineMask(g.getImageData(0, 0, width, height).data, width, height);
-  const ops = cleanOps(saved, width, height);
-  return { width, height, lines, mask, ops, layer: replayFills(width, height, mask, ops), readable };
+  const pixels = once(() => g.getImageData(0, 0, width, height).data);
+  const { old, ops } = familyColoring(saved);
+  return areaPicture({
+    width, height, lines, readable, scale: 1,
+    mask: once(() => fillMask(pixels(), width, height)),
+    older: once(() => lineMask(pixels(), width, height)),
+    base: cleanOps(old, width, height),
+    ops: cleanOps(ops, width, height),
+  });
 }
 
 function drawColored(target, picture) {
@@ -216,8 +344,9 @@ function drawColored(target, picture) {
   g.globalCompositeOperation = 'source-over';
 }
 
-async function familyCard(ctx, meta) {
-  const picture = await loadFamilyPicture(ctx, meta);
+const familyCard = async (ctx, meta) => cardOf(await loadFamilyPicture(ctx, meta));
+
+function cardOf(picture) {
   const scale = Math.min(1, (CARD.width * 2) / picture.width, (CARD.height * 2) / picture.height);
   const card = canvasOf(Math.max(1, Math.round(picture.width * scale)), Math.max(1, Math.round(picture.height * scale)), 'colorin-card-canvas');
   drawColored(card, picture);
@@ -249,12 +378,14 @@ function printableBlob(blob, w, h) {
 
 const storyPrintable = (svg) => printableBlob(new Blob([new globalThis.XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' }), STORY_PAGE.w, STORY_PAGE.h);
 
-async function familyPrintable(picture) {
-  const sheet = canvasOf(picture.width, picture.height);
+async function areaPrintable(picture) {
+  const w = picture.width * picture.scale;
+  const h = picture.height * picture.scale;
+  const sheet = canvasOf(w, h);
   drawColored(sheet, picture);
   const blob = await new Promise((resolve) => sheet.toBlob(resolve, 'image/png'));
   if (!(blob instanceof Blob)) throw new Error('The colored page could not be drawn for printing');
-  return printableBlob(blob, picture.width, picture.height);
+  return printableBlob(blob, w, h);
 }
 
 async function printShown(room, page, view) {
@@ -296,13 +427,66 @@ function pagesIcon(room, page) {
 
 const backButton = (room) => bigButton({ label: 'Back', icon: 'ui/door-button', onClick: () => room.go('hub') });
 
-async function showStoryPage(room, page, { sheet, crayon, canUndo }) {
+const CLICK_REACH = 10;
+
+function colorByArea(room, picture, { sheet, crayon, canUndo }, drawing, saved) {
+  const { width, height, mask, ops } = picture;
+  const colors = canvasOf(width, height, 'colorin-family-colors');
+  const paint = () => context2d(colors).putImageData(colorsImage(picture), 0, 0);
+  drawing.classList.add('colorin-family-lines');
+  let made = 0;
+  const persist = () => {
+    canUndo(made > 0);
+    if (!picture.readable) return;
+    const { key, value } = saved();
+    Promise.resolve(room.ctx.store.set(key, value))
+      .catch(( err) => console.error('The coloring could not be saved', err));
+  };
+  const area = h('div', { class: 'colorin-family', onClick: ( event) => {
+    if (!room.arrival.allows(event)) return;
+    const box = area.getBoundingClientRect();
+    if (!(box.width > 0 && box.height > 0)) return;
+    const x = Math.min(width - 1, Math.max(0, Math.floor(((event.clientX - box.left) / box.width) * width)));
+    const y = Math.min(height - 1, Math.max(0, Math.floor(((event.clientY - box.top) / box.height) * height)));
+    const held = crayon();
+    const color = held === ERASER ? ERASE_COLOR : held;
+    const rgba = paintOf(color);
+    const done = rgba ? fillAt(picture.layer, mask, width, height, x, y, rgba, Math.ceil((CLICK_REACH * width) / box.width)) : null;
+    if (!done || done.changed === 0) return;
+    ops.push({ x: done.x, y: done.y, color });
+    made++;
+    paint();
+    persist();
+  } }, colors, drawing);
+  paint();
+  sheet.append(area);
+  return {
+    undo() {
+      if (made === 0) return;
+      ops.pop();
+      made--;
+      picture.layer = layerOf(picture);
+      paint();
+      persist();
+    },
+    printable: () => areaPrintable(picture),
+  };
+}
+
+async function showStoryPage(room, page, host) {
   const loaded = await loadPage(room.ctx, page, room.doc);
   if (!room.live()) return null;
+  const { picture, stored } = loaded;
+  if (picture) {
+    return colorByArea(room, picture, host, loaded.svg, () => ({ key: fillsKey(page.id), value: { regions: stored.regions, ops: [...picture.ops] } }));
+  }
+  const { sheet, crayon, canUndo } = host;
   const persist = () => {
     canUndo(loaded.coloring.canUndo());
     if (!loaded.readable) return;
-    Promise.resolve(room.ctx.store.set(fillsKey(page.id), loaded.coloring.fills()))
+    const fills = loaded.coloring.fills();
+    const value = stored.ops.length > 0 ? { regions: fills, ops: stored.ops } : fills;
+    Promise.resolve(room.ctx.store.set(fillsKey(page.id), value))
       .catch(( err) => console.error('The coloring could not be saved', err));
   };
   loaded.svg.addEventListener('click', (event) => {
@@ -326,50 +510,14 @@ async function showStoryPage(room, page, { sheet, crayon, canUndo }) {
   };
 }
 
-async function showFamilyPage(room, meta, { sheet, crayon, canUndo }) {
+async function showFamilyPage(room, meta, host) {
   const picture = await loadFamilyPicture(room.ctx, meta);
   if (!room.live()) return null;
-  const { width, height, mask, ops } = picture;
-  const fit = fitPage(width, height);
+  const fit = fitPage(picture.width, picture.height);
+  const { sheet } = host;
   sheet.classList.add('family');
   Object.assign(sheet.style, { left: `${fit.left}px`, top: `${fit.top}px`, width: `${fit.width}px`, height: `${fit.height}px` });
-  const colors = canvasOf(width, height, 'colorin-family-colors');
-  const paint = () => context2d(colors).putImageData(colorsImage(picture), 0, 0);
-  picture.lines.classList.add('colorin-family-lines');
-  let made = 0;
-  const persist = () => {
-    canUndo(made > 0);
-    if (!picture.readable) return;
-    Promise.resolve(room.ctx.store.set(fillsKeyFamily(meta.id), [...ops]))
-      .catch(( err) => console.error('The coloring could not be saved', err));
-  };
-  const area = h('div', { class: 'colorin-family', onClick: ( event) => {
-    if (!room.arrival.allows(event)) return;
-    const box = area.getBoundingClientRect();
-    const x = Math.min(width - 1, Math.max(0, Math.floor(((event.clientX - box.left) / box.width) * width)));
-    const y = Math.min(height - 1, Math.max(0, Math.floor(((event.clientY - box.top) / box.height) * height)));
-    const held = crayon();
-    const color = held === ERASER ? ERASE_COLOR : held;
-    const rgba = paintOf(color);
-    if (!rgba || fillRegion(picture.layer, mask, width, height, x, y, rgba) === 0) return;
-    ops.push({ x, y, color });
-    made++;
-    paint();
-    persist();
-  } }, colors, picture.lines);
-  paint();
-  sheet.append(area);
-  return {
-    undo() {
-      if (made === 0) return;
-      ops.pop();
-      made--;
-      picture.layer = replayFills(width, height, mask, ops);
-      paint();
-      persist();
-    },
-    printable: () => familyPrintable(picture),
-  };
+  return colorByArea(room, picture, host, (picture.lines), () => ({ key: fillsKeyFamily(meta.id), value: { old: picture.base, ops: [...picture.ops] } }));
 }
 
 const regionsOf = (ctx, page) => (page.source === 'story' ? storyArt(page.page) : madeArt(ctx, page.meta));
@@ -407,6 +555,16 @@ function showPage(room, page, others) {
   });
   room.onExit(print.cancel);
 
+  const layout = crayonTray(colors.length);
+  const tray = h('div', { class: ['colorin-tray', layout.rows === 2 && 'two-rows'], role: 'group', 'aria-label': 'Crayons',
+    style: layout.rows === 2 ? { '--cols': String(layout.columns), '--crayon-w': `${layout.width}px` } : {} }, crayons);
+  if (layout.rows === 2 && layout.slides) {
+    tray.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      tray.scrollLeft += e.deltaY;
+      e.preventDefault();
+    }, { passive: false });
+  }
   root.append(
     h('div', { class: 'colorin-tools' },
       undo,
@@ -414,7 +572,7 @@ function showPage(room, page, others) {
       toolButton({ label: 'Back', icon: h('img', { src: artUrl('ui/door-button'), alt: '', draggable: 'false' }), onClick: () => room.go('hub') }),
       print.button),
     sheet,
-    h('div', { class: ['colorin-tray', colors.length + ERASER_SLOTS > ROW && 'two-rows'], role: 'group', 'aria-label': 'Crayons' }, crayons));
+    tray);
 
   const host = { sheet, crayon: () => crayon, canUndo: (yes) => { undo.disabled = !yes; } };
   (page.source === 'family' ? showFamilyPage(room, page.meta, host) : showStoryPage(room, regionsOf(ctx, page), host))
@@ -432,11 +590,9 @@ function showGallery(room, pages) {
   const draw = (p, frame) => {
     const show = (picture) => { if (room.live()) frame.append(picture); };
     const failed = (err) => console.error(`The page ${p.id} could not be shown`, err);
-    if (p.source !== 'family') loadPage(ctx, regionsOf(ctx, p), room.doc).then(({ svg }) => show(svg)).catch(failed);
-    else {
-      const { meta } = p;
-      drawing = drawing.then(() => (room.live() ? familyCard(ctx, meta).then(show) : undefined)).catch(failed);
-    }
+    const card = p.source === 'family' ? () => familyCard(ctx, p.meta)
+      : () => loadPage(ctx, regionsOf(ctx, p), room.doc).then(({ svg, picture }) => (picture && picture.base.length + picture.ops.length > 0 ? cardOf(picture) : svg));
+    drawing = drawing.then(() => (room.live() ? card().then(show) : undefined)).catch(failed);
   };
   const cardFor = (p) => {
     const frame = h('span', { class: 'colorin-card-picture' });

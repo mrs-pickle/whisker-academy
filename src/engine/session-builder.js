@@ -343,10 +343,14 @@ export function pencilLetters(content, profile, states, day) {
   const due = letters.filter(id => { const s = state(id); return s !== undefined && isDue(s, day); });
   const fresh = letters.filter(id => state(id) === undefined);
   const picked = [];
+  let learning = 0;
   for (const id of [...due, ...fresh]) {
     if (picked.length >= PENCIL_LETTERS) break;
     const twin = LETTER_TWINS[ (id)];
     if (twin && picked.includes(twin) && !(secure(id) && secure(twin))) continue;
+    const unsecured = state(id) !== undefined && !secure(id);
+    if (unsecured && learning >= 1 && fresh.some(f => !picked.includes(f))) continue;
+    if (unsecured) learning++;
     picked.push(id);
   }
   return picked;
