@@ -30,7 +30,8 @@ export const ROBOT_WORDS = Object.freeze(['said', 'was', 'of', 'to', 'do', 'are'
 const FILE_OF = { ...LIST_FILES, pairs: 'pairs.json', checks: 'checks.json', entrance: 'entrance.json', blocklist: 'blocklist.json' };
 
 const PAIR_SWAPS = Object.freeze({ ie: 'EH/IH', ssh: 'S/SH' });
-const PAIR_NAMES = Object.freeze({ ie: 'i↔e', ssh: 's↔sh' });
+const PAIR_NAMES = Object.freeze({ ie: 'i↔e', ssh: 's↔sh', end: 'their last sound' });
+const PAIR_KINDS = (['ie', 'ssh', 'end']);
 const NASALS = new Set(['M', 'N', 'NG']);
 
 const PAGE_THINGS_MAX = 4;
@@ -355,7 +356,7 @@ function checkPairs(c, r) {
     return key ? key.split(' ') : null;
   };
 
-  for (const kind of (['ie', 'ssh'])) {
+  for (const kind of PAIR_KINDS) {
     for (const pair of list(pairs[kind])) {
       if (!Array.isArray(pair) || pair.length !== 2 || !pair.every(x => typeof x === 'string')) {
         r.error(`pairs.json ${kind}: ${JSON.stringify(pair)} must be two words`);
@@ -364,13 +365,17 @@ function checkPairs(c, r) {
       const label = `pairs.json ${kind} ${pair[0]}/${pair[1]}`;
       const [a, b] = pair.map(lower);
       for (const w of [a, b]) {
-        if (kind === 'ie' && !bank.has(w)) r.error(`${label}: "${w}" is not in words.json`);
+        if (kind !== 'ssh' && !bank.has(w)) r.error(`${label}: "${w}" is not in words.json`);
         if (kind === 'ssh' && !bank.has(w) && !isSegs(sshSegs[w])) r.error(`${label}: "${w}" is not in words.json or pairs.sshSegs`);
       }
       const sa = soundsOf(a, kind);
       const sb = soundsOf(b, kind);
       if (!sa || !sb) continue;
       const at = sa.length === sb.length ? sa.flatMap((s, i) => (s === sb[i] ? [] : [i])) : [];
+      if (kind === 'end') {
+        if (at.length !== 1 || at[0] !== sa.length - 1) r.error(`${label}: the words must differ only by ${PAIR_NAMES[kind]}`);
+        continue;
+      }
       const swap = at.length === 1 ? [sa[at[0]], sb[at[0]]].sort().join('/') : '';
       if (swap !== PAIR_SWAPS[kind]) r.error(`${label}: the words must differ only by ${PAIR_NAMES[kind]}`);
       else if (kind === 'ie' && NASALS.has(sa[at[0] + 1])) r.error(`${label}: the vowel is followed by a nasal (m, n or ng)`);
@@ -516,7 +521,7 @@ function clipRefs(c) {
   for (const rec of c.letters) for (const id of list(rec?.sounds)) if (typeof id === 'string') refs.add(id);
   for (const w of list(c.entrance?.dictation)) refs.add(`w.${w}`);
   for (const line of list(c.entrance?.ladder)) list(line?.words).forEach(addWord);
-  for (const kind of (['ie', 'ssh'])) {
+  for (const kind of PAIR_KINDS) {
     for (const pair of list(c.pairs[kind])) if (Array.isArray(pair) && pair.length === 2) pair.forEach(addWord);
   }
   for (const it of c.warmup) {
@@ -618,7 +623,7 @@ function practicedWords(c) {
   add(LIST_FILES.nonsense, c.nonsense.map(rec => rec?.w));
   add(LIST_FILES.instant, c.instant.map(rec => rec?.w));
   add(LIST_FILES.chains, c.chains.flatMap(ch => list(ch?.steps)));
-  add(FILE_OF.pairs, [...list(c.pairs.ie).flat(), ...list(c.pairs.ssh).flat(), ...Object.keys(obj(c.pairs.sshSegs))]);
+  add(FILE_OF.pairs, [...list(c.pairs.ie).flat(), ...list(c.pairs.ssh).flat(), ...list(c.pairs.end).flat(), ...Object.keys(obj(c.pairs.sshSegs))]);
   add(LIST_FILES.warmup, c.warmup.flatMap(it => [WARMUP_SAYS_WORD.has(it?.type) ? it.word : null, WARMUP_SAYS_ANSWER.has(it?.type) ? it.answer : null]));
   add(FILE_OF.entrance, [...list(c.entrance.lines).flatMap(l => list(l?.words)), ...list(c.entrance.ladder).flatMap(l => list(l?.words)), ...list(c.entrance.dictation), ...tokenize(c.entrance.passage?.text ?? '')]);
   for (const ch of c.story) add(`story ${ch?.id}`, scenesOf(ch).flatMap(sc => list(sc?.sentences)).flatMap(s => tokenize(s?.text ?? '')));

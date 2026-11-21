@@ -3,6 +3,7 @@ import { phonemeCodes } from '../curriculum/phonemes.js';
 import { chunkClip } from '../curriculum/affixes.js';
 import { artUrl, bigButton, pawButton, tile } from '../ui/components.js';
 import { BLEND_PRAISE, STRETCH_GAP_MS, cardSoundClips, chooseOne, countPraiseLines, createActivityView, judgeAloud, listenDisc, now, offerPass, runRound, secondClick, soundPraiseLines, untilHerTurn, wait } from './cards.js';
+import { wireSlips } from './slip-moment.js';
 
 
 const PAW_LIGHT_MS = 450;
@@ -81,7 +82,8 @@ async function isolate(view, pa) {
   const target = wordPicture(view.ctx, pa.word) ?? listenDisc(view, [`w.${pa.word}`]);
   view.show(target, h('div', { class: 'choice-row' }, choices.map(c => c.el)));
   await view.prompt([`v.warmup.isolate.${pa.position ?? 'first'}`, `w.${pa.word}`]);
-  return chooseOne(view, { choices, answer: pa.answer, hint: [sound], reward: [sound], praise: 'sound', praiseLines: soundPraiseLines('isolate', pa.position), keyboard: true, target });
+  return chooseOne(view, { choices, answer: pa.answer, hint: [sound], reward: [sound], praise: 'sound', praiseLines: soundPraiseLines('isolate', pa.position), keyboard: true, target,
+    onMiss: (chose) => view.noteSlip?.({ item: `pa:${pa.id}`, target: pa.answer, chose, last: pa.position === 'last' }) });
 }
 
 async function segment(view, pa, first) {
@@ -235,6 +237,7 @@ function easyWarmup(ctx, used) {
 
 export async function run(el, ctx, round, hooks) {
   const view = createActivityView(el, ctx, { name: 'warmup' });
+  wireSlips(view, hooks);
   const copilot = hooks.copilot ?? ctx.settings.copilot;
   const items = new Map(ctx.content.warmup.map(( it) => [`pa:${it.id}`, it]));
   const instructed = new Set();

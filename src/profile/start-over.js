@@ -33,6 +33,7 @@ export const PROFILE_FATES = Object.freeze({
   assessFrom: 'reset',
   placements: 'reset',
   pointerLog: 'keep',
+  slips: 'reset',
 });
 
 export const LOOK_FATES = Object.freeze({

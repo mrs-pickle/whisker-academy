@@ -132,8 +132,11 @@ export function sameSoundTiles([g, p], taughtUpTo = Infinity) {
 
 function partnersOf(g) {
   const map = CONFUSIONS;
-  return [...(map[g] ?? []), ...Object.keys(map).filter(k => map[k].includes(g))];
+  return [...(map[g] ?? []), ...Object.keys(map).filter(k => map[k].includes(g))].filter(x => !NEVER_FOR[g]?.includes(x));
 }
+
+const NEVER_FOR = Object.freeze({ s: Object.freeze(['c']) });
+const C_BOXES = new Set(['c', 'ck']);
 
 const otherIE = (g) => (g === 'i' ? 'e' : g === 'e' ? 'i' : null);
 
@@ -154,7 +157,7 @@ export function buildTray(word, settings, rng, after) {
     const x = (SINGLE_OF)[g];
     return x !== undefined && ok(x) && !word.segs.some(([other, p]) => other !== g && saysBy(x, settings.taughtUpTo).includes(p)) ? [x] : [];
   });
-  const alike = voiced.flatMap(partnersOf).filter(x => ok(x) && !saysBy(x, settings.taughtUpTo).some(p => sounds.has(p)));
+  const alike = [...new Set([...voiced.filter(g => C_BOXES.has(g)), ...voiced]).values()].flatMap(partnersOf).filter(x => ok(x) && !saysBy(x, settings.taughtUpTo).some(p => sounds.has(p)));
   const competing = competingBoxes(word.segs);
   const sameSound = competing.flatMap(i => sameSoundTiles(word.segs[i], settings.taughtUpTo))
     .filter(x => !needed.includes(x) && !nasalSwaps.has(x) && sShOk(x)

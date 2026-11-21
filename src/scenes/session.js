@@ -6,21 +6,23 @@ import { createMonitor } from '../engine/frustration.js';
 import { applyResult, newItemState } from '../engine/itemstate.js';
 import { dayOptions } from '../engine/page-recipe.js';
 import { closedPass, howOf, markedBack, passesToReturn, reopenedPass, reviewRounds, withBackResult, withPass } from '../engine/passes.js';
+import { withSlip } from '../engine/slips.js';
 import { nextSpellTier } from '../engine/spell-tier.js';
+import { writeItBudget } from '../activities/write-it.js';
 import { heroOf } from '../profile/hero.js';
 import { earnMadePage, earnPage, firstWaiting, pagesNow, princeTwin } from '../profile/pages.js';
 import { isExtraPractice, latestAccuracy, owns, withFlash, withReread, withUnlocked } from '../profile/profile.js';
 import { artUrl, bigButton, layeredArt, lessonBar, pathStones, setLessonBar } from '../ui/components.js';
 import { wordsBuilt, wordsForStrip } from '../ui/print-pages.js';
 import { castArt } from '../ui/story-stage.js';
-import { nextBreak, runBreak, runCuddle } from './break.js';
+import { confidenceBudget, nextBreak, runBreak, runCuddle } from './break.js';
 import { dressUpButton } from './dressup.js';
 import { pickGiftChoices } from './reward.js';
 
 export { nextGift, pickGiftChoices } from './reward.js';
 
 
-const PATH = Object.freeze([['warmup', 'cards', 'pencil'], ['spell'], ['chain', 'charm'], ['story']]);
+const PATH = Object.freeze([['warmup', 'cards', 'pencil'], ['spell'], ['chain', 'charm'], ['story', 'alone']]);
 const ACTIVE_MS = 60000;
 const NEXT_MS = 1600;
 const SAVE_EVERY_MS = 2000;
@@ -562,6 +564,12 @@ export function mount(el, ctx) {
       ctx.profile = withPass(ctx.profile, id, mode, day);
       throttle.poke();
     };
+    const slip = (s) => {
+      ctx.profile = withSlip(ctx.profile, { ...s, day });
+      throttle.poke();
+    };
+    const writeIt = writeItBudget(ctx.settings);
+    const confidence = confidenceBudget(ctx.rng);
     const third = groups.flat().map(r => r.activity).filter(a => a === 'chain' || a === 'charm');
     const protegeIn = third.length > 0 ? ctx.rng.pick(third) : null;
     const first = today.done;
@@ -595,7 +603,7 @@ export function mount(el, ctx) {
       if (ctx.profile !== before) throttle.poke();
     };
     const pencilDay = isPencilDay(plan);
-    const play = (round, i, part) => run(round, { record, undo, pass, monitor: hooks.monitor, copilot, protege: round.activity === protegeIn, extra, onScene, onReread, onFlash, pencilDay,
+    const play = (round, i, part) => run(round, { record, undo, pass, slip, writeIt, confidence, monitor: hooks.monitor, copilot, protege: round.activity === protegeIn, extra, onScene, onReread, onFlash, pencilDay,
       progress: (fraction) => showBar(lessonPercent(groups, i, part, fraction)),
       answersIn: i === groups.length - 1 && part === groups[i].length - 1 ? answersIn : undefined });
 
@@ -669,6 +677,10 @@ export function mount(el, ctx) {
         },
         pass(id, mode) {
           ctx.profile = withPass(ctx.profile, id, mode, day);
+          save();
+        },
+        slip(s) {
+          ctx.profile = withSlip(ctx.profile, { ...s, day });
           save();
         },
         monitor: hooks.monitor, copilot, protege: false, extra, review: true, pencilDay: isPencilDay(plan),

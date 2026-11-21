@@ -28,6 +28,24 @@
     ["self","shelf"],
     ["sift","shift"]
   ],
+  "end": [
+    ["bus","but"],
+    ["yes","yet"],
+    ["kiss","kit"],
+    ["less","let"],
+    ["mess","met"],
+    ["back","bat"],
+    ["sack","sat"],
+    ["pack","pat"],
+    ["sick","sit"],
+    ["neck","net"],
+    ["lock","lot"],
+    ["dock","dot"],
+    ["kick","kit"],
+    ["wick","wit"],
+    ["kiss","kick"],
+    ["toss","tock"]
+  ],
   "sshMinLesson": 45,
   "sshSegs": {
     "ship": [["sh","sh"],["i","i"],["p","p"]],

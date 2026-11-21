@@ -3,7 +3,7 @@ const FILES = Object.freeze([
   ['nonsense', 'content/nonsense.json', () => []],
   ['instant', 'content/instant-words.json', () => []],
   ['chains', 'content/chains.json', () => []],
-  ['pairs', 'content/pairs.json', () => ({ ie: [], ssh: [] })],
+  ['pairs', 'content/pairs.json', () => ({ ie: [], ssh: [], end: [] })],
   ['warmup', 'content/warmup.json', () => []],
   ['entrance', 'content/entrance.json', () => ({ lines: [], dictation: [], passage: null, ladder: [] })],
   ['names', 'content/names.json', () => []],
@@ -37,7 +37,7 @@ export async function loadContent(readJson) {
   const [results, index] = await Promise.all([Promise.all(FILES.map(([, path]) => read(path))), read(STORY_INDEX)]);
   const loaded = {};
   FILES.forEach(([key, path, fallback], i) => { loaded[key] = valueOf(path, results[i], fallback); });
-  loaded.pairs = { ie: [], ssh: [], ...loaded.pairs };
+  loaded.pairs = { ie: [], ssh: [], end: [], ...loaded.pairs };
 
   const names = valueOf(STORY_INDEX, index, () => []);
   if (!Array.isArray(names)) throw new TypeError(`${STORY_INDEX}: must be a list of chapter file names`);

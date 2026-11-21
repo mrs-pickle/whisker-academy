@@ -1,6 +1,7 @@
 import { LAST_LESSON, LESSONS } from '../curriculum/lessons.js';
 import { isPassRecord, normalizePasses } from '../engine/passes.js';
 import { isCheckRecord, isPlacement } from '../engine/quest-results.js';
+import { isSlip, normalizeSlips } from '../engine/slip-log.js';
 import { clampTaughtUpTo } from './settings.js';
 
 
@@ -203,6 +204,7 @@ const PROFILE_FIELDS = Object.freeze({
   assessFrom: isNumber,
   placements: ( v) => Array.isArray(v) && v.every(isPlacement),
   pointerLog: ( v) => Array.isArray(v) && v.every(isPointerEntry),
+  slips: ( v) => Array.isArray(v) && v.every(isSlip),
 });
 
 export const isProfileShape = (value) => fieldsOk(value, PROFILE_FIELDS);
@@ -301,5 +303,8 @@ export function normalizeProfile(stored, startLesson) {
   const pointerLog = Array.isArray(stored.pointerLog) ? stored.pointerLog.filter(isPointerEntry).map((p) => ({ day: p.day, lesson: p.lesson })) : [];
   if (pointerLog.length > 0) profile.pointerLog = pointerLog;
   else delete profile.pointerLog;
+  const slips = normalizeSlips(stored.slips);
+  if (slips.length > 0) profile.slips = slips;
+  else delete profile.slips;
   return profile;
 }

@@ -1,6 +1,6 @@
 import { h } from '../core/dom.js';
 import { MIX_IT_UP } from '../profile/settings.js';
-import { artUrl, layeredArt } from '../ui/components.js';
+import { artUrl, bigButton, layeredArt } from '../ui/components.js';
 import { castArt } from '../ui/story-stage.js';
 import { dressUpButton } from './dressup.js';
 
@@ -12,6 +12,27 @@ const START_MS = 4000;
 const MOVE_MS = 9000;
 const DONE_MS = 3000;
 const CUDDLE_MS = 9000;
+const MINUTE_MS = 60000;
+export const CONFIDENCE_LINES = Object.freeze(['confidence.1', 'confidence.2', 'confidence.3']);
+export const CONFIDENCE_MAX = 1;
+
+export function confidenceBudget(rng, max = CONFIDENCE_MAX) {
+  let next;
+  let used = 0;
+  return () => {
+    if (used >= max) return null;
+    used++;
+    next ??= rng.int(CONFIDENCE_LINES.length);
+    return `v.${CONFIDENCE_LINES[next++ % CONFIDENCE_LINES.length]}`;
+  };
+}
+
+export const CALM_CHOICES = Object.freeze([
+  ['now', 'Start now'],
+  ['minute', 'Take a minute'],
+  ['ready', "I'll tell you when I'm ready"],
+]);
+
 const HEART_EVERY_MS = 1100;
 const HEART_MS = 2400;
 
@@ -69,8 +90,13 @@ function breakView(el, ctx, className, dressUp) {
     exit: () => exit,
     async step(lineId, ms) {
       if (!live()) return false;
-      await Promise.race([Promise.all([ctx.say(lineId), wait(ms)]), skipped]);
+      await Promise.race([Promise.all([lineId ? ctx.say(lineId) : null, wait(ms)]), skipped]);
       return live();
+    },
+    async until(promise) {
+      if (!live()) return undefined;
+      const got = await Promise.race([promise, skipped.then(() => undefined)]);
+      return live() ? got : undefined;
     },
     pose(pose) {
       const [body] = castArt('kitten', ctx.profile?.look, pose);
@@ -123,12 +149,41 @@ export async function runCuddle(el, ctx, { dressUp = false } = {}) {
   view.root.append(pet);
   const hearts = setInterval(heart, HEART_EVERY_MS);
   try {
-    await view.step('break.cuddle', CUDDLE_MS);
+    if (await view.step('break.cuddle', CUDDLE_MS)) await calmChoice(view, ctx);
   } finally {
     clearInterval(hearts);
     view.destroy();
   }
   return view.exit();
+}
+
+async function calmChoice(view, ctx) {
+  let choose = () => {};
+  const chosen = new Promise((resolve) => { choose = resolve; });
+  const row = h('div', { class: 'calm-choices' }, CALM_CHOICES.map(([id, label]) =>
+    h('button', { type: 'button', class: 'calm-choice', 'data-choice': id, onClick: () => choose(id) }, label)));
+  view.root.append(row);
+  ctx.say('break.choice');
+  const choice = await view.until(chosen);
+  row.remove();
+  if (choice === undefined) return;
+  ctx.audio.stop();
+  if (choice === 'minute') {
+    if (!(await view.step(null, MINUTE_MS))) return;
+  } else if (choice === 'ready') {
+    let ready = () => {};
+    const tapped = new Promise((resolve) => { ready = () => resolve(true); });
+    const paw = h('div', { class: 'calm-ready' }, bigButton({ label: "I'm ready", icon: 'ui/paw', onClick: () => ready() }));
+    view.root.append(paw);
+    ctx.say('break.ready');
+    const was = await view.until(tapped);
+    paw.remove();
+    if (was === undefined) return;
+    ctx.audio.stop();
+  }
+  const line = CONFIDENCE_LINES[ctx.rng.int(CONFIDENCE_LINES.length)];
+  view.pose('cheer');
+  await view.step(line, 2500);
 }
 
 export function mount(el, ctx, params = {}) {

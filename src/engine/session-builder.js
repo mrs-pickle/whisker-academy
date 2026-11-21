@@ -2,6 +2,7 @@ import { CORRESPONDENCES } from '../curriculum/correspondences.js';
 import { canDictate } from '../curriculum/dictation.js';
 import { isDecodable } from '../curriculum/decodable.js';
 import { hasShortIE } from '../curriculum/ie-nasal.js';
+import { soundKind } from '../curriculum/phonemes.js';
 import { isRControlled, shapeTier } from '../curriculum/tiers.js';
 import { finishedSessions, isExtraPractice } from '../profile/profile.js';
 import { isDue, isOverdue } from './itemstate.js';
@@ -34,6 +35,8 @@ const PENCIL_DICTATED = 2;
 export const LETTER_SECURE_BOX = 3;
 const LETTER_TWINS = Object.freeze({ b: 'd', d: 'b' });
 const DICTATED_TIER_MAX = 2;
+
+export const ALONE_WORDS = Object.freeze({ 10: 3, 15: 3, 20: 4 });
 
 const OVERDUE_SHARE = 0.3;
 const PAIRS_PER_KIND = 2;
@@ -163,7 +166,7 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const storyPassed = waiting.some(w => /^[sq]:/.test(w.id)) ? storyCandidates(content, settings, profile, states) : [];
   const passing = {
     warmup: passedIn(attached.warmup, sizes.warmup),
-    cards: passedIn([...attached.read, ...attached.nonsense, ...attached.iePairs, ...attached.sshPairs, ...attached.cards, ...storyPassed], sizes.cards),
+    cards: passedIn([...attached.read, ...attached.nonsense, ...attached.iePairs, ...attached.sshPairs, ...attached.endPairs, ...attached.cards, ...storyPassed], sizes.cards),
     spell: passedIn(attached.spell, sizes.spell),
     chain: passedIn(attached.chains, sizes.chain),
     charm: passedIn(attached.instant, sizes.charm),
@@ -281,6 +284,7 @@ export function buildSession({ content, states, settings, profile, day, rng, las
     if (addWord(c, false, true)) meeting++;
   }
   addPairs([...dueFirst(p.sshPairs), ...weightedOrder(p.sshPairs.filter(c => c.state === undefined), rng)]);
+  addPairs([...dueFirst(p.endPairs), ...weightedOrder(p.endPairs.filter(c => c.state === undefined), rng)]);
   for (const c of dueFirst(toRead)) addWord(c);
   const review = toRead.filter(c => (c.state === undefined ? (c.lesson) <= start : back && knows(c)));
   const reviewOrder = [...fillers(review.filter(c => !spellSet.has(c.id))), ...fillers(review.filter(c => spellSet.has(c.id)))];
@@ -320,14 +324,69 @@ export function buildSession({ content, states, settings, profile, day, rng, las
   const rounds = built.filter(b => b.items.length > 0)
     .map(b => ({ activity: b.activity, items: arrange(b.items, b.head, rng) }));
   const pencil = pencilPlanned(profile, settings, day) ? pencilItems(content, settings, profile, states, day, rng) : [];
-  if (pencil.length === 0) return { day, rounds };
-  const trim = (PENCIL_TRIM[ (settings.sessionMinutes)]);
   const heads = new Map(built.map(b => [b.activity, b.head]));
-  const trimmed = rounds.map(r => (r.activity === 'warmup' || r.activity === 'cards')
-    ? { ...r, items: trimRound(r.items, trim[r.activity] ?? r.items.length, heads.get(r.activity) ?? 0) } : r);
-  const at = trimmed.findIndex(r => r.activity !== 'warmup' && r.activity !== 'cards');
-  trimmed.splice(at < 0 ? trimmed.length : at, 0, { activity: 'pencil', items: pencil });
-  return { day, rounds: trimmed };
+  let planned = rounds;
+  if (pencil.length > 0) {
+    const trim = (PENCIL_TRIM[ (settings.sessionMinutes)]);
+    planned = rounds.map(r => (r.activity === 'warmup' || r.activity === 'cards')
+      ? { ...r, items: trimRound(r.items, trim[r.activity] ?? r.items.length, heads.get(r.activity) ?? 0) } : r);
+    const at = planned.findIndex(r => r.activity !== 'warmup' && r.activity !== 'cards');
+    planned.splice(at < 0 ? planned.length : at, 0, { activity: 'pencil', items: pencil });
+  }
+  const scene = p.story.find(c => c.mode === 'read' || c.mode === 'again')?.id.slice(2);
+  const used = new Set(planned.flatMap(r => r.items.map(i => i.id)));
+  const alone = scene && settings.wordsAlone !== false ? wordsAlone(content, scene, new Set(pools.read.map(c => c.id.slice(2))), used, states, day,
+    ALONE_WORDS[ (settings.sessionMinutes)] ?? ALONE_WORDS[DEFAULT_MINUTES]) : [];
+  if (alone.length === 0) return { day, rounds: planned };
+  let room = 0;
+  planned = planned.map(r => {
+    if (r.activity !== 'cards') return r;
+    const items = trimForAlone(r.items, Math.max(0, r.items.length - alone.length), heads.get('cards') ?? 0);
+    room = r.items.length - items.length;
+    return { ...r, items };
+  });
+  const kept = alone.slice(0, room);
+  return { day, rounds: kept.length > 0 ? [...planned, { activity: 'alone', items: kept }] : planned };
+}
+
+function trimForAlone(items, size, head) {
+  const out = [...items];
+  const sound = (i) => i.id.startsWith('g:');
+  const cut = (may) => {
+    for (let at = out.length - 1; at >= head && out.length > size; at--) {
+      const i = out[at];
+      if (i.isNew || i.model || !may(i) || (sound(i) && out.filter(sound).length <= MIN_SOUND_CARDS)) continue;
+      out.splice(at, 1);
+    }
+  };
+  cut(sound);
+  cut((i) => !i.id.startsWith('pr:') && !i.isReview);
+  cut((i) => !i.id.startsWith('pr:'));
+  return out;
+}
+
+export function wordsAlone(content, sceneId, readable, used, states, day, count) {
+  const scene = (content.story ?? []).flatMap(ch => [...(ch.scenes ?? []), ...(ch.side ?? [])]).find(s => s?.id === sceneId);
+  if (!scene || count <= 0) return [];
+  const bank = new Map((content.words ?? []).map(w => [w.w, w]));
+  const words = [];
+  for (const s of scene.sentences ?? []) {
+    for (const token of String(s?.text ?? '').toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g) ?? []) {
+      const w = bank.get(token);
+      if (!w || w.real === false || words.includes(token) || !readable.has(token) || used.has(`w:${token}`)) continue;
+      if (w.segs.filter(([, ph]) => soundKind(ph) === 'vowel').length !== 1) continue;
+      words.push(token);
+    }
+  }
+  const rank = (w) => {
+    const st = states.get(`w:${w}#read`);
+    return (st === undefined ? 1 : st.mastered ? 2 : 0) + (w.length < 3 ? 3 : 0);
+  };
+  return words.map((w, i) => ({ w, i })).sort((a, b) => rank(a.w) - rank(b.w) || a.i - b.i).slice(0, count)
+    .map(({ w }) => {
+      const st = states.get(`w:${w}#read`);
+      return { id: `w:${w}`, mode: 'read', isNew: false, isReview: st !== undefined && isDue(st, day) };
+    });
 }
 
 export const isPencilDay = (plan) => plan.rounds.some(r => r.activity === 'pencil' && r.items.length > 0);
@@ -466,7 +525,7 @@ const reviewCap = (size) => Math.max(1, Math.floor(size * OVERDUE_SHARE));
 export const heldPlaces = (wordMax, unmet, backfill = BACKFILL_WORDS) => Math.min(backfill, wordMax - 1, unmet);
 
 function gatherPools(content, settings, profile, { again }) {
-  const { taughtUpTo, sShContrast, ieEmphasis } = settings;
+  const { taughtUpTo, sShContrast, ieEmphasis, endingPairs } = settings;
   const cand = (id, mode, extra = {}) => ({ id, mode, key: `${id}#${mode}`, weight: 1, ...extra });
   const wordCand = (w, mode, weight = 1) =>
     cand(`w:${w.w}`, mode, { text: w.w, lesson: w.lesson, tier: w.tier, weight: weight * ieWeight(w.segs, settings) });
@@ -490,6 +549,7 @@ function gatherPools(content, settings, profile, { again }) {
     iePairs: ieEmphasis ? content.pairs.ie.filter(pr => pr.every(w => readable.has(w))).map(pr => pairCand(pr, 'ie')) : [],
     sshPairs: sShContrast && taughtUpTo >= SSH_MIN_LESSON
       ? content.pairs.ssh.filter(pr => pr.every(sshReadable)).map(pr => pairCand(pr, 'ssh')) : [],
+    endPairs: endingPairs ? (content.pairs.end ?? []).filter(pr => pr.every(w => readable.has(w))).map(pr => pairCand(pr, 'end')) : [],
     read: readWords.map(w => wordCand(w, 'read', recent(w))),
     nonsense: (content.nonsense ?? [])
       .filter(w => w.lesson <= taughtUpTo && isDecodable(w.segs, taughtUpTo, w) && rWordAllowed(profile, w.tier))

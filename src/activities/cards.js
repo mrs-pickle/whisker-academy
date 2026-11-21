@@ -8,6 +8,7 @@ import { PHONEMES, phonemeCodes } from '../curriculum/phonemes.js';
 import { heroOf } from '../profile/hero.js';
 import { artUrl, bigButton, copilotBanner, copilotHold, copilotUndoAside, keysOnPage, nextButton, passButton, setUndo, tile } from '../ui/components.js';
 import { HELP_TIPS, markTipSeen, offerTips, TH_TIPS, TURN_TIPS } from '../ui/tips.js';
+import { wireSlips } from './slip-moment.js';
 
 
 
@@ -20,6 +21,7 @@ export const CONFUSIONS = Object.freeze({
   p: Object.freeze(['b']), t: Object.freeze(['d']),
   f: Object.freeze(['v']), v: Object.freeze(['f']),
   g: Object.freeze(['k']), k: Object.freeze(['g']),
+  c: Object.freeze(['s']), ck: Object.freeze(['s']), s: Object.freeze(['c']),
 });
 
 const VOWEL_CARDS = new Set(['a', 'e', 'i', 'o', 'u']);
@@ -101,7 +103,7 @@ export function soundPraiseLines(kind, detail) {
     case 'say':
     case 'pick': return [3];
     case 'isolate': return detail === 'last' ? [1, 3] : detail === 'middle' ? [2, 3] : [3];
-    case 'pair': return detail === 'ie' ? [2] : [];
+    case 'pair': return detail === 'ie' ? [2] : detail === 'end' ? [1] : [];
     default: return [];
   }
 }
@@ -323,7 +325,7 @@ export function herTurn(choices) {
   }
 }
 
-export function chooseOne(view, { choices, answer, hint, reward, praise, praiseLines, keyboard = false, target = null, hintGap, abandon = null }) {
+export function chooseOne(view, { choices, answer, hint, reward, praise, praiseLines, keyboard = false, target = null, hintGap, abandon = null, onMiss }) {
   return new Promise((resolve) => {
     if (abandon?.aborted) return;
     const start = now();
@@ -354,6 +356,7 @@ export function chooseOne(view, { choices, answer, hint, reward, praise, praiseL
       }
       misses++;
       bounce(chosen);
+      if (misses === 1 && onMiss) await onMiss(value);
       if (misses < 2) {
         target?.classList.add('glow');
         await view.say(['v.error.listen', ...hint], 1300, hintGap);
@@ -552,6 +555,8 @@ export async function runRound(view, round, hooks, { play, easy, undo = false, j
   let broughtBack = new Set();
   let right = [];
   let eased = 0;
+  let bank;
+  let missedInRow = 0;
   let breaking = false;
   let back = null;
   const goBack = () => {
@@ -614,6 +619,11 @@ export async function runRound(view, round, hooks, { play, easy, undo = false, j
       continue;
     }
     back = before && result?.selfChecked === false ? { ...before, records: recorded(result) } : null;
+    if (result && result.correct && !result.helped && missedInRow >= 2 && !breaking && view.live()) {
+      const line = hooks.confidence?.();
+      if (line) await view.say([line]);
+    }
+    if (result) missedInRow = result.correct && !result.helped ? 0 : missedInRow + 1;
     if (breaking || !result || result.correct) continue;
     const key = `${item.id}#${item.mode}`;
     if (result.helped && !broughtBack.has(key)) {
@@ -626,6 +636,12 @@ export async function runRound(view, round, hooks, { play, easy, undo = false, j
       queue = [...queue.slice(0, i + 1), ...(next ? [next] : [])];
       breaking = true;
       continue;
+    }
+    if (hooks.writeIt && item.id.startsWith('w:') && view.live()) {
+      const { wordToWrite, writeIt } = await import('./write-it.js');
+      bank ??= new Map((view.ctx?.content?.words ?? []).map(( w) => [w.w, w]));
+      const word = wordToWrite(item, bank);
+      if (word && hooks.writeIt()) await writeIt(view, word);
     }
     if (signal === 'ease' && eased < MAX_EASED) {
       const next = easyItem(item);
@@ -680,7 +696,8 @@ async function hearCard(view, g, { first, abandon }) {
   const disc = listenDisc(view, sound);
   view.show(disc, h('div', { class: 'choice-row' }, choices.map(c => c.el)));
   await view.prompt(['v.cards.hear', ...sound], { play: first ? ['v.cards.hear', ...sound] : sound });
-  return chooseOne(view, { choices, answer: g, hint: sound, reward: sound, praise: 'sound', praiseLines: soundPraiseLines('pick'), keyboard: true, target: disc, abandon });
+  return chooseOne(view, { choices, answer: g, hint: sound, reward: sound, praise: 'sound', praiseLines: soundPraiseLines('pick'), keyboard: true, target: disc, abandon,
+    onMiss: (chose) => view.noteSlip?.({ item: `g:${g}`, target: g, chose }) });
 }
 
 async function listenPair(view, kind, a, b, { first, abandon }) {
@@ -691,7 +708,8 @@ async function listenPair(view, kind, a, b, { first, abandon }) {
   const disc = listenDisc(view, [clip]);
   view.show(disc, h('div', { class: 'choice-row words' }, choices.map(c => c.el)));
   await view.prompt(['v.cards.listen', clip], { play: first ? ['v.cards.listen', clip] : [clip] });
-  return chooseOne(view, { choices, answer: target, hint: [clip], reward: [clip], praise: 'sound', praiseLines: soundPraiseLines('pair', kind), keyboard: true, target: disc, abandon });
+  return chooseOne(view, { choices, answer: target, hint: [clip], reward: [clip], praise: 'sound', praiseLines: soundPraiseLines('pair', kind), keyboard: true, target: disc, abandon,
+    onMiss: (chose) => view.noteSlip?.({ item: `pr:${kind}:${a}/${b}`, target, chose, words: true }) });
 }
 
 async function readWord(view, item, word, { copilot, modeled, made, canUndo = false }) {
@@ -752,8 +770,9 @@ function easyCard(ctx, used) {
   return card ? { id: `g:${card.g}`, mode: 'hear', isNew: false, isReview: false } : null;
 }
 
-export async function run(el, ctx, round, hooks) {
-  const view = createActivityView(el, ctx, { name: 'cards' });
+export async function run(el, ctx, round, hooks, { start = 'v.cards.start', name = 'cards' } = {}) {
+  const view = createActivityView(el, ctx, { name });
+  wireSlips(view, hooks);
   const copilot = hooks.copilot ?? ctx.settings.copilot;
   const instructed = new Set();
   const modeled = new Set();
@@ -761,7 +780,7 @@ export async function run(el, ctx, round, hooks) {
   const scenes = new Map((ctx.content?.story ?? []).flatMap(( ch) => [...ch.scenes, ...ch.side]).map(( scene) => [scene.id, scene]));
   const lines = new Map([...scenes.values()].flatMap((scene) => scene.sentences).map(( s) => [s.id, s]));
   try {
-    if (!hooks.review) await view.prompt(['v.cards.start']);
+    if (!hooks.review) await view.prompt([start]);
     await runRound(view, round, hooks, {
       play: (item, { canUndo, abandon }) => {
         const first = !instructed.has(item.mode);

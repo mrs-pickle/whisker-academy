@@ -5,6 +5,7 @@ import { tierOf } from '../curriculum/tiers.js';
 import { eligibleChains, eligibleWords, rSpellAllowed, rWordAllowed } from '../engine/session-builder.js';
 import { artUrl, kittenBubble, soundBoxes, tile } from '../ui/components.js';
 import { bounce, createActivityView, createOnce, isKnown, knownInstant, listenDisc, now, offerPass, runRound, showNext, sparkle, typeToPick } from './cards.js';
+import { wireSlips } from './slip-moment.js';
 import { chainTray, createChainController, diffStep, protegeError } from './chain-controller.js';
 import { nameClips, segClips } from './spell.js';
 
@@ -135,6 +136,13 @@ function chooseBox({ view, c, board, hint, answered, passable }) {
   });
 }
 
+function noteTileSlip(view, current, target, seg, chose) {
+  const segs = target.op === 'sub' ? current.map((s, i) => (i === target.index ? seg : s))
+    : target.op === 'ins' ? [...current.slice(0, target.index), seg, ...current.slice(target.index)] : null;
+  const word = (segs ?? current).map(([g]) => g).join('');
+  return view.noteSlip?.({ item: `w:${word}`, target: target.to, chose, ...(segs ? { segs, box: target.index } : {}) });
+}
+
 async function chooseTile({ view, c, board, bottom, prompt, once, passable }) {
   const { ctx } = view;
   const { change, current, nextSeg } = c.state();
@@ -172,6 +180,7 @@ async function chooseTile({ view, c, board, bottom, prompt, once, passable }) {
           return;
         }
         bounce(picked);
+        if (after.feedback?.kind === 'bounce') await noteTileSlip(view, current, target, seg, g);
         if (after.feedback?.kind === 'near') {
           for (const [x, t] of tiles) t.classList.add(x === target.to ? 'glow' : 'dim');
           draw({ mark: target.index });
@@ -323,6 +332,7 @@ export function easyChain(ctx, words, used) {
 
 export async function run(el, ctx, round, hooks) {
   const view = createActivityView(el, ctx, { name: 'chain', bg: 'bg/workshop' });
+  wireSlips(view, hooks);
   const words = new Map((ctx.content.words ?? []).map(( w) => [w.w, w]));
   const chains = new Map((ctx.content.chains ?? []).map(( ch) => [ch.id, ch]));
   const once = createOnce();

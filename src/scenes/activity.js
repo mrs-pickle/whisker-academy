@@ -9,7 +9,7 @@ import { bigButton } from '../ui/components.js';
 
 
 
-export const ACTIVITY_IDS = Object.freeze(['warmup', 'cards', 'pencil', 'spell', 'chain', 'charm', 'story']);
+export const ACTIVITY_IDS = Object.freeze(['warmup', 'cards', 'pencil', 'spell', 'chain', 'charm', 'story', 'alone']);
 
 
 function forcedItem(a, { word, scene, mode }, content, profile) {
@@ -28,7 +28,7 @@ function forcedItem(a, { word, scene, mode }, content, profile) {
     case 'cards': {
       if (word.includes('/')) {
         const [x, y] = word.split('/');
-        const kind = ['ie', 'ssh'].find(k => (content.pairs?.[k] ?? []).some(( p) => p[0] === x && p[1] === y)) ?? 'ie';
+        const kind = ['ie', 'ssh', 'end'].find(k => (content.pairs?.[k] ?? []).some(( p) => p[0] === x && p[1] === y)) ?? 'ie';
         return item(`pr:${kind}:${word}`, 'listen');
       }
       if (profile.deck.some(( c) => c.g === word)) return item(`g:${word}`, 'see');

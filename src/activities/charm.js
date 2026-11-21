@@ -5,6 +5,7 @@ import { addUnlocked, createActivityView, createOnce, isKnown, judgeAloud, known
 import { protegeMoment } from './chain.js';
 import { robotMoment, robotToday, robotWord } from './robot.js';
 import { buildWord, segClips } from './spell.js';
+import { wireSlips } from './slip-moment.js';
 import { buildTray, createSpellController } from './spell-controller.js';
 
 
@@ -96,7 +97,7 @@ async function charmWord(view, iw, { copilot, known, slow, bracelet, once }) {
   const c = createSpellController({ word: iw, scaffold: 'full', tray: buildTray(iw, ctx.settings, ctx.rng) });
   card.classList.toggle('veiled', known);
   await view.prompt(['v.charm.build', clip]);
-  const lastSound = await buildWord({ view, c, word: (iw), board, bottom, answered: () => {}, once }, slow);
+  const lastSound = await buildWord({ view, c, word: (iw), board, bottom, answered: () => {}, once, item: `iw:${iw.w}` }, slow);
   if (lastSound === null) {
     view.root.classList.remove('charm-pronoun');
     return { pass: true };
@@ -131,6 +132,7 @@ function easyCharm(ctx, used) {
 
 export async function run(el, ctx, round, hooks) {
   const view = createActivityView(el, ctx, { name: 'charm', bg: 'bg/hall' });
+  wireSlips(view, hooks);
   const copilot = hooks.copilot ?? ctx.settings.copilot;
   const instant = new Map((ctx.content.instant ?? []).map(( iw) => [iw.w, iw]));
   const bracelet = h('img', { class: 'charm-bracelet', src: artUrl('ui/bracelet'), alt: '', draggable: 'false' });

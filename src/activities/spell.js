@@ -4,6 +4,7 @@ import { phonemeCodes } from '../curriculum/phonemes.js';
 import { eligibleWords } from '../engine/session-builder.js';
 import { artUrl, bigButton, pawButton, soundBoxes, takeBackButton, tile } from '../ui/components.js';
 import { addUnlocked, bounce, countPraiseLines, createActivityView, createOnce, judgeAloud, listenDisc, now, offerPass, runRound, showNext, sparkle, typeToPick, wait } from './cards.js';
+import { wireSlips } from './slip-moment.js';
 import { buildTray, createSpellController, scaffoldFor } from './spell-controller.js';
 
 
@@ -103,7 +104,7 @@ async function countSounds({ view, c, word, board, bottom, answered, once }, sca
   return false;
 }
 
-export function buildWord({ view, c, word, board, bottom, answered }, slow) {
+export function buildWord({ view, c, word, board, bottom, answered, item }, slow) {
   return new Promise((resolve) => {
     const tiles = new Map();
     let stopKeys = () => {};
@@ -123,6 +124,7 @@ export function buildWord({ view, c, word, board, bottom, answered }, slow) {
       view.choosing(false);
       let left = [];
       try {
+        if (after.feedback?.kind === 'bounce') await view.noteSlip?.({ item: item ?? `w:${word.w}`, target: word.segs[before.cursor][0], chose: g, segs: word.segs, box: before.cursor });
         left = await showPick({ view, c, word, board, tiles, picked: (tiles.get(g)), before, after, slow });
       } finally {
         c.setLocked(false);
@@ -310,6 +312,7 @@ function easyWord(ctx, used) {
 
 export async function run(el, ctx, round, hooks) {
   const view = createActivityView(el, ctx, { name: 'spell', bg: 'bg/workshop' });
+  wireSlips(view, hooks);
   const copilot = hooks.copilot ?? ctx.settings.copilot;
   const words = new Map((ctx.content.words ?? []).map(( w) => [w.w, w]));
   const bag = h('img', { class: 'trick-bag', src: artUrl('ui/bag'), alt: '', draggable: 'false' });

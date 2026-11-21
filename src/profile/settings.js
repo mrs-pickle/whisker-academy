@@ -9,6 +9,9 @@ export const DEFAULT_SETTINGS = Object.freeze({
   copilot: true,
   sShContrast: true,
   ieEmphasis: true,
+  endingPairs: true,
+  wordsAlone: true,
+  writeIt: true,
   newWordPace: 'steady',
   cardRoutine: 'sound',
   breakStyle: MIX_IT_UP,
@@ -52,6 +55,7 @@ function tipsSeen(value) {
 
 const SETTING_TYPES = Object.freeze({
   taughtUpTo: 'number', sessionMinutes: 'number', copilot: 'boolean', sShContrast: 'boolean', ieEmphasis: 'boolean',
+  endingPairs: 'boolean', wordsAlone: 'boolean', writeIt: 'boolean',
   newWordPace: 'string', cardRoutine: 'string', breakStyle: 'string', mixOffered: 'boolean', textSpacing: 'string', tint: 'string', pin: 'string',
   printWords: 'boolean', flash: 'boolean', gamesOffered: 'boolean', muted: 'boolean', tipsSeen: 'object',
 });
@@ -74,6 +78,9 @@ export function normalizeSettings(raw) {
     copilot: bool(r.copilot, d.copilot),
     sShContrast: games ? bool(r.sShContrast, d.sShContrast) : true,
     ieEmphasis: bool(r.ieEmphasis, d.ieEmphasis),
+    endingPairs: bool(r.endingPairs, d.endingPairs),
+    wordsAlone: bool(r.wordsAlone, d.wordsAlone),
+    writeIt: bool(r.writeIt, d.writeIt),
     newWordPace: oneOf(r.newWordPace, NEW_WORD_PACES, d.newWordPace),
     cardRoutine: oneOf(r.cardRoutine, CARD_ROUTINES, d.cardRoutine),
     breakStyle: r.mixOffered !== true && r.breakStyle === 'ballet' ? d.breakStyle : name(r.breakStyle, d.breakStyle),
