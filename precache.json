@@ -1,5 +1,5 @@
 {
-  "version": "ef734a1ea1b83adf9547f6b12ef4ab309dd323428994e7ada2d0fa3017773cd1",
+  "version": "44d6588286527838ca70e7cdd18613bd5fd10d6bba3f816520f58a084228e6db",
   "files": [
     "assets/art/bg/academy.webp",
     "assets/art/bg/belfry.webp",
@@ -6743,7 +6743,7 @@
   "packs": [
     {
       "id": "core",
-      "hash": "981e6e0a712af9f8b204b797683aa0b881676f01aa55be83104d7d7b7354e1ab",
+      "hash": "4f65e798026667c2c9a8d109cd593856f55e61042bec5ce29b76f8935a437c98",
       "files": [
         "assets/art/bg/belfry.webp",
         "assets/art/bg/chapel.webp",
@@ -10944,7 +10944,7 @@
     },
     {
       "id": "ending-patterns",
-      "hash": "3dd3160f8f9ab31985d0b30b377e07e4584dc403468a5e0464a08bfefcb88fc4",
+      "hash": "dcd13f2a740712e2135ca32a699466b54c2217658993bcb39b6a4902fcb22108",
       "files": [
         "assets/art/bg/camp.webp",
         "assets/art/pageparts/place-camp.svg",
@@ -11261,7 +11261,7 @@
     },
     {
       "id": "r-controlled",
-      "hash": "a383785d35604f8c03e0c94e7b5b9a1248e3de0cbabb8fbc47b087afaf87b26e",
+      "hash": "742d2616671780100c61c76da7beb03e0264244332fd2879a941e762c1433f92",
       "files": [
         "assets/art/bg/fort.webp",
         "assets/art/pageparts/place-fort.svg",
@@ -12003,7 +12003,7 @@
     },
     {
       "id": "other-teams",
-      "hash": "23b70b014020403a7455bdf342ec6398b2d8852466ab9be649a5e4aeed25c145",
+      "hash": "672df35e9d76d4ac69fac7b219bdc765bb85d35ed68bd5948bdec6ddf67b3bec",
       "files": [
         "assets/art/bg/cave.webp",
         "assets/art/pageparts/place-cave.svg",
@@ -12303,7 +12303,7 @@
     },
     {
       "id": "diphthongs",
-      "hash": "b5df1dad111ec2c20e641a7d6417423dd173a6fb77576a63e3fc95fa95bdd6a5",
+      "hash": "6f24a1ba0300be4b6c23835c3f5a467bbfbd773680f540d66056ca73b358fef3",
       "files": [
         "assets/art/bg/clouds.webp",
         "assets/art/pageparts/place-clouds.svg",
